@@ -74,6 +74,20 @@ See the [paper PDF](paper/paper.pdf), [LaTeX source](paper/paper.tex), and
 [provenance](UPSTREAM.md). The paper has no author byline or date and is
 associated with its repository commit.
 
+## Citation and archival release
+
+[CITATION.cff](CITATION.cff) describes the software citation, and
+[.zenodo.json](.zenodo.json) supplies the proposed Zenodo archive metadata.
+The archive includes the Lean development, paper and verification records.
+The creator credit describes human direction of the project; the proof
+development and manuscript remain explicitly disclosed as AI-generated.
+No Zenodo DOI or Palomar registration is claimed until one is issued.
+
+See [Zenodo release preparation](docs/ZENODO.md) and
+[Palomar submission preparation](docs/PALOMAR.md). Palomar runs its own
+verification against a fixed public commit; the local verification receipt
+does not substitute for that registry workflow.
+
 ## Build and verify
 
 Lean **4.35.0-rc4** and Mathlib

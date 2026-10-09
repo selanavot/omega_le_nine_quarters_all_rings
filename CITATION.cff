@@ -1,0 +1,59 @@
+cff-version: 1.2.0
+message: >-
+  Please cite this version of the software when using its integral or ring
+  extension or Lean proof. Cite the original OpenAI construction and the
+  earlier all-fields extension separately. Creator credit records human
+  direction; the new proof development and manuscript are AI-generated.
+type: software
+title: 'The Matrix Multiplication Bound ω ≤ 9/4 over Associative Rings'
+version: 0.1.0
+authors:
+  - family-names: Navot
+    given-names: Sela
+    orcid: 'https://orcid.org/0009-0001-8002-5835'
+repository-code: 'https://github.com/selanavot/omega_le_nine_quarters_all_rings'
+url: 'https://github.com/selanavot/omega_le_nine_quarters_all_rings'
+license: Apache-2.0
+abstract: >-
+  A Lean formalization establishing that the matrix multiplication exponent
+  is at most 9/4 over every associative unital ring, including noncommutative
+  rings. The stronger intermediate theorem bounds the exponent of exact
+  integer coefficient tensor rank by 9/4. For every positive epsilon, the
+  development proves correct arithmetic programs using at most
+  C n^(9/4+epsilon) operations. An explicit zero-cost program handles the
+  trivial ring, whose real-valued exponent is zero by the unchanged infimum
+  convention. OpenAI supplied the numerical bound, main proof architecture
+  and arithmetic-program specification. This project builds on the earlier
+  all-fields extension. The new proof development and accompanying manuscript
+  are AI-generated with Codex under Sela Navot's human direction.
+  Compilation, axiom inspection, fresh-kernel replay
+  of the six-claim dependency closure, and frozen-specification Comparator
+  with all six bundled checkers passed locally. No human peer review,
+  improved numerical exponent, exact O(n^(9/4)) endpoint, efficient uniform
+  circuit generator or bit-complexity bound is claimed. Five vendored
+  fixed-point proof modules retain their separate MIT license.
+keywords:
+  - matrix multiplication
+  - arithmetic complexity
+  - associative rings
+  - integer tensor rank
+  - Lean
+  - formal verification
+references:
+  - type: software
+    title: 'Matrix multiplication exponent at most 9/4 over arbitrary fields: a Lean formalization'
+    authors:
+      - family-names: Navot
+        given-names: Sela
+        orcid: 'https://orcid.org/0009-0001-8002-5835'
+    doi: '10.5281/zenodo.23219128'
+    repository-code: 'https://github.com/selanavot/matrix-multiplication-all-fields'
+    commit: 08481ef22bca7dc9ffba091083b7c1e81e537220
+    url: 'https://github.com/selanavot/matrix-multiplication-all-fields/tree/08481ef22bca7dc9ffba091083b7c1e81e537220'
+  - type: software
+    title: 'An Upper Bound of 9/4 for the Matrix Multiplication Exponent'
+    authors:
+      - name: OpenAI
+    repository-code: 'https://github.com/openai/math'
+    commit: adc7f1241b42e322a6451854ab7e4b4c146bf78a
+    url: 'https://github.com/openai/math/tree/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Matrix-Multiplication-Nine-Fourths-October-2-2026'

@@ -1,0 +1,155 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+# Release proposal: confirm the human attribution before public submission.
+version: v0.4
+project:
+  name: "Matrix multiplication: omega at most 9/4 over every ring"
+  description: >-
+    An integral extension of OpenAI's matrix multiplication exponent bound and
+    its previous all-fields extension. The formalization proves that the exact
+    integer coefficient tensor-rank exponent is at most 9/4, yielding
+    division-free arithmetic programs over every associative unital ring,
+    including noncommutative rings. For every positive epsilon, one constant
+    bounds the operation count at all positive matrix sizes by C*n^(9/4+epsilon).
+    The arithmetic model is preserved apart from Field-to-Ring assumptions.
+    The extension uses a primitive tensor spectrum, coefficient extraction,
+    fixed finite-free descent, and coprime patching of Fourier and interpolation
+    constructions. It does not improve the numerical exponent or assert an
+    endpoint O(n^(9/4)) algorithm, efficient uniform generation, or bit complexity.
+  authors:
+    - Sela Navot
+  license: Apache-2.0
+  responsible_maintainers:
+    - Sela Navot
+# This repository contains the substantive proof, so no thin-wrapper entry is needed.
+classification:
+  arxiv: [cs.CC, cs.DS]
+  msc2020: [68Q25, 15A69, 68W30]
+sources:
+  - title: "An Upper Bound of 9/4 for the Matrix Multiplication Exponent"
+    authors: [OpenAI]
+    type: paper
+    id: "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Matrix-Multiplication-Nine-Fourths-October-2-2026/paper.pdf"
+    relationship: adapts
+    note: >-
+      Supplies the numerical bound, auxiliary separation, determinant and sector
+      constructions, spectral framework, profile argument, and arithmetic model.
+      This project extends the coefficient argument to integers and then rings;
+      it does not claim the numerical bound or inherited architecture as new.
+  - title: "Matrix multiplication exponent at most 9/4 over arbitrary fields"
+    type: other
+    id: "https://github.com/selanavot/matrix-multiplication-all-fields/tree/08481ef22bca7dc9ffba091083b7c1e81e537220"
+    relationship: adapts
+    note: >-
+      Prior AI-generated field extension under Sela Navot's direction, including
+      finite-extension descent. The present repository begins with a trimmed
+      import of this pinned formalization and develops the integral argument.
+related_formalizations:
+  - id: "https://github.com/openai/math/tree/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/OAI/LinearAlgebra/MatrixMultiplication"
+    relationship: builds-on
+    note: "Inherited theorem architecture and arithmetic model; see UPSTREAM.md."
+  - id: "https://github.com/selanavot/matrix-multiplication-all-fields/tree/08481ef22bca7dc9ffba091083b7c1e81e537220"
+    relationship: adapts
+    note: "Exact imported source hashes are recorded in docs/IMPORT-MANIFEST.json."
+status:
+  scope: >-
+    Completed Lean proofs of all six declarations selected by comparator.json.
+    The upper bound and direct cost statement include the zero ring; the lower
+    bound and bounded-below statement require Nontrivial. For the zero ring all
+    exponents are admissible, and omega=0 follows from the unchanged real-valued
+    infimum convention rather than a genuine lower-bounded infimum. An explicit
+    zero-cost program proves the corresponding algorithmic claim. Exact integer
+    coefficient identities are proved independently of finite-input functional
+    equality. Formal verification covers Lean declarations, not manuscript prose
+    or historical novelty.
+  # Counts exclude the six deliberate theorem holes in ComparatorAudit.Challenge.
+  # They concern the completed proof development and proved Solution declarations.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: [propext, Classical.choice, Quot.sound]
+automation:
+  methods:
+    - method: agent
+      framework: OpenAI Codex
+      tool_setup: >-
+        Multi-agent mathematical development, Lean implementation, adversarial
+        source review, serialized local compilation, frozen-model Comparator,
+        and fresh-kernel replay under human direction. The proof development
+        and accompanying paper are AI-generated. Exact model identifiers for
+        this ring extension are not reconstructed in this metadata.
+      cost:
+        wall_time: not tracked
+        spend_usd: not tracked
+        hardware: "Local macOS machine with 24 GB RAM; one Lean build worker"
+      prompting_notes: >-
+        Preserve the previous arithmetic semantics and a minimal statement diff;
+        prove the integral extension; independently challenge the mathematics,
+        formal statement, assumptions, and verification process.
+  notes: >-
+    Sela Navot initiated and directed the work and maintains the repository.
+    Human attribution records that orchestration and responsibility; it does
+    not claim that the Lean proofs or paper were handwritten. Material AI
+    contributions are disclosed here, in README.md, and in the manuscript.
+fidelity:
+  divergences: >-
+    Generalizes the scalar assumption from Field to Ring, including
+    noncommutative rings. The arithmetic Model has exactly seven literal
+    Field-to-Ring substitutions; costs, evaluation, correctness quantifiers,
+    positive slack, and the real infimum are unchanged. Integral constructions
+    replace field-specific steps. Nontrivial remains on lower-bound claims.
+    The numerical exponent and profile-growth argument are inherited. See
+    README.md and UPSTREAM.md for the zero-ring convention and provenance.
+review:
+  status: agent-reviewed
+  reviewers:
+    - "Codex adversarial review agents; roles and findings in docs/adversarial/"
+  notes: >-
+    Separate AI reviews examined the mathematics, statement semantics, and
+    reproducibility. The six compared claims passed Lean compilation, guarded
+    axiom checks, replay of their complete dependency closure into a fresh Lean
+    kernel, and local Comparator with all six bundled checkers. These local
+    checks reused dependency caches and disabled Comparator's build sandbox;
+    they are not Palomar's full provenance/sandbox preflight. Earlier unchanged
+    negative controls rejected altered gate cost and sorryAx. This is not human
+    peer review. Receipts: verification/comparator/RESULTS.md and the separately
+    scoped RESULTS-NONTRIVIAL.md. No Palomar review or registration is claimed.
+alignment:
+  namespace: ComparatorChecks
+  statements:
+    - lean: ComparatorChecks.omega_bound
+      module: ComparatorAudit.Solution
+      status: proved
+      note: >-
+        For every associative unital ring R in any universe, omega(R)<=9/4.
+        The zero ring is included with the documented real-infimum convention.
+    - lean: ComparatorChecks.admissible_bddBelow
+      module: ComparatorAudit.Solution
+      status: proved
+      note: "For every nontrivial ring, the admissible-exponent set is bounded below."
+    - lean: ComparatorChecks.admissible_nonempty
+      module: ComparatorAudit.Solution
+      status: proved
+      note: "Every ring has a nonempty admissible-exponent set, including the zero ring."
+    - lean: ComparatorChecks.omega_lower
+      module: ComparatorAudit.Solution
+      status: proved
+      note: "For every nontrivial ring, omega(R)>=2; this is the retained lower bound."
+    - lean: ComparatorChecks.epsilon_cost
+      module: ComparatorAudit.Solution
+      status: proved
+      note: >-
+        For every ring and every epsilon>0, one C>0 bounds a correct arithmetic
+        program at each n>=1 by C*n^(9/4+epsilon). Input and constant gates are
+        free; addition, subtraction, and multiplication each cost one.
+    - lean: ComparatorChecks.exact_coefficients
+      module: ComparatorAudit.Solution
+      status: proved
+      note: >-
+        For every epsilon>0 there are n>=2 and r<=n^(9/4+epsilon), with integer
+        coefficient vectors giving an exact coordinatewise rank-one
+        decomposition of the n-by-n matrix multiplication tensor. The frozen
+        Challenge spells out the tensor coordinates without project rank definitions.
+acknowledgements: >-
+  OpenAI for the original numerical bound and proof architecture; the preceding
+  all-fields formalization; Lean and Mathlib; and the vendored fixed-point
+  formalization by harfe, whose separate MIT license is retained. This project
+  is Apache-2.0 and retains the imported provenance and licenses.
