@@ -7,12 +7,15 @@ message: >-
 type: software
 title: 'The Matrix Multiplication Bound ω ≤ 9/4 over Associative Rings'
 version: 0.1.0
+date-released: '2026-10-09'
+doi: '10.5281/zenodo.23268534'
+commit: 2d2cc89859d17d3143cd40c4a4b3df49801aa533
 authors:
   - family-names: Navot
     given-names: Sela
     orcid: 'https://orcid.org/0009-0001-8002-5835'
 repository-code: 'https://github.com/selanavot/omega_le_nine_quarters_all_rings'
-url: 'https://github.com/selanavot/omega_le_nine_quarters_all_rings'
+url: 'https://zenodo.org/records/23268534'
 license: Apache-2.0
 abstract: >-
   A Lean formalization establishing that the matrix multiplication exponent

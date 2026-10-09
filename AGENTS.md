@@ -24,10 +24,16 @@ protocol; both temporary artifacts were removed. Do not create a duplicate
 submission. The access token and private review are outside Git; never publish
 them in this repository. Registry mechanical verification also passed in run
 37969772632; see verification/palomar for both public receipts. The latest
-submission/review API requests returned HTTP 500, so editorial status is unknown.
-Zenodo draft 23268534 is saved and unpublished with the five checked release
-files from the approved snapshot. Do not create a duplicate record. Zenodo
-publication still needs approval of this concrete deposit/release.
+submission status is `verification-error`: Palomar could not complete the
+Challenge renderability check, and editorial review has not started.
+On 2026-10-09 Sela explicitly requested that the existing Zenodo upload be made
+live. Record 23268534 is now published as version 0.1.0 with the same five
+checked release files from the approved snapshot. Its version DOI is
+10.5281/zenodo.23268534 and concept DOI is 10.5281/zenodo.23268533.
+Do not create a duplicate record or replace the frozen release with later docs.
+Sela also explicitly authorized merging the documentation PR prepared on
+`docs/zenodo-publication` after its edits and validation are complete; that
+authorization is specific to this publication update.
 Permanent Palomar registration requires a further explicit instruction after
 Sela receives the complete review; submission approval is not that instruction.
 See docs/ZENODO.md and docs/PALOMAR.md for the current publication steps.

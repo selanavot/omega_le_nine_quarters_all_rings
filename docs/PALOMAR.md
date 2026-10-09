@@ -17,9 +17,12 @@ The registry's [verification run](https://github.com/PalomarRegistry/PalomarSubm
 also completed successfully; its bounded mechanical report says `pass` and
 `complete` for the same snapshot and six claims. Both reports are retained in
 the public receipt. This does not establish that editorial review is complete.
-The submission and private-review API endpoints returned HTTP 500 on the latest
-checks, so the review state is currently unavailable. Preserve the existing
-submission and token; a service error is not a reason to resubmit.
+After earlier HTTP 500 responses, the submission API now reports
+`verification-error`: Palomar could not complete the Challenge renderability
+check after multiple attempts. The final recorded attempt failed at
+2026-10-09 20:54:31 UTC. Editorial review has not started; the review endpoint
+returns HTTP 404. No detailed rendering diagnostic is exposed. Preserve the
+existing submission and token; do not create a duplicate intake.
 The confirmed human credit describes orchestration and responsibility, not
 handwritten proofs or prose. Permanent registration still needs explicit
 approval after Sela receives the complete review.

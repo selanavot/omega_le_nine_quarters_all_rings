@@ -1,5 +1,18 @@
 # Status
 
+## Zenodo publication
+
+On 2026-10-09 Sela requested that the existing upload be made live and the
+README updated. [Zenodo record 23268534](https://zenodo.org/records/23268534)
+is now published and open as version 0.1.0. The version DOI
+[10.5281/zenodo.23268534](https://doi.org/10.5281/zenodo.23268534) resolves to
+the published record; [10.5281/zenodo.23268533](https://doi.org/10.5281/zenodo.23268533)
+is its concept DOI. The five published file checksums match the prepared
+release at `2d2cc89859d17d3143cd40c4a4b3df49801aa533`.
+See [the release record](ZENODO.md). This documentation update does not
+change the proof, paper or frozen archive. Sela authorized merging the
+specific `docs/zenodo-publication` PR after editing and validation.
+
 ## Algebraic-structure diagram
 
 After Sela merged PR #3 at `505371ebed8922bedcc95ae5bcb6e1262323a947`,
@@ -27,15 +40,16 @@ Palomar intake `pq5sjorephuw` was submitted with authorization relationship
 `maintainer`; the temporary ownership tag and secret gist were removed.
 The registry's mechanical verification also passed:
 https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/37969772632.
-The report is retained beside the preflight receipt. The submission and review
-API endpoints subsequently returned HTTP 500; editorial review status is unknown.
+The report is retained beside the preflight receipt. After earlier HTTP 500
+responses, the submission API reports `verification-error`: Palomar could not
+complete the Challenge renderability check after multiple attempts. Editorial
+review has not started, and no private review is available.
 Do not create a duplicate submission. Permanent registry
 registration remains a later decision after Sela views the actual review.
-Zenodo draft [23268534](https://zenodo.org/uploads/23268534) is saved and
-unpublished, with the five release files from the approved snapshot. The saved
-preview confirms the creator, license, version, AI disclosure and related works;
-all five displayed MD5 checksums match the local release files. Publication has
-not been authorized or performed. See [ZENODO.md](ZENODO.md).
+Zenodo [23268534](https://zenodo.org/records/23268534) is now published with
+the five release files from the approved snapshot. The public record confirms
+the creator, license, version, AI disclosure and related works; all five
+displayed MD5 checksums match the local release files. See [ZENODO.md](ZENODO.md).
 
 The sections below retain the earlier preparation and proof snapshots.
 
@@ -151,6 +165,7 @@ kernel. The export method received a separate source review.
 
 Owner status files retain chronological development notes. This status and
 the current receipt supersede earlier pending-build descriptions.
-PRs #1, #2 and #3 are merged. Continue diagram documentation on
-`docs/algebraic-structures` through a new PR; obtain Sela's specific approval
-before merging that PR. Keep the submitted snapshot unchanged.
+PRs #1–#4 are merged. Continue the Zenodo documentation on
+`docs/zenodo-publication` through its own PR; Sela has specifically authorized
+merging that PR after editing and validation. Keep the archived and submitted
+snapshot unchanged.

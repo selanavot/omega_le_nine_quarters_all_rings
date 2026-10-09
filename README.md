@@ -1,5 +1,7 @@
 # Matrix multiplication: ω ≤ 9/4 over every ring
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23268534.svg)](https://doi.org/10.5281/zenodo.23268534)
+
 OpenAI proved ω ≤ 9/4 over the complex numbers in its
 [matrix multiplication preprint](https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Matrix-Multiplication-Nine-Fourths-October-2-2026/paper.pdf).
 Our [earlier all-fields extension](https://github.com/selanavot/matrix-multiplication-all-fields)
@@ -95,16 +97,22 @@ associated with its repository commit.
 
 ## Citation and archival release
 
-[CITATION.cff](CITATION.cff) describes the software citation, and
-[.zenodo.json](.zenodo.json) supplies the proposed Zenodo archive metadata.
-The archive includes the Lean development, paper and verification records.
+Version **0.1.0** is published on [Zenodo](https://zenodo.org/records/23268534):
+**[DOI 10.5281/zenodo.23268534](https://doi.org/10.5281/zenodo.23268534)**.
+The archive preserves source snapshot
+[`2d2cc89859d17d3143cd40c4a4b3df49801aa533`](https://github.com/selanavot/omega_le_nine_quarters_all_rings/tree/2d2cc89859d17d3143cd40c4a4b3df49801aa533),
+including the Lean development, paper, verification records, Git history bundle
+and checksums. Later repository documentation is outside that frozen release.
+Use the version DOI to cite this exact archive; the
+[concept DOI](https://doi.org/10.5281/zenodo.23268533) identifies the evolving project.
+
+[CITATION.cff](CITATION.cff) supplies the software citation, and
+[.zenodo.json](.zenodo.json) retains the archive metadata and attribution.
 The creator credit describes human direction of the project; the proof
 development and manuscript remain explicitly disclosed as AI-generated.
-The Zenodo release is prepared as an unpublished draft; no registered Zenodo
-DOI or Palomar registration is claimed.
 
-See [Zenodo release preparation](docs/ZENODO.md) and
-[Palomar submission preparation](docs/PALOMAR.md). Palomar runs its own
+See the [Zenodo release record](docs/ZENODO.md) and
+[Palomar submission status](docs/PALOMAR.md). Palomar runs its own
 verification against a fixed public commit; the local verification receipt
 does not substitute for that registry workflow.
 The [full Palomar mechanical preflight and registry verification passed](verification/palomar/README.md)
