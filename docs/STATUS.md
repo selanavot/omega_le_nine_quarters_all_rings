@@ -1,6 +1,34 @@
 # Status
 
-## Release preparation
+## Public release and Palomar preflight
+
+On 2026-10-09 Sela explicitly approved merging PR #2, making this repository
+public, using Sela Navot as creator/responsible maintainer, and submitting
+`2d2cc89859d17d3143cd40c4a4b3df49801aa533` with `comparator.json` to Palomar.
+PR #2 is merged at `83923f946c6834ae392aa40c5169191745d9e519`; GitHub visibility
+is public. The approved proof snapshot remains unchanged.
+
+The full official preflight passed, with empty report error and warning lists:
+https://github.com/selanavot/omega_le_nine_quarters_all_rings/actions/runs/37967750557
+Request ID: `ringsfull001`. The bounded report is retained in
+[verification/palomar](../verification/palomar/README.md).
+Palomar intake `pq5sjorephuw` was submitted with authorization relationship
+`maintainer`; the temporary ownership tag and secret gist were removed.
+The registry's mechanical verification also passed:
+https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/37969772632.
+The report is retained beside the preflight receipt. The submission and review
+API endpoints subsequently returned HTTP 500; editorial review status is unknown.
+Do not create a duplicate submission. Permanent registry
+registration remains a later decision after Sela views the actual review.
+Zenodo draft [23268534](https://zenodo.org/uploads/23268534) is saved and
+unpublished, with the five release files from the approved snapshot. The saved
+preview confirms the creator, license, version, AI disclosure and related works;
+all five displayed MD5 checksums match the local release files. Publication has
+not been authorized or performed. See [ZENODO.md](ZENODO.md).
+
+The sections below retain the earlier preparation and proof snapshots.
+
+## Historical release preparation (before PR #2 merged)
 
 PR #1 was merged by Sela at `97298f64dc4ae420a104db473b6a74162a280729`.
 Branch `release/zenodo-palomar` prepares citation/archive metadata and the
@@ -112,4 +140,6 @@ kernel. The export method received a separate source review.
 
 Owner status files retain chronological development notes. This status and
 the current receipt supersede earlier pending-build descriptions.
-Continue changes through PR #1; obtain Sela's specific approval before merging.
+PRs #1 and #2 are merged. Continue publication documentation on
+`docs/publication-status` through a new PR; obtain Sela's specific approval
+before merging that PR. Keep the submitted snapshot unchanged.

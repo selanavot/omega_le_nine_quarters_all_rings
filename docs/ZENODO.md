@@ -1,10 +1,53 @@
 # Zenodo release preparation
 
-Status: metadata prepared for **0.1.0**, not published. No DOI has been
-assigned to this project. The repository is private. Sela's confirmation of
-the proposed creator credit and authorization of public release are pending.
-The `open` access setting in `.zenodo.json` describes the proposed publication;
-it does not publish files or authorize a change in repository visibility.
+Status: **0.1.0** is saved as unpublished
+[Zenodo draft 23268534](https://zenodo.org/uploads/23268534).
+Its [preview](https://zenodo.org/records/23268534?preview=1) requires access to
+the intended Zenodo account. No version DOI has been reserved or registered.
+The preview displays the automatically allocated concept DOI
+`10.5281/zenodo.23268533`, explicitly unregistered until first publication;
+do not cite it as a published archive. Sela confirmed the creator/maintainer credit and
+approved making the repository public. The repository is now public, and
+[PR #2](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/2)
+was merged at `83923f946c6834ae392aa40c5169191745d9e519` with explicit approval.
+Publishing the concrete Zenodo deposit/release remains a separate approval step.
+The `open` access setting in `.zenodo.json` does not itself publish anything.
+
+The approved Palomar snapshot is
+`2d2cc89859d17d3143cd40c4a4b3df49801aa533` with `comparator.json`. Its
+[full mechanical preflight](https://github.com/selanavot/omega_le_nine_quarters_all_rings/actions/runs/37967750557)
+passed, and Palomar intake `pq5sjorephuw` was submitted. This does not establish
+editorial approval or permanent registry registration.
+
+## Saved draft and uploaded files
+
+The draft was saved and its preview inspected on 2026-10-09. It contains the
+title, Software type, version 0.1.0, creator Sela Navot with the confirmed ORCID
+and no affiliation, Apache-2.0 license, English language, Lean programming
+language, six keywords, and all four related identifiers from `.zenodo.json`.
+The description preserves the AI disclosure, attribution, scope and limitations,
+and adds the exact source snapshot and Git-bundle reproduction note.
+The draft publication date is 2026-10-09, when the source became public.
+
+All five uploads reached 100%; their displayed MD5 checksums match the local
+files byte for byte. The release is frozen at
+`2d2cc89859d17d3143cd40c4a4b3df49801aa533`:
+
+| File | Bytes | Uploaded MD5 |
+| --- | ---: | --- |
+| `omega_le_nine_quarters_all_rings-0.1.0.zip` | 771958 | `e9ec7c45335b64bed6118d45cda6e80c` |
+| `paper.pdf` | 298585 | `07940ef8e98692f851168cc70f00f3a2` |
+| `source-history.bundle` | 738269 | `ff7dd209bf2d8f8fcbafdcc655997350` |
+| `RELEASE.json` | 548 | `9d2d48284425d987d96b7517ae09ed24` |
+| `SHA256SUMS` | 352 | `cea738464868171f2070649793cb5fd8` |
+
+The source ZIP passed integrity checking and contains the committed PDF.
+The history bundle was restored separately and the baseline specification audit
+passed there. The supplementary SHA-256 manifest covers the release files.
+Later publication-status documentation and Palomar reports are outside this
+frozen release. The saved preview explicitly states that the record has not
+yet been published. Do not create a second draft or trigger automatic archival
+for this same release.
 
 ## Record and attribution
 
@@ -20,15 +63,15 @@ cross-link the real software and paper DOIs using `isDocumentedBy` and
 | Title | The Matrix Multiplication Bound ω ≤ 9/4 over Associative Rings |
 | Resource type | Software |
 | Version | 0.1.0, matching `lakefile.lean` |
-| Proposed creator | Sela Navot, human direction of the project |
+| Confirmed creator | Sela Navot, human direction and responsible maintenance of the project |
 | ORCID | 0009-0001-8002-5835 |
 | License | Apache-2.0, with the retained MIT license for the five vendored fixed-point modules |
-| Publication date | Set to the actual release date when publishing; omitted from prepared metadata |
-| DOI | Omitted until Zenodo reserves or issues a real identifier |
+| Publication date | 2026-10-09 in the saved draft; date the source first became public |
+| DOI | No registered DOI; the preview's concept identifier is not yet registered |
 
 The creator name and ORCID were copied from the prior all-fields project's
 existing `CITATION.cff`, not inferred from a name search. Zenodo requires a
-creator, and that credit appears in its citation. The proposed software credit
+creator, and that credit appears in its citation. The confirmed software credit
 does not add an author byline, date or author metadata to the PDF.
 [Zenodo creator documentation](https://help.zenodo.org/docs/deposit/describe-records/creators/).
 
@@ -51,8 +94,9 @@ license and claims aligned. The Apache-2.0 archive-level value does not override
 
 ## Release contents and reproduction
 
-Freeze one reviewed commit after the metadata PR is merged with Sela's specific
-approval. Prepare these files from that exact commit:
+PR #2 merged the reviewed metadata. Record the exact commit chosen for the
+Zenodo release; do not silently substitute later documentation changes for
+the approved Palomar snapshot. Prepare these files from that exact commit:
 
 - One source ZIP containing tracked Lean sources, toolchain and dependency
   pins, paper source and PDF, build instructions, licenses, provenance,
@@ -81,15 +125,15 @@ preserve reproducibility and resolve the packaging with Zenodo before claiming
 Software Heritage archival.
 [Manual software-upload documentation](https://help.zenodo.org/docs/github/archive-software/manual-upload/).
 
-## Manual draft, keeping GitHub private
+## Manual draft
 
-This is the prepared path while repository visibility remains private. Zenodo's
-GitHub integration has no access to private repositories.
-[Official GitHub-permissions FAQ](https://support.zenodo.org/help/en-gb/24-github-integration/127-which-github-permissions-do-you-request-and-why).
+The manual path remains available now that the repository is public. It allows
+review of one concrete deposit before publication. GitHub integration is an
+alternative below; do not create duplicate records for the same release.
 
-1. Finish local metadata validation and review; merge the preparation PR only
-   with approval identifying that PR. Freeze the exact release commit and
-   prepare the files above.
+1. Metadata validation, review and the approved PR #2 merge are complete.
+   Freeze the exact release commit and prepare the files above. Any further
+   repository changes require their own PR and specific merge approval.
 2. In the intended Zenodo account, create a new upload with resource type
    **Software**. Upload the release files and copy the prepared metadata.
    Verify the creator and provenance in the actual form; uploading
@@ -97,9 +141,9 @@ GitHub integration has no access to private repositories.
 3. Save the draft. A real DOI may be reserved in the draft if needed, but do
    not invent one or copy the older project's DOI. Use the eventual public
    release date in the publication-date field.
-4. Review the concrete draft and files with Sela. Publishing an open archive
-   exposes those files even if the GitHub repository stays private. Obtain the
-   required public-release authorization before publishing.
+4. Review the concrete draft and files with Sela. Obtain approval to publish
+   that Zenodo deposit; the completed GitHub visibility change does not itself
+   publish or approve the archival deposit.
 5. After publication, verify the record's files, checksums, version, creator,
    license and related identifiers. Record the issued version DOI and URL in a
    follow-up metadata PR. Confirm any Software Heritage link separately.
@@ -110,8 +154,8 @@ a saved, unpublished draft is the preparation state here.
 
 ## GitHub integration alternative
 
-Use this path only if Sela authorizes making the repository public and its
-public release. Link the intended GitHub and Zenodo accounts, sync repositories
+The public-repository prerequisite is satisfied. After approval of the concrete
+archival release, link the intended GitHub and Zenodo accounts, sync repositories
 and enable this repository in Zenodo **before** creating the release. Include
 the reviewed metadata in the chosen release commit, then publish GitHub release
 `v0.1.0`. The enabled integration archives releases automatically, so publishing
@@ -148,7 +192,8 @@ generator or bit-complexity theorem is claimed.
 
 ## Checks before publication
 
-- Confirm creator credit, public-release authorization and the selected path.
+- Creator credit and public GitHub visibility are confirmed. Select the
+  archival path and obtain approval for the concrete Zenodo publication.
 - Validate both metadata files and check `0.1.0` against the package version.
 - Confirm the archive and PDF come from the same immutable release commit.
 - Verify licenses, upstream source pins, the Git bundle and file checksums.

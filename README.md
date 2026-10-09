@@ -81,12 +81,16 @@ associated with its repository commit.
 The archive includes the Lean development, paper and verification records.
 The creator credit describes human direction of the project; the proof
 development and manuscript remain explicitly disclosed as AI-generated.
-No Zenodo DOI or Palomar registration is claimed until one is issued.
+The Zenodo release is prepared as an unpublished draft; no registered Zenodo
+DOI or Palomar registration is claimed.
 
 See [Zenodo release preparation](docs/ZENODO.md) and
 [Palomar submission preparation](docs/PALOMAR.md). Palomar runs its own
 verification against a fixed public commit; the local verification receipt
 does not substitute for that registry workflow.
+The [full Palomar mechanical preflight and registry verification passed](verification/palomar/README.md)
+for the submitted snapshot. Permanent registration remains pending;
+no registry acceptance is claimed.
 
 ## Build and verify
 

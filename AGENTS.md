@@ -1,13 +1,36 @@
 # Matrix multiplication over rings
 
-## Authorized scope and privacy
+## Authorized scope and publication
 
-Sela authorized this NEW PRIVATE repository `selanavot/omega_le_nine_quarters_all_rings`
-for the Lean proof and paper of the reviewed integral/ring extension.
-Keep it PRIVATE. Do not change its visibility. The old proof repository and
-unrelated local research remain read-only; do not push this work there.
+Sela originally authorized this repository
+`selanavot/omega_le_nine_quarters_all_rings` as private for the Lean proof and
+paper of the reviewed integral/ring extension. On 2026-10-09, Sela explicitly
+approved merging PR #2, making this repository public, and crediting Sela Navot
+as its human creator and responsible maintainer. PR #2 was merged at
+`83923f946c6834ae392aa40c5169191745d9e519`; the repository is now public.
+The old proof repository and unrelated local research remain read-only; do not
+push this work there.
 Push checkpoints and open/update a PR here. Each merge requires Sela's
-explicit approval identifying that particular PR.
+explicit approval identifying that particular PR; PR #2's approval does not
+authorize later merges.
+
+Sela approved Palomar submission of the immutable snapshot
+`2d2cc89859d17d3143cd40c4a4b3df49801aa533` with root `comparator.json`, as the
+responsible maintainer. Its full mechanical preflight passed:
+https://github.com/selanavot/omega_le_nine_quarters_all_rings/actions/runs/37967750557.
+Do not replace that approved snapshot with later documentation commits.
+Palomar intake `pq5sjorephuw` has been submitted using its required tag/gist
+protocol; both temporary artifacts were removed. Do not create a duplicate
+submission. The access token and private review are outside Git; never publish
+them in this repository. Registry mechanical verification also passed in run
+37969772632; see verification/palomar for both public receipts. The latest
+submission/review API requests returned HTTP 500, so editorial status is unknown.
+Zenodo draft 23268534 is saved and unpublished with the five checked release
+files from the approved snapshot. Do not create a duplicate record. Zenodo
+publication still needs approval of this concrete deposit/release.
+Permanent Palomar registration requires a further explicit instruction after
+Sela receives the complete review; submission approval is not that instruction.
+See docs/ZENODO.md and docs/PALOMAR.md for the current publication steps.
 
 ## Trusted specification
 
