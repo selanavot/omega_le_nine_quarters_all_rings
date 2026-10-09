@@ -2,7 +2,7 @@
 
 This is a focused source fork of the [all-fields extension](https://github.com/selanavot/matrix-multiplication-all-fields/tree/08481ef22bca7dc9ffba091083b7c1e81e537220),
 which derives from [OpenAI's mathematics repository](https://github.com/openai/math/tree/adc7f1241b42e322a6451854ab7e4b4c146bf78a).
-It is a separate private repository, not a GitHub fork relationship.
+It is a separate repository, not a GitHub fork relationship.
 
 OpenAI's *An Upper Bound of 9/4 for the Matrix Multiplication Exponent*
 (October 2, 2026) supplies the numerical bound, auxiliary separation,
