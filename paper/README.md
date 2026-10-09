@@ -7,11 +7,14 @@ OpenAI's original result and the prior all-fields extension are explicitly
 credited in the paper. There is no author byline or document date; the source
 and PDF are associated with their repository commit.
 
-**Current status:** the complete AllRings entry point compiled in queue request
-2aa7a8, including the integer rank bound, arbitrary-ring exponent theorem, and
-explicit operation-count corollary. Transport axioms are clean. Final axiom
-audits, fresh-kernel replay, and Comparator checks remain pending. The PDF
-distinguishes these checks and does not claim peer review.
+**Verification:** the complete AllRings entry point compiled, including the
+integer rank bound, arbitrary-ring exponent theorem, and explicit operation-count
+corollary. Six audited claims use only the three standard Lean axioms. Fresh
+replay of their complete dependencies and frozen-specification Comparator checks
+passed, including all six bundled checkers. See the
+[verification records](../verification/comparator/README.md) for commands and
+scope. These checks validate the formal declarations; the PDF and separate AI
+source reviews are not human peer review.
 
 - [PDF](paper.pdf)
 - [LaTeX source](paper.tex)

@@ -1,5 +1,11 @@
 # Integral spectral detection port
 
+**Final coordinator update (2026-10-09):** the full ring theorem, fresh-kernel
+replay, Comparator, and both failure controls passed. See [STATUS.md](STATUS.md)
+and the [verification receipt](../verification/comparator/RESULTS.md).
+The chronological notes below preserve earlier work stages; their pending
+descriptions are superseded by that final evidence.
+
 Owner: ring_spectrum. Status: full primitive spectral detection and division-free
 character transport compiled successfully. Final 9/4 theorem remains separate.
 

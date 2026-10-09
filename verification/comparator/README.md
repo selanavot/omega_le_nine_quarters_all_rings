@@ -1,9 +1,9 @@
 # Frozen-model Comparator verification
 
-Status: harness prepared; current end-to-end Comparator and fresh-kernel runs
-have not yet been recorded. Do not infer a verification result from the presence
-of these files. Completed results will be saved here after the coordinator runs
-the commands below.
+Status: **passed on 2026-10-09**, including the fresh-kernel replay, native
+Comparator with all six bundled checkers, and both deliberate failure controls.
+See [RESULTS.md](RESULTS.md) for the tested revision, commands, exact outcomes,
+log hashes, and scope. No proof or harness source changed during either run.
 
 The harness uses native `lake comparator` from Lean **4.35.0-rc4**, with its
 bundled independent kernel checkers requested by `--paranoid`. The local run
@@ -74,12 +74,21 @@ bash scripts/check-kernel.sh
 python3 scripts/check-comparator.py --trusted-local --negative-controls
 ```
 
-`check-kernel.sh` builds KernelAudit and runs `leanchecker --fresh --verbose`.
-This replays imported declarations in a fresh environment using **Lean's own
-kernel**. It is distinct from the independent bundled kernels requested by
-Comparator. Dependency validation verifies source checkouts and revisions;
-generated ignored build caches are not independently source-audited by that
-script. The fresh and independent kernel checks provide separate evidence.
+`check-kernel.sh` builds KernelAudit, then uses `leanexport` to export the six
+Solution claims and their complete transitive dependencies, including types,
+proof bodies, definition values, and inductive/recursor dependencies.
+`leanchecker --from-export` replays that closure into an empty environment
+using **Lean's own kernel**. It omits unrelated imported Mathlib declarations,
+not dependencies of the claims. This is distinct from the independent bundled
+kernels requested by Comparator. The procedure received a separate
+[source-review addendum](../../docs/adversarial/reproducibility.md).
+
+Dependency validation verifies source checkouts and revisions; generated ignored
+build caches are not independently source-audited by that script. The fresh and
+independent kernel checks provide separate evidence. An earlier broad
+`leanchecker --fresh MODULE` run was stopped without a verdict and is not counted
+as passed. No clean-source rebuild or external toolchain-provenance certification
+is claimed.
 
 The negative controls alter copies, never the real specification or proof:
 

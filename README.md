@@ -6,8 +6,10 @@ Our [earlier all-fields extension](https://github.com/selanavot/matrix-multiplic
 establishes the same bound over every field.
 This repository extends the result to arbitrary associative unital
 rings, including noncommutative rings.
-The full theorem compiles in Lean. Independent verification is in progress;
-see [current status](docs/STATUS.md).
+The full theorem compiles in Lean and has passed its axiom audit, fresh-kernel
+replay, and frozen-specification Comparator checks with all six bundled checkers.
+See [verification details](verification/comparator/README.md) and
+[current status](docs/STATUS.md).
 
 **Both the extension's Lean proof development and the [paper](paper/paper.pdf)
 are AI-generated with Codex under human direction.** The numerical exponent
@@ -82,7 +84,8 @@ python3 scripts/check-comparator.py --trusted-local --negative-controls
 The specification checker freezes the original model plus only the seven
 approved typeclass substitutions. Comparator checks six statements, including
 BddBelow, the lower bound, direct costs, and exact integer coefficients.
-Its deliberate controls must reject changed multiplication cost and `sorry`.
+Its deliberate controls rejected changed multiplication cost and `sorry` for
+the expected reasons; see the [completed verification receipt](verification/comparator/RESULTS.md).
 The local Comparator command disables its build sandbox; it is not a claim
 of sandboxed source-provenance verification. See [audit details](verification/comparator/README.md).
 

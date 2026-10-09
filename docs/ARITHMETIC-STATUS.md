@@ -119,7 +119,9 @@ theorem OAI.MatrixMultiplication.omega_le_nine_quarters_all_rings.{u} :
   ∀ (R : Type u) [Ring R] [Nontrivial R], Arithmetic.omega R ≤ 9 / 4
 ```
 
-Fresh-kernel and Comparator harnesses are owned by the spectrum agent.
+Fresh-kernel and Comparator harnesses were implemented by the spectrum agent.
+The coordinator's completed runs, including both failure controls, are recorded
+in [the verification receipt](../verification/comparator/RESULTS.md).
 Legacy `AllFields.lean` is retained, but its separate full entrypoint build
 is not part of this final ring-target check.
 

@@ -1,50 +1,76 @@
 # Status
 
-2026-10-09. Repository and draft PR #1 are PRIVATE. Branch: prove-all-rings.
+2026-10-09. Branch: prove-all-rings.
 https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/1
 
-**The full ring 9/4 theorem and final axiom audit compile. Independent kernel/Comparator runs are in progress.**
+**The full ring 9/4 theorem, fresh-kernel replay, Comparator, and both deliberate
+failure controls passed.** The paper and committed PDF are ready for review.
+The repository remains private until Sela authorizes publication. No PR merge
+is authorized. Paper and README use wording suitable for joint publication.
 
 Target: `omega_le_nine_quarters_all_rings (R : Type u) [Ring R] [Nontrivial R]`.
 Lean 4.35.0-rc4 and mathlib f0469b25d97aef3998d4bc06f6f01da670b3d18e
-are installed and pinned. The checkout has independent physical dependencies.
+are pinned. The checkout has independent physical dependency sources.
 
-## Confirmed compiler evidence
+## Proven scope
 
-- Ring arithmetic model, programs, naive bound, output-count lower bound,
-  BddBelow, and omega >= 2. The model has only seven Field -> Ring changes.
-- Integer coefficient identities produce recursive arithmetic programs over
-  arbitrary rings; the unconditional bridge omega(R) <= exactRankExponent(Z)
-  is checked, including ordered products for noncommutative rings.
-- Primitive tensor subsemiring, character extension, and detecting characters
-  for integer exact rank. Negative control excludes scalar-2 -> scalar-1 over Z.
-- Coefficient extraction, finite free rank/restriction descent, monic quotient
-  projection, Vandermonde norm clearing, finite field lift, and finite Bezout
-  patch. The complete convolution power rank and character bound compile.
-- Cyclotomic algebra/unit/basis/projection; unnormalized Fourier sum;
-  polynomial separation construction; integer restriction descent compile.
-- Generic determinant/sector/tag/profile argument compiles: explicit separation
-  and convolution assumptions imply each character exponent sum <= 9/4.
-- SpectrumAudit and TransportAudit report only propext, Classical.choice,
-  and Quot.sound for the audited intermediate declarations.
+- Exact integer coefficient tensor-rank exponent is at most 9/4.
+- The arithmetic exponent over every nontrivial associative unital ring is
+  at most 9/4, including noncommutative rings.
+- For every ring and every positive epsilon, one constant bounds correct
+  programs at every positive matrix size by C*n^(9/4+epsilon).
+- Boundedness and nonemptiness of the admissible set, and the lower bound 2
+  for nontrivial rings, are proved.
+- The arithmetic model differs from the imported baseline by exactly seven
+  Field-to-Ring substitutions. All other model bytes are preserved.
+- No smaller numerical exponent, exact O(n^(9/4)) endpoint, efficient uniform
+  circuit generator, or bit-complexity theorem is claimed.
 
-## Complete theorem evidence
+## Completed checks
 
-- Integral finite separation passed request50abc3.
-- AllRings, OAI and FinalAudit passed request2aa7a8 (9175 jobs), no source
-  changes during the build. Printed target has only Ring R and Nontrivial R.
-  Exact integer rank, main ring theorem, BddBelow, lower bound and direct cost
-  statements all use only the three standard axioms listed above.
-- Comparator Challenge, Solution and guarded KernelAudit passed053bf2.
-- The original AllFields entry point also passed4a30e6 (9165 jobs).
-- Specification hash check and all nine pinned source dependencies pass.
+- AllRings, OAI and FinalAudit: request 1791557812451628000-2aa7a8,
+  exit 0, 9175 build-graph jobs, no concurrent source changes.
+- Comparator Challenge, Solution and guarded KernelAudit:
+  request 1791557832666381000-053bf2, exit 0, 9176 jobs.
+- Legacy AllFields: request 1791557921875737000-4a30e6,
+  exit 0, 9165 jobs.
+- Six audited claims depend only on propext, Classical.choice and Quot.sound.
+- Model/Challenge specification hashes and all nine pinned dependency source
+  checkouts passed.
+- The complete six-claim proof dependency closure was exported and replayed
+  into a fresh Lean kernel; exit 0 and unchanged source snapshot.
+- Native frozen-specification Comparator passed with its Lean paranoid,
+  lean4lean, nanoda, con-leche, con-ron and default Lean checkers.
+- The altered multiplication-cost control was rejected at Arithmetic.Gate.cost.
+  The deliberately unproved epsilon-cost theorem was rejected for sorryAx.
+  Both controls failed for their required reasons; temporary sources were removed.
+- Three separate adversarial AI reviews found no blocking defect. Their
+  reports and limits are in [adversarial/](adversarial/).
+- Both LaTeX compilers passed. All six rendered pages were inspected; there
+  are no unresolved references or box warnings, author metadata, or PDF dates.
+  The abstract cites the prior all-fields extension beside OpenAI's complex result.
 
-## Remaining
+The commands, exact versions, log hashes and concise output excerpts are in
+[the verification receipt](../verification/comparator/RESULTS.md).
+Dependency caches were reused; this is not a clean-source rebuild or an
+externally authenticated toolchain-provenance audit. Comparator used trusted
+local sources with its build sandbox explicitly disabled. Formal checks
+validate Lean declarations, not the prose manuscript or historical novelty.
 
-- Fresh-kernel replay and native Comparator with deliberate negative controls.
-- Three fresh adversarial reviews are underway.
-- Paper source/PDF compile and every page has been rendered and inspected;
-  final verification wording will be updated after the remaining checks.
+## Restart notes
 
-Build requests/logs are ignored under .lake/ring-queue. Only root runs the
-worker. Owner details are in ARITHMETIC/SPECTRUM/TRANSPORT-STATUS.md.
+The serialized build worker is stopped. Detailed build and audit logs are
+ignored under .lake. All proof/harness sources were frozen during the final
+runs. The audited code and harness are at commit 2553d35; later changes are
+paper and documentation only.
+
+An earlier broad leanchecker --fresh MODULE run was stopped without a verdict.
+It is not counted as a successful check. The completed replacement exports
+the six claims and every dependency, then replays that closure using
+leanchecker --from-export into an empty kernel. This method received a
+separate source-review addendum.
+
+Owner files ARITHMETIC/SPECTRUM/TRANSPORT-STATUS.md retain chronological
+development notes. This status and the verification receipt supersede their
+earlier pending-build descriptions. Continue changes through the existing PR;
+obtain Sela's specific approval before any merge.
