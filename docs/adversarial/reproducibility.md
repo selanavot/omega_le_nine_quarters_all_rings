@@ -115,3 +115,52 @@ check-kernel.sh}`, `lean/ComparatorAudit/{Challenge,Solution,KernelAudit}.lean`,
 `verification/comparator/{pins,config}.json`, `comparator.json`, `lakefile.lean`
 and `lean/OAI.lean`. This fingerprint records the reviewed snapshot, not a
 promise that later changes have been reviewed.
+
+## Addendum: targeted fresh-kernel replay
+
+The coordinator replaced the broad `leanchecker --fresh MODULE` invocation
+with an export of the six frozen Solution targets and their complete proof
+dependencies, followed by `leanchecker --from-export`. The earlier broad run
+was stopped without a completed verdict; it must not be counted as a pass.
+This addendum independently reviews the revised command's coverage. It does
+not report the new run's outcome, which remained the coordinator's task.
+
+I read the revised `scripts/check-kernel.py` and the installed rc4 sources
+`LeanExport.lean`, `LeanExport/Basic.lean` and `LeanChecker.lean`:
+
+- The script still checks the frozen specification and dependencies and builds
+  KernelAudit before export. It reads the six target names from the validated
+  configuration, adds the three allowed axioms and the Quot package, and passes
+  those explicit names after the exporter's `--` separator. It does not enable
+  the exporter's ignore-missing or unsafe-export options.
+- `LeanExport.main` treats the names after `--` as export roots. In
+  `LeanExport.Basic.dumpConstant`, definitions, opaque declarations and
+  theorems each recursively export constants used in **both their types and
+  their values/proof terms**. Axioms export the dependencies of their types.
+  Inductive blocks include their constructors, recursors and dependencies of
+  recursor rule bodies; the Quot package is exported together. The dependency
+  walker calls `dumpConstant` on every name from `Expr.getUsedConstants`.
+  Thus the selection excludes unrelated imported theorems, not intermediate
+  lemmas or definitions used by the six claims.
+- `LeanChecker.checkExport` parses the export, calls
+  `Lean.mkEmptyEnvironment`, and invokes kernel replay on its complete constant
+  map. It does not import Mathlib declarations as already trusted facts into
+  that replay. The automatically generated Quot entries receive the explicit
+  post-check used by native Comparator as well. Replay and post-check errors
+  return a nonzero exit, which the Python script requires to succeed.
+- Kernel replay alone accepts axiom declarations. The standard-axiom
+  restriction continues to be supplied by the guarded KernelAudit build and
+  by Comparator's separate transitive axiom check; the revised export step
+  does not replace or weaken those checks.
+
+This is a valid fresh replay of the complete six-claim proof dependency
+closure. It preserves the relevant kernel-checking claim while avoiding a
+replay of every unrelated declaration imported through `Mathlib`. The earlier
+limits concerning incremental compilation, local toolchain trust and absence
+of hostile-build isolation still apply.
+
+Only `scripts/check-kernel.py` changed among the fingerprinted files. Its new
+SHA-256 is
+`682908cf8a64b961c06ec19012ac593a99b41ae499dbc97c8d83612ec0d0f5f6`.
+The revised canonical file-map SHA-256, calculated by the same method above,
+is `760413387231aaa4a8d4519485a5fa5ed1f573af3baf8ca77bb09c73081fab49`.
