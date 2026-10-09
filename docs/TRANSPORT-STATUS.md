@@ -1,49 +1,77 @@
 # Integral transport status
 
-Owner: omega_constructions / transport. 2026-10-09.
+Owner: omega_constructions / transport. Updated 2026-10-09.
+Toolchain: Lean 4.35.0-rc4, mathlib f0469b25.
 
-Current source drafts (NOT yet compiler verified):
-- Integral/Restriction: concatenate local maps on a finite direct sum; weighted version.
-- Integral/FiniteFreeDescent: fixed finite basis and a supplied unit-splitting
-  linear functional; exact rank and all-power descent with one D² overhead.
-- Integral/CoefficientExtraction: direct polynomial coefficient expansion;
-  `(a+1)(b+1)` source copies, no interpolation or division. The third coefficient
-  has an explicit zero guard when the requested index would be negative.
-- Integral/CoprimePatch: concatenate actual rank decompositions/restrictions
-  with Bezout coefficients, including powers of two coprime scalars.
+## Checked result
 
-Build requests use scripts/lean-queue.py; only the coordinator runs the worker.
-The first request was submitted before the dependency-cache repair notice and
-has not yet supplied compiler evidence. Further requests await cache readiness.
+`Integral.convolution_integer_power_rank (a b : ℕ)` now compiles:
 
-Next: restriction-level finite-free descent; adjugate Vandermonde interpolation
-and multiplication-matrix norm clearing. The latter uses no localization:
-`adj(V)*V = det(V)*I` gives a scheme for Delta times convolution; applying the
-adjugate multiplication-by-Delta matrix to the coordinate vector of 1 produces
-w with Delta*w = det(mulDelta)*1. Distinctness modulo p then proves the integer
-norm is nonzero modulo p. Finite-field lifts and cyclotomic rings remain to be
-integrated after these generic transport lemmas compile.
+```
+∃ C : ℕ, 0 < C ∧ ∀ k : ℕ,
+  Tensor.RankAtMost (Tensor.power (convolution (K := ℤ) a b) k)
+    ((a + b - 1) ^ k * C)
+```
 
-Additional uncompiled source drafts:
-- restriction-level finite-free descent, retaining D² copies of the source;
-- Vandermonde determinant scheme and normCofactor clearing via two adjugates;
-- MonicQuotient: finite basis and constant-remainder projection splitting 1;
-- existing PolynomialApproximation and PolynomialRestrictionDegeneration
-  structures generalized to CommRing (field-only recovery remains scoped);
-- same-structure polynomial degeneration power and exact extraction methods.
+The finite family, finite free algebras, and constant C are chosen before k.
+The theorem asserts exact integer coefficient decompositions, not merely
+fieldwise rank or a reduction modulo each prime. This is one intermediate
+result; it does not by itself assert the final all-rings exponent theorem.
 
-Toolchain migration is now being handled by the coordinator at the user's
-request; the first queue request was interrupted during the old dependency
-repair. No module in this status file has compiler evidence yet.
+## Checked components
 
-Verified compiler progress (rc4): the two original polynomial modules compile
-after the CommRing generalization. Integral/Restriction also compiles, including
-weighted direct sums and tensor-power local maps. FiniteFreeDescent's rank
-lemmas passed elaboration; the restriction-level summation hit the default
-heartbeat limit and is being rechecked with explicit binder types/local limit.
+- `Restriction`: concatenate local maps on direct sums, weighted direct sums,
+  and tensor powers.
+- `FiniteFreeDescent`: expand the first two coefficients in a fixed finite
+  basis and apply a linear functional splitting 1. Rank descent has D²
+  overhead once, including after taking tensor powers.
+- `RestrictionDescent`: the analogous actual local-map restriction with D²
+  copies of the source.
+- `CoefficientExtraction`: direct coefficient expansion with `(a+1)(b+1)`
+  source copies. The third coefficient has an explicit zero guard when the
+  requested degree would be negative. No interpolation or division is used.
+  The existing `PolynomialRestrictionDegeneration` structure has checked
+  `.power` and `.extract` methods.
+- The original `ComplexPolynomialApproximation` and
+  `ComplexPolynomialDegenerationComposition` structures have been generalized
+  to CommRing without changing their definitions; field-only recovery remains
+  in scoped sections.
+- `CoprimePatch`: actual rank/restriction maps with Bezout coefficients;
+  kth-power ideals; one finite Bezout family from prime-avoiding witnesses.
+  The two-source patch with unrelated formats is owned by spectrum in
+  `CharacterTransport.restriction_patch_binary`.
+- `MonicQuotient`: the constant-coefficient remainder projection splits 1 for
+  a positive-degree monic quotient.
+- `Vandermonde`: adjugate interpolation gives determinant-scaled convolution.
+  A second adjugate, for multiplication by that determinant, gives norm
+  clearing. This uses no localization.
+- `ResidueBasis`: basis-preserving specialization commutes with multiplication
+  matrices and their determinants; a nonzero residue detects a prime-avoiding
+  norm.
+- `FiniteFieldLift`: lift a finite-field power basis to a monic integer
+  polynomial quotient, choose lifts of distinct interpolation nodes, and
+  obtain a clearing integer nonzero modulo the specified prime. Take powers
+  in this one fixed quotient, then descend.
+- `ConvolutionRank`: use the integer ideal generated by all prime-local
+  clearing integers to select one finite family. Bezout patches its kth
+  powers for every k, giving the result above.
 
-New source draft: FiniteFieldLift constructs a monic integral lift of a finite-
-field power basis and the prime-avoiding clearing scheme. ConvolutionRank then
-uses an ideal-span argument to select one finite Bezout family, proving a fixed
-constant exact rank overhead for all integer convolution powers. These newer
-modules are queued and NOT verified yet.
+## Compiler evidence
+
+All builds went through the serialized queue, with no direct agent Lean/Lake
+processes. Key requests:
+
+- `0464a4`: RestrictionDescent passed.
+- `84bff6`: CoefficientExtraction, including power/extract, passed.
+- `6280a3`: CoprimePatch passed; clean source was replayed in later builds.
+- `3845d6`: Vandermonde passed.
+- `9d7572`: ResidueBasis passed.
+- `2d19ff`: FiniteFieldLift and ConvolutionRank passed (3150 dependency jobs).
+- `04d40e`: TransportAudit PASSED (3156 dependency jobs). All eight audited
+  transport declarations report only `propext`, `Classical.choice`, and
+  `Quot.sound`; no `sorryAx` or additional axioms.
+
+Spectrum has been notified that its `ConvolutionCharacter` wrapper can now
+consume this compiled result. No edits were made to old repositories, no
+remote operations were performed by this agent, and no final exponent claim
+is made in this status file.

@@ -46,10 +46,15 @@ theorem exists_detecting_character {d k : ℕ} (hd : 2 ≤ d)
       (hcat : D + (m : TensorSemiring.PrimitiveClass K) +
           TensorSemiring.primitiveMatrixClass d * s ≤
         D + (k : TensorSemiring.PrimitiveClass K) * s) : False := by
+    change (D : TensorSemiring.TensorClass K) + (m : TensorSemiring.TensorClass K) +
+        TensorSemiring.matrixClass d * (s : TensorSemiring.TensorClass K) ≤
+      (D : TensorSemiring.TensorClass K) + (k : TensorSemiring.TensorClass K) *
+        (s : TensorSemiring.TensorClass K) at hcat
     by_cases hs : s = 0
-    · have hbad : (D : TensorSemiring.TensorClass K) + m ≤ D := by
-        simpa only [hs, mul_zero, add_zero] using hcat
-      exact not_tensor_add_positive_nat_le_self D hm hbad
+    · subst s
+      have hbad : (D : TensorSemiring.TensorClass K) + m ≤ (D : TensorSemiring.TensorClass K) := by
+        simpa only [ZeroMemClass.coe_zero, mul_zero, add_zero] using hcat
+      exact not_tensor_add_positive_nat_le_self (K := K) (D : TensorSemiring.TensorClass K) hm hbad
     · have hs1 : (1 : TensorSemiring.PrimitiveClass K) ≤ s :=
         TensorSemiring.primitive_one_le_of_ne_zero s hs
       have hbound := tensor_catalytic_obstruction_of_scalar_gain_of_one_le

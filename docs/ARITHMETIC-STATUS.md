@@ -1,123 +1,108 @@
-# Arithmetic ring port
+# Arithmetic and analytic endgame
 
-2026-10-09. Work in progress. Ring model, program/compiler, padding, naive
-algorithm, nontrivial-ring lower bounds, and arithmetic exponent compiled
-on Lean 4.35.0-rc4. Full integer-to-ring bridge retry is queued. Generic
-entropy tag bounds compiled; profile modules have a dependency-scope repair
-queued. The final 9/4 theorem is not yet established.
+2026-10-09. All arithmetic and generic analytic modules assigned to this agent
+have passed target builds on Lean 4.35.0-rc4. The final `AllRings.lean` assembly
+and `FinalAudit.lean` are drafted and queued as `1791557571747002000-a5404e`.
+Their build still depends on the coordinator's integral separation proof.
+Do not treat the final numerical theorem as checked until that build passes.
 
-The existing `Model` and arithmetic program/compiler definitions now use `Ring`
-instead of `Field`. Their defining equations, gate costs, and quantifiers are
-unchanged. The output-count lower bounds use `Nontrivial`; the naive upper
-bound applies even to the zero ring.
+## Unchanged specification
 
-The existing arbitrary-coefficient tensor-rank bridge is retained under
-`CommRing`. Integer-coefficient correctness and recursion over arbitrary
-associative rings are implemented but await compilation. The final interface
-`admissibleExponent_of_int_rank_bounds` consumes exact integer rank schemes
-with arbitrary positive slack and preserves the original cost definition.
+`Model.lean` differs from its inherited version by exactly seven `Field` →
+`Ring` typeclass substitutions. Defining equations, gate costs, correctness
+quantifiers, positive exponent slack, and the infimum are unchanged. Constants
+and inputs cost zero; addition, subtraction, and multiplication cost one.
+Correctness quantifies over all pairs of input matrices.
 
-Build requested: `OAI.LinearAlgebra.MatrixMultiplication.Arithmetic.Exponent`,
-then `OAI.LinearAlgebra.MatrixMultiplication.Arithmetic.Growth`.
-Only the root coordinator starts builds.
+The lower-bound proof uses only `0 ≠ 1`. The admissible-exponent set is bounded
+below by 2 for every nontrivial ring, and its infimum is at least 2. Nontriviality
+is needed here: the zero ring does not have a meaningful bounded-below exponent
+set. The direct operation-count theorem includes the zero ring.
 
-Initial build attempt did not reach Lean sources: the copied mathlib checkout
-was at a different revision from the manifest, and Git could not fetch a
-missing promisor object without network access. The coordinator is restoring
-the pinned dependency cache. This is not evidence about source correctness.
+The final scalar variable is `R`, as requested. Existing auxiliary identifiers
+retain old names to keep the model diff small.
 
-The `Model.lean` diff is exactly seven `Field` → `Ring` typeclass substitutions.
-For the final declaration the scalar type must be named `R`, per Sela's
-explicit preference. Existing auxiliary identifiers retain their old names.
+## Integer schemes over noncommutative rings
 
-## Source-level review of the noncommutative bridge
-
-The new proof expands each output as
+`Arithmetic/RecursiveBlockPrograms.lean` keeps the legacy coefficient-rank
+bridge under `CommRing`. Its new integer bridge expands each output as
 
 ```
 sum_q c_q (sum_x a_qx left_x) (sum_y b_qy right_y).
 ```
 
-All `a`, `b`, and `c` are integer coefficients cast into the target ring.
-`Int.cast_comm` moves only an integer coefficient past an input value.
-No step interchanges `left_x` and `right_y`. The expression becomes
+All coefficients are integers cast into the target ring. `Int.cast_comm` moves
+only an integer coefficient past an input; no step interchanges the left and
+right input values. The result is
 
 ```
 sum_x sum_y (sum_q a_qx b_qy c_q) left_x right_y.
 ```
 
 The exact integer tensor identity reduces the inner sum to the matrix
-multiplication coefficients, 0 or 1. This is coefficient reasoning, not
+multiplication coefficients, zero or one. This is coefficient reasoning, not
 inference from equality of polynomial functions on a finite ring.
 
-The existing block program, expression compiler, and operation-count
-calculation are reused. Thus the recursion has the same overhead
-`6 * rank * blockSize^2 * innerSize^2` in the square case. The only changed
-correctness proof is the integral identity above. The abstract geometric
-recurrence and padding arguments then apply without a commutativity premise.
+The same block program, compiler, padding, and cost recurrence apply. The
+square block overhead remains `6 * rank * blockSize^2 * innerSize^2`.
+`Arithmetic.admissibleExponent_of_int_rank_bounds` selects a finite scheme at
+slack ε/2 and applies recursion at another ε/2, yielding the required ε and
+one constant for all matrix sizes. It does not assert exact O(n^(9/4)) cost.
 
-`admissibleExponent_of_int_rank_bounds` deliberately includes a second
-positive-slack application: choose the fixed integer scheme at epsilon/2,
-then obtain programs from recursion at another epsilon/2. The resulting
-exponent is exactly the requested `tau + epsilon`, with one constant for
-all matrix sizes. No exact O(n^(9/4)) assertion is made.
-
-The zero ring is allowed in this operation-count bridge. Nontriviality is
-required only when deriving a meaningful infimum exponent and its lower
-bound from distinct output functions.
-
-## Final integration interface
-
-`AuxiliarySeparation/Integral/Arithmetic.lean` now contains an unconditional
-bridge, still awaiting compilation:
+`Integral/Arithmetic.lean` proves, without a numerical assumption:
 
 ```
 Integral.omega_le_exactRankExponent_int (R) [Ring R] [Nontrivial R] :
   Arithmetic.omega R <= exactRankExponent Int
 ```
 
-It also exposes the direct positive-slack operation-count statement for every
-ring. The only missing numerical ingredient for the final result is the
-independently proved integral inequality `exactRankExponent Int <= 9/4`.
+It also gives the direct positive-slack circuit-cost theorem for every ring.
+The numerical ingredient is supplied separately in `AllRings.lean`.
 
-## Generic profile and entropy modules
+## Generic character endgame
 
-The root's drafts of Character/{Dot,Permutation,Symmetrization},
-Convolution/{Basic,Symmetry}, and Growth/NormalizedProfile are now assigned
-to this agent for compilation and repair. Their positivity arguments select
-a coefficient equal to one; the old field-only nonzero-tensor wrappers remain.
+Character, convolution, and normalized-profile modules now work over the
+appropriate commutative semiring/ring. Positivity uses an explicit coefficient
+one, rather than the invalid assertion that every nonzero integer tensor
+restricts to the unit. Legacy field wrappers remain available.
 
-Entropy/Tag now also exposes generic `..._of_value_pos` and
-`..._of_coefficient_one` versions of both logarithmic and geometric-mean
-integral-type tag bounds. Existing field theorem statements are retained.
+Entropy/Tag, Tensor/SharedPadding, and Tensor/TagInequality provide generic
+positive-value and coefficient-one tag bounds. Determinant/Character and
+Sector/Character use the division-free polynomial-degeneration character
+comparison, with explicit coefficient-one branch witnesses.
 
-Lean 4.35.0-rc4 and its compatible pinned mathlib cache are now in use per the
-user's request. Arithmetic and profile/entropy module checks have been
-submitted to the serialized queue. No successful check is yet recorded here.
+The generic endpoint is
+`Character.exponent_sum_le_nine_quarters_of_separation_and_convolution`.
+Its two assumptions remain explicit: finite separation for all characters,
+and `chi(convolution a b) <= a+b-1` for all characters. `AllRings.lean`
+discharges them with `Integral.finiteSeparation_bound_int` and
+`Character.value_convolution_le_int`, then uses detecting characters and
+integer rounding to bound the integer rank exponent. No new class or axiom
+hides either obligation.
 
-## Compiler evidence (rc4)
+## Compiler evidence
 
-Queue request `1791555995654232000-2735df` successfully built Model,
-Arithmetic/Complexity, LowerBound, Programs, ProgramComposition, Padding,
-NaiveAlgorithm, Exponent, and Polynomial/ExpressionFamily. In particular,
-`admissibleExponent_bddBelow` and `omega_two_le` now compile for nontrivial
-rings with the original operation model.
+All builds use the serialized queue. Successful request IDs:
 
-RecursiveBlockPrograms reported only three instance-scope errors in legacy
-CommRing correctness lemmas: they still referenced the outer Ring instance.
-The new integer bilinear identity emitted no errors in that compilation, but
-the module as a whole was not accepted. Ring and CommRing scopes have now
-been separated, with retry `1791556206499286000-a85055` pending.
+- `1791556206499286000-a85055`: RecursiveBlockPrograms, Growth,
+  Integral.Arithmetic; core Model, Exponent, LowerBound, compiler, naive
+  algorithm and padding passed in its preceding request.
+- `1791556544880997000-93de23`: generic CharacterRounding.
+- `1791556877119393000-98a61f`: SharedPadding and TagInequality.
+- `1791556924274633000-804b24`: normalized profiles, convolution symmetry,
+  TagInequality and dependencies.
+- `1791557195516484000-76907f`: Determinant.Character and Sector.Character.
+- `1791557237379643000-9d5c82`: generic Polynomial.Inequalities endpoint.
 
-The first profile/entropy request built the generic Entropy.Tag, including all
-four new positivity/coefficient-one variants. Its failure was in downstream
-symmetrization, because the prior Convolution.Basic artifact still carried
-unneeded Nontrivial premises. Those premises are now scoped to actual
-nonzero/equivalence lemmas; the source-output coefficient-one construction is
-generic. A fresh profile request will compile that consistent source state.
+Early dependency-copy failures were setup failures, not Lean proof errors.
+The coordinator repaired the pinned rc4 cache and replaced the inherited
+`.lake/packages` symlink with an independent physical directory. The active
+build environment is isolated inside this repository.
 
-CharacterRounding is now generic over CommSemiring; only the final theorem
-mentioning `exactRankExponent` needs Nontrivial. Its conditional character
-hypotheses remain explicit. ExponentComparison was inspected and is already
-purely real-analytic, so it needed no change. CharacterRounding compilation
-is queued.
+## Final audit scope
+
+`FinalAudit.lean` checks the exact Ring + Nontrivial theorem type, BddBelow,
+the lower bound, the explicit direct-cost correctness quantifiers, and a
+concrete coefficient ring `Matrix (Fin 2) (Fin 2) Int` to catch hidden
+commutativity hypotheses. It prints the model definitions and transitive
+axioms. Fresh-kernel and Comparator harnesses are owned by the spectrum agent.

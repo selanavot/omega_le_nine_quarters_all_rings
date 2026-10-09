@@ -65,12 +65,12 @@ theorem mul_normCofactor {E ι : Type*} [CommRing E] [Algebra R E]
     delta * normCofactor basis delta =
       algebraMap R E (Algebra.leftMulMatrix basis delta).det := by
   apply basis.equivFun.injective
-  change basis.repr (delta * normCofactor basis delta) =
-    basis.repr (algebraMap R E (Algebra.leftMulMatrix basis delta).det)
+  simp only [Module.Basis.equivFun_apply]
   rw [← Algebra.leftMulMatrix_mulVec_repr]
   have hw : (basis.repr (normCofactor basis delta) : ι → R) =
       (Algebra.leftMulMatrix basis delta).adjugate *ᵥ basis.repr 1 := by
-    exact basis.equivFun.apply_symm_apply _
+    simpa only [Module.Basis.equivFun_apply, normCofactor] using basis.equivFun.apply_symm_apply
+      ((Algebra.leftMulMatrix basis delta).adjugate *ᵥ basis.repr 1)
   rw [hw, Matrix.mulVec_mulVec, Matrix.mul_adjugate,
     Matrix.smul_mulVec, Matrix.one_mulVec]
   rw [Algebra.algebraMap_eq_smul_one, map_smul]

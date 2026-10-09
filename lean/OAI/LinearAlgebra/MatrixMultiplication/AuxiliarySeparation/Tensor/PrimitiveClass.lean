@@ -29,11 +29,12 @@ variable {K : Type*} [CommSemiring K] [Nontrivial K]
 /-- The tensor subsemiring on which all nonzero objects dominate the unit. -/
 abbrev PrimitiveClass (K : Type*) [CommSemiring K] [Nontrivial K] :=
   UnitDominating.subsemiring (zero_le (K := K))
-    (fun _ _ _ _ ha hb => add_mono ha hb) (fun _ _ _ _ ha hb => mul_mono ha hb)
+    (fun ha hb => add_mono ha hb) (fun ha hb => mul_mono ha hb)
 
 /-- Matrix multiplication is primitive, including its zero-dimensional boundary. -/
 def primitiveMatrixClass (n : ℕ) : PrimitiveClass K := by
   refine ⟨matrixClass n, ?_⟩
+  change matrixClass n = 0 ∨ 1 ≤ matrixClass (K := K) n
   by_cases hn : n = 0
   · subst n
     left

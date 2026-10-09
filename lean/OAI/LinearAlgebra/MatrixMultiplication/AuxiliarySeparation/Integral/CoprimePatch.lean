@@ -107,7 +107,7 @@ theorem exists_bezout_powers {R ι : Type*} [CommRing R] [Fintype ι]
   have hs : Ideal.span (Set.range d) = ⊤ := by
     apply (Ideal.eq_top_iff_one _).mpr
     change (1 : R) ∈ Submodule.span R (Set.range d)
-    exact Submodule.mem_span_range_iff_exists_fun.mpr ⟨u, by simpa only [smul_eq_mul] using hu⟩
+    exact (Submodule.mem_span_range_iff_exists_fun R).mpr ⟨u, by simpa only [smul_eq_mul] using hu⟩
   have hp := Ideal.span_pow_eq_top (Set.range d) hs k
   have hset : ((fun x : R => x ^ k) '' Set.range d) = Set.range (fun i => d i ^ k) := by
     ext x
@@ -115,7 +115,7 @@ theorem exists_bezout_powers {R ι : Type*} [CommRing R] [Fintype ι]
   rw [hset] at hp
   have hm := (Ideal.eq_top_iff_one _).mp hp
   change (1 : R) ∈ Submodule.span R (Set.range (fun i => d i ^ k)) at hm
-  simpa only [smul_eq_mul] using Submodule.mem_span_range_iff_exists_fun.mp hm
+  simpa only [smul_eq_mul] using (Submodule.mem_span_range_iff_exists_fun R).mp hm
 
 /-- A finite collection of clearing schemes with one Bezout identity patches
 all powers with a constant total overhead. -/
@@ -164,7 +164,7 @@ theorem exists_finite_bezout_of_prime_witness (S : Set ℤ)
     ext x
     simp
   rw [← hrange] at ht
-  obtain ⟨u, hu⟩ := Submodule.mem_span_range_iff_exists_fun.mp ht
+  obtain ⟨u, hu⟩ := (Submodule.mem_span_range_iff_exists_fun ℤ).mp ht
   exact ⟨t, htS, u, by simpa only [smul_eq_mul] using hu⟩
 
 end

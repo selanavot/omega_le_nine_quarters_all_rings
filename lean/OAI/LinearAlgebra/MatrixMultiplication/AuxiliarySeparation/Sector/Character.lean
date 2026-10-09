@@ -8,6 +8,7 @@ See UPSTREAM.md for provenance and changes; Apache-2.0 license retained in LICEN
 
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Sector.Degeneration
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Character.Degeneration
+public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Integral.CharacterTransport
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Polynomial.Laws
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Tensor.TagInequality
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Sector.Branches
@@ -35,7 +36,7 @@ open MatrixMultiplication.Foundation
 
 namespace MatrixMultiplication.AuxiliarySeparation.Sector
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommRing K] [Nontrivial K]
 
 /-- The actual three retained tensors in their original ambient spaces. -/
 def branchFamily (a h : ℕ) (b : Fin 3) :
@@ -93,9 +94,9 @@ theorem sum_branchFamily (a h : ℕ) :
   exact (retained_eq_three_branches (K := K) a h).symm
 
 /-- The character comparison uses the actual polynomial degeneration. -/
-theorem value_retained_le_source [Infinite K] (χ : (Character K)) (a h : ℕ) :
+theorem value_retained_le_source_ring (χ : (Character K)) (a h : ℕ) :
     χ.value (retained (K := K) a h) ≤ χ.value (source (K := K) a h) :=
-  χ.value_polynomialRestrictionDegeneration_le (restriction (K := K) a h)
+  χ.value_polynomialRestrictionDegeneration_le_ring (restriction (K := K) a h)
 
 /-- Both interval labels can be recovered without changing the common first
 input, so the tagged branch tensor has precisely the retained tensor's value. -/
@@ -111,6 +112,25 @@ theorem branchFamily_nonzero {a h : ℕ} (ha : 0 < a) (hh : 0 < h)
   · simpa [branchFamily] using middleTensor_nonzero (K := K) ha hh
   · simpa [branchFamily] using rightTensor_nonzero (K := K) ha hh
 
+/-- All retained branches have a coefficient one in their displayed convolution
+coordinates; the middle branch uses the recorded first-input reversal. -/
+theorem branchFamily_coefficient_one {a h : ℕ} (ha : 0 < a) (hh : 0 < h)
+    (b : Fin 3) : ∃ i j k, branchFamily (K := K) a h b i j k = 1 := by
+  let i : Fin a := ⟨0, ha⟩
+  let r : Fin h := ⟨0, hh⟩
+  let z := convolutionOutput i r
+  have hc : convolution (K := K) a h i r z = 1 := convolution_at_output i r
+  fin_cases b
+  · refine ⟨i, leftY a h r, leftZ a h z, ?_⟩
+    have hp := congrFun (congrFun (congrFun (leftTensor_pullback (K := K) a h) i) r) z
+    exact (show leftTensor (K := K) a h i (leftY a h r) (leftZ a h z) = _ from hp).trans hc
+  · refine ⟨i.rev, middleY a h z, middleZ a h r, ?_⟩
+    have hp := congrFun (congrFun (congrFun (middleTensor_pullback (K := K) a h) i) z) r
+    exact (show middleTensor (K := K) a h i.rev (middleY a h z) (middleZ a h r) = _ from hp).trans hc
+  · refine ⟨i, rightY a h r, rightZ a h z, ?_⟩
+    have hp := congrFun (congrFun (congrFun (rightTensor_pullback (K := K) a h) i) r) z
+    exact (show rightTensor (K := K) a h i (rightY a h r) (rightZ a h z) = _ from hp).trans hc
+
 /-- The uniform branch product combines the two outer convolution values. -/
 theorem uniform_branchFamily_product (χ : (Character K)) (a h : ℕ)
     (ha : 0 < a) (hh : 0 < h) :
@@ -121,7 +141,8 @@ theorem uniform_branchFamily_product (χ : (Character K)) (a h : ℕ)
   simp only [branchFamily_zero, branchFamily_one, branchFamily_two,
     value_leftTensor, value_middleTensor, value_rightTensor]
   have hc : 0 < χ.value ((convolution (K := K)) a h) :=
-    lt_of_lt_of_le zero_lt_one (χ.one_le_value (convolution_nonzero (K := K) ha hh))
+    lt_of_lt_of_le zero_lt_one (χ.one_le_value_of_coefficient_one
+      ⟨⟨0, ha⟩, ⟨0, hh⟩, convolutionOutput ⟨0, ha⟩ ⟨0, hh⟩, convolution_at_output _ _⟩)
   calc
     χ.value ((convolution (K := K)) a h) ^ (1 / 3 : ℝ) *
         χ.value (exchangedConvolution (K := K) a h) ^ (1 / 3 : ℝ) *
@@ -136,20 +157,44 @@ theorem uniform_branchFamily_product (χ : (Character K)) (a h : ℕ)
 /-- The per-character three-sector inequality, before multiplication over
 the six tensor-leg permutations. All tensor values are actual convolution
 values, with only the middle branch exchanging its last two legs. -/
-theorem convolution_tripling_tag [IsAlgClosed K] (χ : (Character K)) (a h : ℕ)
+theorem convolution_tripling_tag_of_separation (χ : Character K)
+    (hsep : ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+      0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+        (∑ i, χ.value (B' i)) * (M : ℝ) ^ χ.pX ≤
+          6 * (M : ℝ) * χ.value (sharedFirstTensor B'))
+    (a h : ℕ)
     (ha : 0 < a) (hh : 0 < h) :
     (3 : ℝ) ^ χ.pX * χ.value ((convolution (K := K)) a h) ^ (2 / 3 : ℝ) *
       χ.value (fun i s r => (convolution (K := K)) a h i r s) ^ (1 / 3 : ℝ) ≤
         χ.value ((convolution (K := K)) a (3 * h + a - 1)) := by
-  have htag := χ.sharedFirst_tag (FiniteLaw.uniform (Fin 3))
-    (branchFamily (K := K) a h) (branchFamily_nonzero (K := K) ha hh)
+  have htag := χ.sharedFirst_tag_of_separation_of_coefficient_one hsep (FiniteLaw.uniform (Fin 3))
+    (branchFamily (K := K) a h) (branchFamily_coefficient_one (K := K) ha hh)
   rw [uniformThree_entropy_factor, uniform_branchFamily_product χ a h ha hh,
     value_sharedFirst_branchFamily] at htag
-  have hresult := htag.trans (value_retained_le_source χ a h)
+  have hresult := htag.trans (value_retained_le_source_ring χ a h)
   change (3 : ℝ) ^ χ.pX * (χ.value ((convolution (K := K)) a h) ^ (2 / 3 : ℝ) *
     χ.value (fun i s r => (convolution (K := K)) a h i r s) ^ (1 / 3 : ℝ)) ≤
       χ.value ((convolution (K := K)) a (3 * h + a - 1)) at hresult
   simpa only [mul_assoc] using hresult
+
+section Field
+
+variable {K : Type*} [Field K]
+
+theorem value_retained_le_source [Infinite K] (χ : Character K) (a h : ℕ) :
+    χ.value (retained (K := K) a h) ≤ χ.value (source (K := K) a h) :=
+  value_retained_le_source_ring χ a h
+
+theorem convolution_tripling_tag [IsAlgClosed K] (χ : Character K) (a h : ℕ)
+    (ha : 0 < a) (hh : 0 < h) :
+    (3 : ℝ) ^ χ.pX * χ.value (convolution (K := K) a h) ^ (2 / 3 : ℝ) *
+      χ.value (fun i s r => convolution (K := K) a h i r s) ^ (1 / 3 : ℝ) ≤
+        χ.value (convolution (K := K) a (3 * h + a - 1)) :=
+  convolution_tripling_tag_of_separation χ (by
+    intro M X' Y' Z' _ _ _ hM B'
+    exact χ.finiteSeparation_bound hM B') a h ha hh
+
+end Field
 
 end MatrixMultiplication.AuxiliarySeparation.Sector
 

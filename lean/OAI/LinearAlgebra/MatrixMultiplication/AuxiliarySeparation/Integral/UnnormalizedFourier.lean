@@ -12,7 +12,7 @@ Negative exponents are powers of units, so no field structure is required. -/
 
 namespace OAI.MatrixMultiplication.AuxiliarySeparation.Integral
 
-open scoped BigOperators
+open scoped BigOperators Classical
 
 variable {E : Type*} [CommRing E] [IsDomain E]
 
@@ -33,11 +33,11 @@ theorem sum_unit_zpow_primitive_root {ζ : Eˣ} {L : ℕ}
   have hpow : (↑(ζ ^ e) : E) ^ L = 1 := by
     have h : (ζ ^ e) ^ L = 1 := by
       rw [← zpow_natCast, ← zpow_mul, mul_comm, zpow_mul, hζ.zpow_eq_one, one_zpow]
-    exact_mod_cast h
+    simpa only [Units.val_pow_eq_pow_val, Units.val_one] using congrArg Units.val h
   have hterm (r : ℕ) : (↑(ζ ^ ((r : ℤ) * e)) : E) = (↑(ζ ^ e) : E) ^ r := by
     have h : ζ ^ ((r : ℤ) * e) = (ζ ^ e) ^ r := by
       rw [← zpow_natCast, ← zpow_mul, mul_comm]
-    exact_mod_cast h
+    simpa only [Units.val_pow_eq_pow_val, Units.val_one] using congrArg Units.val h
   simp_rw [hterm]
   rw [sum_pow_root_of_unity _ _ hpow]
   have hone : (↑(ζ ^ e) : E) = 1 ↔ (L : ℤ) ∣ e := by

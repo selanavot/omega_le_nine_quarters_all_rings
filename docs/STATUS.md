@@ -1,42 +1,40 @@
 # Status
 
-2026-10-09. Repository and PR #1 are PRIVATE. Branch: prove-all-rings.
+2026-10-09. Repository and draft PR #1 are PRIVATE. Branch: prove-all-rings.
 https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/1
 
-**The ring 9/4 theorem is not yet verified or implemented end-to-end.**
+**The ring 9/4 theorem is not yet verified end-to-end.**
 
 Target: `omega_le_nine_quarters_all_rings (R : Type u) [Ring R] [Nontrivial R]`.
 Lean 4.35.0-rc4 and mathlib f0469b25d97aef3998d4bc06f6f01da670b3d18e
-were selected at Sela's request to use current Lean. Both are installed/cached.
-The new checkout now has its own physical dependency copy; inherited shared
-cache links were removed, and the prior shared cache's pins/oleans restored.
+are installed and pinned. The checkout has independent physical dependencies.
 
 ## Confirmed compiler evidence
 
-- Ring Model, arithmetic programs/composition/padding, naive bound, output-count
-  lower bound, and Arithmetic.Exponent compile. BddBelow and omega >= 2 retain
-  nontriviality.
-- Arithmetic.RecursiveBlockPrograms, Growth, and Integral.Arithmetic compile.
-  The unconditional bridge `omega R <= exactRankExponent Z` is checked, including
-  central integer coefficients and ordered noncommutative products. Queue a85055.
-- Generic exact tensor rank/exponent and matrix rank lower bound compile.
-- Generalized original polynomial approximation/degeneration structures compile.
-- Integral.Restriction, FiniteFreeDescent and MonicQuotient compile.
-- Generic Entropy.Tag compiles.
+- Ring arithmetic model, programs, naive bound, output-count lower bound,
+  BddBelow, and omega >= 2. The model has only seven Field -> Ring changes.
+- Integer coefficient identities produce recursive arithmetic programs over
+  arbitrary rings; the unconditional bridge omega(R) <= exactRankExponent(Z)
+  is checked, including ordered products for noncommutative rings.
+- Primitive tensor subsemiring, character extension, and detecting characters
+  for integer exact rank. Negative control excludes scalar-2 -> scalar-1 over Z.
+- Coefficient extraction, finite free rank/restriction descent, monic quotient
+  projection, Vandermonde norm clearing, finite field lift, and finite Bezout
+  patch. The complete convolution power rank and character bound compile.
+- Cyclotomic algebra/unit/basis/projection; unnormalized Fourier sum;
+  polynomial separation construction; integer restriction descent compile.
+- Generic determinant/sector/tag/profile argument compiles: explicit separation
+  and convolution assumptions imply each character exponent sum <= 9/4.
+- SpectrumAudit and TransportAudit report only propext, Classical.choice,
+  and Quot.sound for the audited intermediate declarations.
 
-These are foundations, NOT verification of the 9/4 result.
+## Remaining
 
-## Work in progress
+- Integral finite-separation assembly (consecutive periods, descent, coprime
+  powers and polynomial overhead): compiler repair in progress.
+- AllRings and FinalAudit drafted; awaiting that last dependency and checks.
+- Comparator with frozen definitions and negative controls, full build and
+  fresh kernel replay remain. Manuscript and PDF are being prepared.
 
-- Primitive tensor spectrum/detecting-character layer: source drafted; compiler
-  repair in progress. Negative control rejects scalar-2 -> scalar-1 over Z.
-- Integral coefficient extraction, Vandermonde/norm clearing, finite field lifts,
-  Bezout patching: source drafted; compiler repair in progress.
-- Cyclotomic units, unnormalized Fourier, polynomial local maps and determinant
-  basis over rings: source drafted; awaiting/repairing compiler checks.
-- Character comparison/profile integration, full integer exponent bound, final
-  ring theorem, clean kernel/Comparator audits and paper remain unfinished.
-
-All requests/logs live under ignored .lake/ring-queue. Only root starts the
-worker; agents submit/status. Separate ARITHMETIC/SPECTRUM/TRANSPORT status files
-have owner-level details. Imported provenance is in IMPORT-MANIFEST.json.
+Build requests/logs are ignored under .lake/ring-queue. Only root runs the
+worker. Owner details are in ARITHMETIC/SPECTRUM/TRANSPORT-STATUS.md.

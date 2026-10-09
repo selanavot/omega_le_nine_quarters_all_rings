@@ -7,6 +7,8 @@ Developed for the integral extension of OpenAI's matrix-multiplication proof.
 
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Integral.CoefficientExtraction
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Tensor.CharacterBounds
+public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Tensor.BinaryCharacter
+public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Integral.CoprimePatch
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Growth.PolynomialOverhead
 
 public section
@@ -55,6 +57,64 @@ theorem le_of_pow_le_const_product_linear_mul_pow {a b A B C : ℝ}
   intro n
   convert h n using 1 <;> ring
 
+namespace Integral
+
+open MatrixMultiplication.Foundation
+open scoped BigOperators
+
+variable {R X Y Z U V W U' V' W' : Type*} [CommSemiring R]
+variable [Fintype U] [Fintype V] [Fintype W]
+variable [Fintype U'] [Fintype V'] [Fintype W']
+
+/-- Different source-coordinate types may be combined by coproducts. -/
+theorem restrict_sumTensor
+    (T : Tensor R U V W) (S : Tensor R U' V' W')
+    (A : X → U → R) (B : Y → V → R) (C : Z → W → R)
+    (A' : X → U' → R) (B' : Y → V' → R) (C' : Z → W' → R) :
+    Tensor.restrict (fun x => Sum.elim (A x) (A' x))
+      (fun y => Sum.elim (B y) (B' y)) (fun z => Sum.elim (C z) (C' z))
+      (sumTensor T S) =
+      fun x y z => Tensor.restrict A B C T x y z + Tensor.restrict A' B' C' S x y z := by
+  funext x y z
+  simp [Tensor.restrict, sumTensor, Fintype.sum_sum_type]
+
+/-- Scale one local map, rather than scalar-multiplying a character value. -/
+theorem restrict_scale_right (T : Tensor R U V W)
+    (A : X → U → R) (B : Y → V → R) (C : Z → W → R) (u : R) :
+    Tensor.restrict A B (fun z w => u * C z w) T =
+      fun x y z => u * Tensor.restrict A B C T x y z := by
+  funext x y z
+  simp only [Tensor.restrict, Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro p hp
+  apply Finset.sum_congr rfl
+  intro q hq
+  apply Finset.sum_congr rfl
+  intro r hr
+  ring
+
+/-- Bezout patching with different source spaces. The scalar multipliers are
+removed in the exact coefficient identity before applying any character. -/
+theorem restriction_patch_binary
+    (T : Tensor R X Y Z) (S : Tensor R U V W) (S' : Tensor R U' V' W')
+    (d e u v : R) (huv : u * d + v * e = 1)
+    (A : X → U → R) (B : Y → V → R) (C : Z → W → R)
+    (A' : X → U' → R) (B' : Y → V' → R) (C' : Z → W' → R)
+    (h : Tensor.restrict A B C S = fun x y z => d * T x y z)
+    (h' : Tensor.restrict A' B' C' S' = fun x y z => e * T x y z) :
+    Tensor.restrict (fun x => Sum.elim (A x) (A' x))
+      (fun y => Sum.elim (B y) (B' y))
+      (fun z => Sum.elim (fun w => u * C z w) (fun w => v * C' z w))
+      (sumTensor S S') = T := by
+  rw [restrict_sumTensor, restrict_scale_right, restrict_scale_right, h, h']
+  funext x y z
+  change u * (d * T x y z) + v * (e * T x y z) = T x y z
+  calc
+    _ = (u * d + v * e) * T x y z := by ring
+    _ = _ := by rw [huv, one_mul]
+
+end Integral
+
 namespace Character
 
 open MatrixMultiplication.Foundation
@@ -100,9 +160,30 @@ theorem value_le_mul_of_power_comparisons
   apply le_of_pow_le_const_product_linear_mul_pow
     (A := A) (B := B) (C := C) (mul_nonneg hL (χ.nonneg T))
   intro n
-  have hn := h n
-  rw [χ.value_power, χ.value_power, mul_pow]
-  simpa only [χ.value_power, mul_assoc] using hn
+  simpa only [χ.value_power, mul_pow, mul_assoc] using h n
+
+/-- A pair of coprime scalar powers is cancelled before applying monotonicity.
+The two exact restrictions may have unrelated finite coordinate spaces. -/
+theorem value_le_add_of_coprime_scaled_restrictions
+    {U₁ V₁ W₁ U₂ V₂ W₂ : Type}
+    [Fintype U₁] [Fintype V₁] [Fintype W₁]
+    [Fintype U₂] [Fintype V₂] [Fintype W₂]
+    (T : Tensor K X Y Z) (S₁ : Tensor K U₁ V₁ W₁) (S₂ : Tensor K U₂ V₂ W₂)
+    {d e : K} (hde : IsCoprime d e) (n : ℕ)
+    (h₁ : ∃ (A : X → U₁ → K) (B : Y → V₁ → K) (C : Z → W₁ → K),
+      Tensor.restrict A B C S₁ = fun x y z => d ^ n * T x y z)
+    (h₂ : ∃ (A : X → U₂ → K) (B : Y → V₂ → K) (C : Z → W₂ → K),
+      Tensor.restrict A B C S₂ = fun x y z => e ^ n * T x y z) :
+    χ.value T ≤ χ.value S₁ + χ.value S₂ := by
+  obtain ⟨u, v, huv⟩ := hde.pow (m := n) (n := n)
+  obtain ⟨A, B, C, h₁⟩ := h₁
+  obtain ⟨A', B', C', h₂⟩ := h₂
+  have heq := Integral.restriction_patch_binary T S₁ S₂ (d ^ n) (e ^ n) u v huv
+    A B C A' B' C' h₁ h₂
+  have h := χ.monotone (sumTensor S₁ S₂)
+    (fun x => Sum.elim (A x) (A' x)) (fun y => Sum.elim (B y) (B' y))
+    (fun z => Sum.elim (fun w => u * C z w) (fun w => v * C' z w))
+  simpa only [heq, χ.value_sumTensor] using h
 
 end Character
 end OAI.MatrixMultiplication.AuxiliarySeparation

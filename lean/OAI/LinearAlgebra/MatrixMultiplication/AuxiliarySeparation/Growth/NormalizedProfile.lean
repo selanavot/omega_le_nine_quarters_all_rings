@@ -88,7 +88,7 @@ theorem symmetrizedProfile_le_of_permuted_value_bounds {t : ℝ} (ht : 0 < t)
     rw [← χ.prod_permutedCharacter_value T]
     calc
       (∏ i : Fin 6, (χ.permutedCharacter i).value T) ≤ ∏ _i : Fin 6, (r : ℝ) :=
-        Finset.prod_le_prod (fun i _ => (χ.permutedCharacter i).nonneg T) (fun i _ => h i)
+        Finset.prod_le_prod₀ (fun i _ => (χ.permutedCharacter i).nonneg T) (fun i _ => h i)
       _ = _ := by simp
   calc
     χ.symmetrizedProfile t T ≤ ((r : ℝ) ^ 6) ^ (1 / (6 * t)) :=

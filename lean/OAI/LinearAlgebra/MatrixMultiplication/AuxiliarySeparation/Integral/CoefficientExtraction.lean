@@ -46,12 +46,12 @@ theorem coeff_mul_mul_bounded (p q t : R[X]) (a b h : ℕ)
     calc
       p = ∑ i ∈ Finset.range (a + 1), Polynomial.monomial i (p.coeff i) :=
         p.as_sum_range' (a + 1) (Nat.lt_succ_of_le hp)
-      _ = _ := (Fin.sum_univ_eq_sum_range (fun i => Polynomial.monomial i (p.coeff i))).symm
+      _ = _ := (Fin.sum_univ_eq_sum_range (fun i => Polynomial.monomial i (p.coeff i)) (a + 1)).symm
   have eq : q = ∑ j : Fin (b + 1), Polynomial.monomial j.val (q.coeff j) := by
     calc
       q = ∑ j ∈ Finset.range (b + 1), Polynomial.monomial j (q.coeff j) :=
         q.as_sum_range' (b + 1) (Nat.lt_succ_of_le hq)
-      _ = _ := (Fin.sum_univ_eq_sum_range (fun j => Polynomial.monomial j (q.coeff j))).symm
+      _ = _ := (Fin.sum_univ_eq_sum_range (fun j => Polynomial.monomial j (q.coeff j)) (b + 1)).symm
   conv_lhs => rw [ep, eq]
   simp only [Finset.sum_mul, Finset.mul_sum, Polynomial.finsetSum_coeff,
     Polynomial.monomial_mul_monomial, coeff_monomial_mul_full]

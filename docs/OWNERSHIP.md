@@ -14,3 +14,9 @@ Further assignments:
 - Root: Integral/{SeparationWeights,SeparationPolynomial}; Separation/{Basic,BranchTagging};
   Determinant/{Basis,Bounds,Filtration}; Sector/{Branches,Degeneration}.
 - omega_constructions: Integral/{MonicQuotient,ResidueBasis,FiniteFieldLift,ConvolutionRank,RestrictionDescent} too.
+
+Final integration assignments:
+- ring_statement: AllRings, FinalAudit, OAI entrypoint.
+- ring_spectrum: ComparatorAudit, verification/comparator, verification scripts; read-only adversarial separation audit.
+- omega_constructions: paper source, build script, PDF and paper README.
+- Root: Integral/{SeparationDescent,FiniteSeparation}, main README, final verification orchestration and Git.

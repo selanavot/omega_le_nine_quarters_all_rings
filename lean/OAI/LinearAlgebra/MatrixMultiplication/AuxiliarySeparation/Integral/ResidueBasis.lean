@@ -27,7 +27,8 @@ theorem repr_specialize (b : Module.Basis ι R E) (c : Module.Basis ι S K)
     (hb : ∀ i, φ (b i) = c i) (x : E) (i : ι) :
     c.repr (φ x) i = ψ (b.repr x i) := by
   have he : φ x = c.equivFun.symm (fun j => ψ (b.repr x j)) := by
-    rw [Module.Basis.equivFun_symm_apply, ← b.sum_repr x, map_sum]
+    rw [Module.Basis.equivFun_symm_apply]
+    conv_lhs => rw [← b.sum_repr x, map_sum]
     apply Finset.sum_congr rfl
     intro j hj
     simp only [Algebra.smul_def, map_mul, hφ, hb]
@@ -68,7 +69,9 @@ theorem norm_specialize (b : Module.Basis ι R E) (c : Module.Basis ι S K)
     (hφ : ∀ r, φ (algebraMap R E r) = algebraMap S K (ψ r))
     (hb : ∀ i, φ (b i) = c i) (x : E) :
     ψ (Algebra.leftMulMatrix b x).det = (Algebra.leftMulMatrix c (φ x)).det := by
-  rw [RingHom.map_det, leftMulMatrix_specialize b c ψ φ hφ hb]
+  rw [RingHom.map_det]
+  change ((Algebra.leftMulMatrix b x).map ψ).det = _
+  rw [leftMulMatrix_specialize b c ψ φ hφ hb]
 
 /-- A basis-preserving specialization to a field detects a nonzero norm.
 For R=Z and S=ZMod p, this says the integer norm is not divisible by p. -/

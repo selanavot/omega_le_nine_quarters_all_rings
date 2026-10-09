@@ -14,7 +14,7 @@ coefficient from degree zero to degree 2M² without changing the target. -/
 
 namespace OAI.MatrixMultiplication.AuxiliarySeparation.Integral
 
-open scoped BigOperators
+open scoped BigOperators Classical
 
 def leftDegree (g : ℤ) : ℕ := (firstWeight g).toNat
 def middleDegree (M : ℕ) (h u : ℤ) : ℕ := ((M : ℤ) ^ 2 + secondWeight h u).toNat

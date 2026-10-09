@@ -1,7 +1,6 @@
 module
 
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Integral.SeparationWeights
-public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Integral.CoefficientExtraction
 
 public section
 
@@ -57,7 +56,14 @@ theorem integralSeparationPolynomial_restrict [Fintype X] [Fintype Y] [Fintype Z
   rw [hC]
   funext x y z
   unfold leftPolynomialMap middlePolynomialMap rightPolynomialMap
-  rw [restrict_constantCopies_delta]
+  rw [restrict_constantCopies_delta (R := Fin L)
+    (fun x y z => Polynomial.C (sharedFirstTensor B x y z)) Prod.fst Prod.fst Prod.fst
+    (fun x r => Polynomial.monomial (leftDegree (sectorNumber x.2))
+      (↑(ζ ^ ((r.val : ℤ) * (2 * sectorNumber x.2))) : E))
+    (fun y r => Polynomial.monomial (middleDegree M (sectorNumber y.1.1) (sectorNumber y.2))
+      (↑(ζ ^ ((r.val : ℤ) * (sectorNumber y.2 - sectorNumber y.1.1))) : E))
+    (fun z r => Polynomial.monomial (rightDegree M (sectorNumber z.1.1) (sectorNumber z.2))
+      (↑(ζ ^ ((r.val : ℤ) * (-sectorNumber z.2 - sectorNumber z.1.1))) : E)) x y z]
   by_cases hyz : y.1.1 = z.1.1
   · simp only [sharedFirstTensor, integralSeparationPolynomial, hyz, ↓reduceIte]
     rw [← hyz]
@@ -82,7 +88,9 @@ theorem integralSeparationPolynomial_restrict [Fintype X] [Fintype Y] [Fintype Z
     simp_rw [hterm]
     rw [← map_sum, Polynomial.monomial_mul_C]
     unfold weightedBranch
-    rw [Fin.sum_univ_eq_sum_range]
+    rw [Fin.sum_univ_eq_sum_range (fun r : ℕ =>
+      (↑(ζ ^ ((r : ℤ) * phase (sectorNumber x.2) (sectorNumber y.1.1)
+        (sectorNumber y.2) (sectorNumber z.2))) : E))]
   · simp [sharedFirstTensor, integralSeparationPolynomial, hyz]
 
 def mapDegreeBound {A B : Type*} [Fintype A] [Fintype B]

@@ -1,0 +1,16 @@
+module
+
+public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Integral.ConvolutionRank
+public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Integral.RestrictionDescent
+public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Integral.CoefficientExtraction
+
+/-! Kernel dependency audit for the integral coefficient transport chain. -/
+
+#print axioms OAI.MatrixMultiplication.AuxiliarySeparation.Integral.convolution_integer_power_rank
+#print axioms OAI.MatrixMultiplication.AuxiliarySeparation.Integral.exists_prime_clearing_convolution
+#print axioms OAI.MatrixMultiplication.AuxiliarySeparation.Integral.exists_integral_powerBasis_lift
+#print axioms OAI.MatrixMultiplication.AuxiliarySeparation.Integral.rankAtMost_norm_convolution
+#print axioms OAI.MatrixMultiplication.AuxiliarySeparation.Integral.exists_finite_bezout_of_prime_witness
+#print axioms OAI.MatrixMultiplication.AuxiliarySeparation.Integral.descend_restriction_basis
+#print axioms OAI.MatrixMultiplication.Foundation.Tensor.PolynomialRestrictionDegeneration.extract
+#print axioms OAI.MatrixMultiplication.Foundation.Tensor.PolynomialRestrictionDegeneration.power

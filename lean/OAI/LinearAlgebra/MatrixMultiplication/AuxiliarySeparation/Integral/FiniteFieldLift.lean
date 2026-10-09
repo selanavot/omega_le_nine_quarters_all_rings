@@ -47,13 +47,17 @@ theorem exists_integral_powerBasis_lift (p : ℕ) [Fact p.Prime]
   let φ := AdjoinRoot.lift (Int.castRingHom K) pb.gen hroot
   refine ⟨f, hf, b, φ, hd, ?_, ?_⟩
   · intro r
+    rw [show algebraMap ℤ (AdjoinRoot f) r = (r : AdjoinRoot f) from
+      map_intCast (algebraMap ℤ (AdjoinRoot f)) r]
     simp only [map_intCast]
   · intro i
     dsimp [b]
     rw [Module.Basis.reindex_apply]
-    change φ ((AdjoinRoot.powerBasis' hf).basis ((finCongr hd).symm i)) = pb.basis i
-    rw [(AdjoinRoot.powerBasis' hf).basis_eq_pow, pb.basis_eq_pow, map_pow]
-    simp only [AdjoinRoot.powerBasis'_gen, φ, AdjoinRoot.lift_root]
+    have hbpow (j : Fin f.natDegree) :
+        (AdjoinRoot.powerBasisAux' hf) j = AdjoinRoot.root f ^ j.val :=
+      (AdjoinRoot.powerBasis' hf).basis_eq_pow ⟨j.val, j.isLt⟩
+    rw [hbpow, pb.basis_eq_pow, map_pow]
+    simp only [φ, AdjoinRoot.lift_root]
     rfl
 
 /-- For each prime, convolution has a clearing integer not divisible by that
@@ -90,7 +94,9 @@ theorem exists_prime_clearing_convolution (p : ℕ) [Fact p.Prime] (a b : ℕ) :
       ext i j
       simp only [Matrix.map_apply, Matrix.vandermonde, Matrix.of_apply, map_pow, hv]
     dsimp [delta]
-    rw [RingHom.map_det, hmat]
+    rw [RingHom.map_det]
+    change ((Matrix.vandermonde v).map φ).det ≠ 0
+    rw [hmat]
     exact Matrix.det_vandermonde_ne_zero_iff.mpr nodes.injective
   have hD : (D : ZMod p) ≠ 0 := norm_specialize_ne_zero basis pb.basis
     (Int.castRingHom (ZMod p)) φ hφ hb delta hdelta
@@ -105,8 +111,11 @@ theorem exists_prime_clearing_convolution (p : ℕ) [Fact p.Prime] (a b : ℕ) :
   intro k
   have hk := hr.descend_finite_basis_powers basis (monicQuotientProjection hf)
     (monicQuotientProjection_one hf hfpos) k
-  simpa only [Foundation.Tensor.power, Finset.prod_mul_distrib, Finset.prod_const,
-    Finset.card_univ, Fintype.card_fin] using hk
+  convert hk using 1
+  · funext x y z
+    simp only [Foundation.Tensor.power, T, Finset.prod_mul_distrib, Finset.prod_const,
+      Finset.card_univ, Fintype.card_fin]
+  · simp only [Fintype.card_fin, h]
 
 end
 end OAI.MatrixMultiplication.AuxiliarySeparation.Integral

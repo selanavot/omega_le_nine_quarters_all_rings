@@ -1,3 +1,3 @@
 module
 
-public import OAI.LinearAlgebra.MatrixMultiplication.AllFields
+public import OAI.LinearAlgebra.MatrixMultiplication.AllRings
