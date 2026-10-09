@@ -1,8 +1,11 @@
 # Matrix multiplication: ω ≤ 9/4 over every nontrivial ring
 
-This private repository extends [OpenAI's matrix multiplication proof](https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Matrix-Multiplication-Nine-Fourths-October-2-2026/paper.pdf)
-and the [previous all-fields formalization](https://github.com/selanavot/matrix-multiplication-all-fields)
-to arbitrary associative unital rings, including noncommutative rings.
+OpenAI proved ω ≤ 9/4 over the complex numbers in its
+[matrix multiplication preprint](https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Matrix-Multiplication-Nine-Fourths-October-2-2026/paper.pdf).
+Our [earlier all-fields extension](https://github.com/selanavot/matrix-multiplication-all-fields)
+establishes the same bound over every field.
+This private repository extends the result to arbitrary associative unital
+rings, including noncommutative rings.
 The full theorem compiles in Lean. Independent verification is in progress;
 see [current status](docs/STATUS.md).
 

@@ -30,8 +30,9 @@
 
 \begin{abstract}
 OpenAI's auxiliary-separation argument gives the matrix multiplication
-exponent bound $9/4$ over the complex numbers; a previous extension covers
-all fields. We describe an integral version of that argument. Its stronger
+exponent bound $9/4$ over the complex numbers \cite{OAI,OAILean}; our earlier
+extension establishes the same bound over every field \cite{Fields}.
+We describe an integral version of that argument. Its stronger
 intermediate conclusion is a bound on exact tensor rank over $\Z$, which
 supplies the same arithmetic exponent over every associative unital ring.
 The changes are a primitive tensor semiring for spectral detection,
@@ -42,8 +43,9 @@ exponent and the underlying profile-growth argument are those of OpenAI.
 
 \noindent\textbf{Verification status.} The complete $9/4$ theorem, exact
 integer rank bound, and explicit operation-count corollary have compiled in
-Lean. Their final audit, fresh-kernel replay, and Comparator validation are
-pending. Compilation checks the formal declarations, not this prose document.
+Lean. The axiom audit, fresh-kernel replay of the complete claim dependencies,
+and frozen-specification Comparator checks passed, including all bundled
+checkers. These checks validate the formal declarations, not this prose document.
 
 \paragraph{AI disclosure.}
 This manuscript is AI-generated. The proof development and Lean
@@ -376,11 +378,18 @@ convolution\_integer\_power\_rank\\
 exists\_prime\_clearing\_convolution
 \end{quote}
 and the polynomial degeneration \texttt{power}/\texttt{extract} methods.
-Their kernel audit
-reports only \texttt{propext}, \texttt{Classical.choice}, and
-\texttt{Quot.sound}. The complete \texttt{AllRings.lean} entry point also
-compiles. Its final axiom audit, fresh-kernel replay, and Comparator checks
-are pending; the repository records their status separately.
+
+The audited claims use only the standard axioms \texttt{propext},
+\texttt{Classical.choice}, and \texttt{Quot.sound}. Fresh-kernel replay checks
+the complete dependency closure of six claims: the upper bound, boundedness
+and nonemptiness of the admissible set, the lower bound, direct operation
+costs, and literal integer coefficient identities. Comparator checks these
+against a frozen arithmetic model with exactly seven field-to-ring
+substitutions and no definition holes. Its bundled Lean paranoid, lean4lean,
+nanoda, con-leche, con-ron, and default Lean checkers all accepted the proof.
+The verification used trusted local sources, pinned dependencies, and
+incremental build caches, with fresh replay of the theorem dependencies.
+The repository retains the commands, results, and separate AI source reviews.
 
 \paragraph{Attribution.}
 The numerical $9/4$ bound and its main mathematical architecture are due
