@@ -1,10 +1,28 @@
 # Palomar release and submission handoff
 
-Prepared on 2026-10-09. **Preparation is not submission or registration.**
-No Palomar workflow, intake, or registration has been started by this change.
-The repository remains private until Sela explicitly authorizes publication.
-The proposed human credit in `formalization.yaml` also needs Sela's confirmation;
-it describes orchestration and responsibility, not handwritten proofs or prose.
+Updated on 2026-10-09. Sela confirmed the human creator/maintainer credit,
+approved the public repository and the PR #2 merge, and authorized submission
+of snapshot `2d2cc89859d17d3143cd40c4a4b3df49801aa533` with root
+`comparator.json` as its responsible maintainer. The repository is now public.
+[PR #2](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/2)
+was merged at `83923f946c6834ae392aa40c5169191745d9e519`.
+
+The [full mechanical preflight](https://github.com/selanavot/omega_le_nine_quarters_all_rings/actions/runs/37967750557)
+passed for the approved snapshot, with empty report error and warning lists. Its
+[public receipt](../verification/palomar/README.md) retains the complete bounded
+mechanical report. Palomar intake `pq5sjorephuw` was then submitted via the
+required tag/gist protocol; both one-use artifacts were removed. Permanent
+registration has not been performed. Do not create a duplicate intake.
+The registry's [verification run](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/37969772632)
+also completed successfully; its bounded mechanical report says `pass` and
+`complete` for the same snapshot and six claims. Both reports are retained in
+the public receipt. This does not establish that editorial review is complete.
+The submission and private-review API endpoints returned HTTP 500 on the latest
+checks, so the review state is currently unavailable. Preserve the existing
+submission and token; a service error is not a reason to resubmit.
+The confirmed human credit describes orchestration and responsibility, not
+handwritten proofs or prose. Permanent registration still needs explicit
+approval after Sela receives the complete review.
 
 ## Pinned workflow and current eligibility
 
@@ -15,14 +33,15 @@ It requests `mode: full`, `execution_profile: palomar-standard-v1`, root
 `comparator.json`, and root `formalization.yaml`. It has read-only contents
 permissions, receives no inherited secrets, and has no push/PR trigger.
 The upstream job fetches a public source snapshot without private-repository
-credentials, so it cannot verify this source while it remains private.
+credentials. The repository's approved visibility change satisfies that
+prerequisite.
 
 Our `leanprover/lean4:v4.35.0-rc4` exceeds the pinned pipeline's
 [rc2 minimum](https://github.com/PalomarRegistry/PalomarSubmission/blob/d4e41c1d5b0d114c4859e6e5831dc6d3ad1d0d44/toolchains.json)
 and exactly matches the pinned Mathlib toolchain. The exact
 [Verso rc4 tag](https://github.com/leanprover/verso/tree/v4.35.0-rc4)
 resolves to `01a09f320122475119588526857a07d218aef600`; no toolchain change is
-currently indicated. Recheck live policy and support before actual intake.
+currently indicated. Recheck live policy and support before any future intake.
 
 The source inspection found 161 tracked Lean files, all with the required
 module header except the permitted Lakefile exemption. The largest has 1,613
@@ -51,7 +70,7 @@ preprint and the pinned all-fields formalization, plus related formalizations.
 No claim of numerical improvement, historical priority, or human peer review
 is made. Palomar reserves project authors/maintainers for humans; Codex's
 material role is disclosed under automation and in the production account.
-The proposed human project credit is Sela Navot, subject to confirmation.
+Sela Navot confirmed the human project creator/maintainer credit.
 
 All six frozen statements are explained in the metadata's `alignment` table:
 upper bound for all rings; BddBelow for nontrivial rings; nonempty admissible
@@ -64,30 +83,21 @@ The source and Comparator model are unchanged by this release preparation.
 The earlier receipts retain their precise scope. Metadata validation is not
 proof verification, and successful preflight is not editorial approval.
 
-## Finish the release and run the full preflight
+## Completed mechanical verification and next step
 
-1. Obtain Sela's decision on human creator/maintainer credit. Finish the release
-   metadata and PR, then obtain approval for that specific PR before merging.
-   Separately obtain permission to make this repository public.
-2. Push the complete final source and release metadata. Record its full
-   40-character SHA; do not substitute a branch/tag. The source for the
-   preflight and intake must be exactly that immutable commit.
-3. Show Sela the repository, exact SHA, `comparator.json`, and the proposed
-   authorization relationship. The likely statement is that Sela is a
-   responsible maintainer of this substantive formalization; obtain agreement
-   rather than inferring it from GitHub ownership or from AI authorship.
-4. Once public, invoke **Palomar full mechanical preflight** from GitHub Actions
-   with that SHA and the agreed relationship. Use a twelve-character lowercase
-   alphanumeric request ID, for example `ringsfull001`. The workflow must be
-   present on the default branch for normal manual dispatch. If using `gh`,
-   `gh workflow run palomar-preflight.yml --repo selanavot/omega_le_nine_quarters_all_rings`
-   accepts the three named inputs `target_commit`, `authorization_relationship`,
-   and `request_id`; supply their approved values explicitly.
-5. Save the `mechanical-report-<request_id>` artifact. Proceed only when its
-   `status` is `pass` for the intended repository, SHA, config, and full mode.
-   A green local build, preparation-only check, skipped job, or truncated report
-   is insufficient. This advisory run does not render Challenge or perform
-   editorial review, and actual verification may still differ.
+The release metadata is merged, the source is public, and the approved full
+40-character commit is `2d2cc89859d17d3143cd40c4a4b3df49801aa533`.
+Both the completed preflight and submitted intake use that immutable
+snapshot and root `comparator.json`, not a moving branch or the newer
+documentation-only follow-up. Sela explicitly confirmed the responsible
+maintainer relationship; it was not inferred from GitHub ownership.
+
+The full workflow completed successfully with request ID `ringsfull001`.
+Its report has `status: pass`, the exact approved repository/commit/config,
+and the standard hosted execution profile. Lean's default kernel, NanoDa and
+con-ron accepted the proof under the pipeline's protected Comparator setup.
+This preflight does not perform Challenge rendering or editorial review;
+the submitted intake runs those registry stages separately.
 
 Local checks completed successfully before submission:
 
@@ -99,9 +109,11 @@ Local checks completed successfully before submission:
   `PyYAML==6.0.3` and `jsonschema==4.25.1` via `uv run`.
 
 The last check applies `yaml.safe_load` and `jsonschema.validate` with the
-pinned `schema/v0.4.schema.json`. These checks passed; no full Palomar preflight,
-Challenge render, editorial review, or registry submission has run. The two
-zero sorry counts exclude the six deliberate Challenge theorem holes.
+pinned `schema/v0.4.schema.json`. These preparation checks passed. The full
+Palomar preflight and registry mechanical verification subsequently passed.
+Challenge rendering, editorial review and registry registration remain separate
+stages; the mechanical report does not certify their completion. The two zero sorry
+counts exclude the six deliberate Challenge theorem holes.
 
 The current metadata parser is
 [`load_formalization_metadata`](https://github.com/PalomarRegistry/PalomarSubmission/blob/d4e41c1d5b0d114c4859e6e5831dc6d3ad1d0d44/scripts/submission_contract.py)
