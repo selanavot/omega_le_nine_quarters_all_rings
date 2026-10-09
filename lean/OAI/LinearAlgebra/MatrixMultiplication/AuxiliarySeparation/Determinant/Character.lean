@@ -8,6 +8,7 @@ See UPSTREAM.md for provenance and changes; Apache-2.0 license retained in LICEN
 
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Determinant.Filtration
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Character.Degeneration
+public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Integral.CharacterTransport
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Character.Dot
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Tensor.SupportExtension
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Tensor.TagInequality
@@ -35,7 +36,7 @@ open scoped BigOperators
 
 namespace MatrixMultiplication.AuxiliarySeparation.DeterminantFiltration
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommRing K] [Nontrivial K]
 
 /-- The two graded blocks, padded with zeros in common coordinate spaces. -/
 def branch (d e : ℕ) (n : Fin 2) :
@@ -69,11 +70,20 @@ theorem branch_ne_zero (d e : ℕ) (he : 0 < e) (n : Fin 2) : branch (K := K) d 
       (.inr ⟨0, he⟩)) (.inr ⟨0, by omega⟩)
     simp [branch] at hv
 
+/-- Each positive determinant branch has an explicit unit coefficient. -/
+theorem branch_coefficient_one (d e : ℕ) (he : 0 < e) (n : Fin 2) :
+    ∃ i j k, branch (K := K) d e n i j k = 1 := by
+  fin_cases n
+  · exact ⟨⟨0, by omega⟩, .inl ⟨0, by omega⟩, .inl ⟨0, by omega⟩,
+      by simp [branch]⟩
+  · exact ⟨⟨0, by omega⟩, .inr ⟨0, he⟩, .inr ⟨0, by omega⟩,
+      by simp [branch]⟩
+
 end DeterminantFiltration
 
 namespace Character
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommRing K] [Nontrivial K]
 
 open DeterminantFiltration
 
@@ -149,12 +159,12 @@ theorem value_determinant_source_le (d e : ℕ) :
   ring
 
 /-- Actual basis-change and degeneration certificates give this comparison. -/
-theorem value_determinant_graded_le [Infinite K] (d e : ℕ) :
+theorem value_determinant_graded_le_ring (d e : ℕ) :
     χ.value (gradedTensor (K := K) d e) ≤
       (2 : ℝ) ^ χ.pX * χ.value ((convolution (K := K)) (d + 1) (e + 1)) := by
   calc
     χ.value (gradedTensor (K := K) d e) ≤ χ.value (adaptedTensor (K := K) d e) :=
-      χ.value_polynomialRestrictionDegeneration_le (degeneration (K := K) d e)
+      χ.value_polynomialRestrictionDegeneration_le_ring (degeneration (K := K) d e)
     _ ≤ χ.value (sourceTensor (K := K) d e) := by
       simpa only [sourceTensor_coordinate_change] using
         χ.monotone (sourceTensor (K := K) d e) (fixedFirst d) (inputChange e)
@@ -162,24 +172,34 @@ theorem value_determinant_graded_le [Infinite K] (d e : ℕ) :
     _ ≤ _ := χ.value_determinant_source_le d e
 
 /-- The binary tag bound before normalizing over all six characters. -/
-theorem convolution_concavity_tag_dims [IsAlgClosed K] (d e : ℕ) (he : 0 < e)
+theorem convolution_concavity_tag_dims_of_separation
+    (hsep : ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+      0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+        (∑ i, χ.value (B' i)) * (M : ℝ) ^ χ.pX ≤
+          6 * (M : ℝ) * χ.value (sharedFirstTensor B'))
+    (d e : ℕ) (he : 0 < e)
     (q : ℝ) (hq₀ : 0 ≤ q) (hq₁ : q ≤ 1) :
     Real.exp (χ.pX * Real.binEntropy q) *
         χ.value ((convolution (K := K)) (d + 1) (e + 2)) ^ q *
         χ.value ((convolution (K := K)) (d + 1) e) ^ (1 - q) ≤
       (2 : ℝ) ^ χ.pX * χ.value ((convolution (K := K)) (d + 1) (e + 1)) := by
-  have ht := χ.sharedFirst_tag (binaryLaw q hq₀ hq₁) (branch (K := K) d e)
-    (branch_ne_zero (K := K) d e he)
+  have ht := χ.sharedFirst_tag_of_separation_of_coefficient_one hsep (binaryLaw q hq₀ hq₁) (branch (K := K) d e)
+    (branch_coefficient_one (K := K) d e he)
   rw [χ.value_sharedFirstTensor_eq_sum (branch (K := K) d e)
     (branchLabel e) (branchLabel (d + e)) (branch_support (K := K) d e), sum_branch] at ht
   rw [binaryLaw_entropy, binaryLaw_product,
     χ.value_determinant_branch_zero, χ.value_determinant_branch_one] at ht
   apply le_trans (b := χ.value (gradedTensor (K := K) d e))
   · simpa only [mul_assoc] using ht
-  · exact χ.value_determinant_graded_le d e
+  · exact χ.value_determinant_graded_le_ring d e
 
 /-- The determinant inequality in the paper's positive-dimension notation. -/
-theorem convolution_concavity_tag [IsAlgClosed K] (a b : ℕ) (ha : 0 < a) (hb : 2 ≤ b)
+theorem convolution_concavity_tag_of_separation
+    (hsep : ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+      0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+        (∑ i, χ.value (B' i)) * (M : ℝ) ^ χ.pX ≤
+          6 * (M : ℝ) * χ.value (sharedFirstTensor B'))
+    (a b : ℕ) (ha : 0 < a) (hb : 2 ≤ b)
     (q : ℝ) (hq₀ : 0 ≤ q) (hq₁ : q ≤ 1) :
     Real.exp (χ.pX * Real.binEntropy q) *
         χ.value ((convolution (K := K)) a (b + 1)) ^ q *
@@ -187,7 +207,39 @@ theorem convolution_concavity_tag [IsAlgClosed K] (a b : ℕ) (ha : 0 < a) (hb :
       (2 : ℝ) ^ χ.pX * χ.value ((convolution (K := K)) a b) := by
   obtain ⟨d, rfl⟩ : ∃ d, a = d + 1 := ⟨a - 1, by omega⟩
   obtain ⟨e, rfl, he⟩ : ∃ e, b = e + 1 ∧ 0 < e := ⟨b - 1, by omega, by omega⟩
-  simpa [Nat.add_assoc] using χ.convolution_concavity_tag_dims d e he q hq₀ hq₁
+  simpa [Nat.add_assoc] using χ.convolution_concavity_tag_dims_of_separation hsep d e he q hq₀ hq₁
+
+section Field
+
+variable {K : Type*} [Field K] (χ : Character K)
+
+/-- Legacy field wrapper for the integral polynomial-degeneration comparison. -/
+theorem value_determinant_graded_le [Infinite K] (d e : ℕ) :
+    χ.value (gradedTensor (K := K) d e) ≤
+      (2 : ℝ) ^ χ.pX * χ.value (convolution (K := K) (d + 1) (e + 1)) :=
+  χ.value_determinant_graded_le_ring d e
+
+theorem convolution_concavity_tag_dims [IsAlgClosed K] (d e : ℕ) (he : 0 < e)
+    (q : ℝ) (hq₀ : 0 ≤ q) (hq₁ : q ≤ 1) :
+    Real.exp (χ.pX * Real.binEntropy q) *
+        χ.value (convolution (K := K) (d + 1) (e + 2)) ^ q *
+        χ.value (convolution (K := K) (d + 1) e) ^ (1 - q) ≤
+      (2 : ℝ) ^ χ.pX * χ.value (convolution (K := K) (d + 1) (e + 1)) :=
+  χ.convolution_concavity_tag_dims_of_separation (by
+    intro M X' Y' Z' _ _ _ hM B'
+    exact χ.finiteSeparation_bound hM B') d e he q hq₀ hq₁
+
+theorem convolution_concavity_tag [IsAlgClosed K] (a b : ℕ) (ha : 0 < a) (hb : 2 ≤ b)
+    (q : ℝ) (hq₀ : 0 ≤ q) (hq₁ : q ≤ 1) :
+    Real.exp (χ.pX * Real.binEntropy q) *
+        χ.value (convolution (K := K) a (b + 1)) ^ q *
+        χ.value (convolution (K := K) a (b - 1)) ^ (1 - q) ≤
+      (2 : ℝ) ^ χ.pX * χ.value (convolution (K := K) a b) :=
+  χ.convolution_concavity_tag_of_separation (by
+    intro M X' Y' Z' _ _ _ hM B'
+    exact χ.finiteSeparation_bound hM B') a b ha hb q hq₀ hq₁
+
+end Field
 
 end Character
 end MatrixMultiplication.AuxiliarySeparation

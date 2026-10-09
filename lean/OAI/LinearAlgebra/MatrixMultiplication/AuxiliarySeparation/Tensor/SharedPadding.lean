@@ -31,7 +31,7 @@ open scoped BigOperators Classical
 
 namespace MatrixMultiplication.AuxiliarySeparation
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommSemiring K]
 
 variable {M : ℕ} {X : Type} {Y Z : Fin M → Type}
 variable [Fintype X] [∀ i, Fintype (Y i)] [∀ i, Fintype (Z i)]

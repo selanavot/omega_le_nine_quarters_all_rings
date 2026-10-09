@@ -1,6 +1,7 @@
 # Proof plan
 
-1. Preserve the arithmetic semantics while generalizing to nontrivial rings.
+1. Preserve the arithmetic semantics while generalizing to all rings, treating
+   the trivial ring separately with its zero-cost program and real-infimum convention.
 2. Generalize coefficient rank and restriction semiring to commutative rings.
 3. Use the zero-or-1-restricting tensor subsemiring for spectral detection;
    extend its characters to all tensors by chi(T+1)-1 if verified.

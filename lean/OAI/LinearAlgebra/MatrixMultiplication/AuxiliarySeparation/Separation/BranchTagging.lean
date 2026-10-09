@@ -31,7 +31,7 @@ open scoped BigOperators
 
 namespace MatrixMultiplication.AuxiliarySeparation
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommSemiring K]
 
 variable {M : ℕ} {X Y Z : Type}
 variable [Fintype X] [Fintype Y] [Fintype Z]

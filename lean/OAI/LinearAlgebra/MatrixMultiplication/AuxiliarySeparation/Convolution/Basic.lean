@@ -30,7 +30,7 @@ open scoped BigOperators
 
 namespace MatrixMultiplication.AuxiliarySeparation
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommSemiring K]
 
 open MatrixMultiplication.Foundation
 
@@ -42,19 +42,19 @@ def convolution (a b : ℕ) : Tensor K (Fin a) (Fin b) (Fin (a + b - 1)) :=
     (i : Fin a) (j : Fin b) (k : Fin (a + b - 1)) :
     convolution (K := K) a b i j k = if i.val + j.val = k.val then 1 else 0 := rfl
 
-@[simp] theorem convolution_ne_zero_iff {a b : ℕ}
+@[simp] theorem convolution_ne_zero_iff [Nontrivial K] {a b : ℕ}
     (i : Fin a) (j : Fin b) (k : Fin (a + b - 1)) :
     convolution (K := K) a b i j k ≠ 0 ↔ i.val + j.val = k.val := by
   simp only [convolution]
   split_ifs <;> simp_all
 
-@[simp] theorem convolution_eq_one_iff {a b : ℕ}
+@[simp] theorem convolution_eq_one_iff [Nontrivial K] {a b : ℕ}
     (i : Fin a) (j : Fin b) (k : Fin (a + b - 1)) :
     convolution (K := K) a b i j k = 1 ↔ i.val + j.val = k.val := by
   simp only [convolution]
   split_ifs <;> simp_all
 
-@[simp] theorem convolution_eq_zero_iff {a b : ℕ}
+@[simp] theorem convolution_eq_zero_iff [Nontrivial K] {a b : ℕ}
     (i : Fin a) (j : Fin b) (k : Fin (a + b - 1)) :
     convolution (K := K) a b i j k = 0 ↔ i.val + j.val ≠ k.val := by
   simp only [convolution]
@@ -73,14 +73,13 @@ theorem convolution_output_supported {a b : ℕ} (ha : 0 < a) (hb : 0 < b)
     (k : Fin (a + b - 1)) :
     ∃ (i : Fin a) (j : Fin b), convolution (K := K) a b i j k = 1 := by
   by_cases hk : k.val < a
-  · exact ⟨⟨k.val, hk⟩, ⟨0, hb⟩, by simp⟩
+  · exact ⟨⟨k.val, hk⟩, ⟨0, hb⟩, by simp [convolution]⟩
   · have hk' := k.isLt
     refine ⟨⟨a - 1, by omega⟩, ⟨k.val - (a - 1), by omega⟩, ?_⟩
-    apply (convolution_eq_one_iff _ _ _).mpr
-    dsimp
-    omega
+    change (if (a - 1) + (k.val - (a - 1)) = k.val then (1 : K) else 0) = 1
+    rw [if_pos (by omega)]
 
-theorem convolution_nonzero {a b : ℕ} (ha : 0 < a) (hb : 0 < b) :
+theorem convolution_nonzero [Nontrivial K] {a b : ℕ} (ha : 0 < a) (hb : 0 < b) :
     convolution (K := K) a b ≠ 0 := by
   intro hz
   have hc := congrFun (congrFun (congrFun hz ⟨0, ha⟩) ⟨0, hb⟩)
@@ -90,7 +89,7 @@ theorem convolution_nonzero {a b : ℕ} (ha : 0 < a) (hb : 0 < b) :
   rw [convolution_at_output] at hc
   exact one_ne_zero hc
 
-theorem convolution_nonzero_iff (a b : ℕ) :
+theorem convolution_nonzero_iff [Nontrivial K] (a b : ℕ) :
     convolution (K := K) a b ≠ 0 ↔ 0 < a ∧ 0 < b := by
   constructor
   · intro h

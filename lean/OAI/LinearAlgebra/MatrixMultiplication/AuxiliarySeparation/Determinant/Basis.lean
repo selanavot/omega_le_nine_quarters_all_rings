@@ -13,7 +13,7 @@ namespace OAI
 # The finite adapted basis for the determinant filtration
 
 The quotient vectors and determinant-kernel vectors of Section 5.1 form a basis
-of the actual space of bidegree `(e,1)` forms. The proof works over every field,
+of the actual space of bidegree `(e,1)` forms. The proof works over every commutative ring,
 including in the boundary case `e = 0` where the kernel has dimension zero.
 -/
 
@@ -91,20 +91,55 @@ theorem finrank_boundedPair (K : Type*) [Field K] (e : ℕ) :
   rw [Module.finrank_prod, h]
   omega
 
-/-- The fixed simultaneous change of basis used in the determinant degeneration. -/
-def basis (K : Type*) [Field K] (e : ℕ) :
-    Module.Basis (Fin (e + 2) ⊕ Fin e) K (BoundedPair K e) :=
-  basisOfLinearIndependentOfCardEqFinrank' (vector e) (vector_linearIndependent e) (by
-    rw [Fintype.card_sum, Fintype.card_fin, Fintype.card_fin, finrank_boundedPair]
-    omega)
+/-- The adapted vectors span over an arbitrary commutative ring: each ordinary
+monomial pair is either a quotient vector or a quotient-plus-kernel vector. -/
+theorem vector_span (e : ℕ) :
+    ⊤ ≤ Submodule.span R (Set.range (vector (R := R) e)) := by
+  classical
+  let b := (degreeLT.basis R (e + 1)).prod (degreeLT.basis R (e + 1))
+  rw [← b.span_eq]
+  apply Submodule.span_le.mpr
+  rintro _ ⟨j, rfl⟩
+  have hv (i : Fin (e + 2) ⊕ Fin e) :
+      vector (R := R) e i ∈ Submodule.span R (Set.range (vector (R := R) e)) :=
+    Submodule.subset_span ⟨i, rfl⟩
+  cases j with
+  | inl j =>
+      have heq : b (Sum.inl j) = vector e (Sum.inl ⟨j.val, by omega⟩) := by
+        apply forget_injective e
+        simp [b, forget, Module.Basis.prod_apply, degreeLT.basis_val,
+          vector, quotientVector, show j.val < e + 1 from j.isLt]
+      rw [heq]
+      exact hv _
+  | inr j =>
+      by_cases hj : j.val < e
+      · have heq : b (Sum.inr j) =
+            vector e (Sum.inl ⟨j.val + 1, by omega⟩) + vector e (Sum.inr ⟨j.val, hj⟩) := by
+          apply forget_injective e
+          simp [b, forget, Module.Basis.prod_apply, degreeLT.basis_val,
+            vector, quotientVector, kernelVector, show j.val + 1 < e + 1 by omega]
+        rw [heq]
+        exact Submodule.add_mem _ (hv _) (hv _)
+      · have hje : j.val = e := by omega
+        have heq : b (Sum.inr j) = vector e (Sum.inl ⟨e + 1, by omega⟩) := by
+          apply forget_injective e
+          simp [b, forget, Module.Basis.prod_apply, degreeLT.basis_val,
+            vector, quotientVector, hje]
+        rw [heq]
+        exact hv _
 
-@[simp] theorem basis_apply (K : Type*) [Field K] (e : ℕ)
-    (j : Fin (e + 2) ⊕ Fin e) : basis K e j = vector e j := by
-  rw [basis, coe_basisOfLinearIndependentOfCardEqFinrank']
+/-- The same adapted basis exists over every commutative ring. -/
+def basis (R : Type*) [CommRing R] (e : ℕ) :
+    Module.Basis (Fin (e + 2) ⊕ Fin e) R (BoundedPair R e) :=
+  Module.Basis.mk (vector_linearIndependent e) (vector_span e)
+
+@[simp] theorem basis_apply (R : Type*) [CommRing R] (e : ℕ)
+    (j : Fin (e + 2) ⊕ Fin e) : basis R e j = vector e j := by
+  exact Module.Basis.mk_apply _ _ _
 
 /-- Forgetting degree bounds identifies the finite basis with the explicit
 polynomial-pair formulas. -/
-@[simp] theorem forget_basis (K : Type*) [Field K] (e : ℕ)
+@[simp] theorem forget_basis (K : Type*) [CommRing K] (e : ℕ)
     (j : Fin (e + 2) ⊕ Fin e) :
     forget e (basis K e j) =
       Sum.elim (DeterminantKernel.quotientVector e) (DeterminantKernel.kernelVector e) j := by

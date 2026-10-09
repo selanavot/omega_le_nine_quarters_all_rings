@@ -30,7 +30,7 @@ open scoped BigOperators
 
 namespace MatrixMultiplication.AuxiliarySeparation.Character
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommSemiring K]
 
 variable (χ : (Character K))
 

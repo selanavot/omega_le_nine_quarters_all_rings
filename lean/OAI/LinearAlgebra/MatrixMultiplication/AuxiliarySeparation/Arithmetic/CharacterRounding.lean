@@ -28,7 +28,7 @@ character-growth assumptions remain explicit in the final implications.
 
 namespace MatrixMultiplication.AuxiliarySeparation
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommSemiring K]
 
 open MatrixMultiplication.Foundation
 
@@ -122,7 +122,7 @@ theorem exponent_le_of_detecting_character_exponents {ν τ : ℝ} (hτ : 0 ≤ 
 
 /-- The paper's final `ν ≤ 9/4` implication, with its two substantive character
 inputs visible rather than incorporated into the definition of `ν`. -/
-theorem exactRankExponent_le_nine_quarters_of_characters
+theorem exactRankExponent_le_nine_quarters_of_characters [Nontrivial K]
     (detect : ∀ d : ℕ, 2 ≤ d → ∀ k : ℕ,
       (k : ℝ) < (d : ℝ) ^ (exactRankExponent K) →
       ∃ χ : (Character K), (k : ℝ) ≤ χ.value ((matrixMultiplicationTensor (K := K)) d d d))

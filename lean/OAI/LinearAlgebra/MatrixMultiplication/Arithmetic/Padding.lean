@@ -8,7 +8,7 @@ public section
 
 namespace OAI
 
-/-! Division-free arithmetic programs over a field and their operation counts. -/
+/-! Division-free arithmetic programs over a ring and their operation counts. -/
 
 noncomputable section
 
@@ -16,7 +16,7 @@ open scoped BigOperators
 
 namespace MatrixMultiplication.Arithmetic
 
-variable {F : Type*} [Field F]
+variable {F : Type*} [Ring F]
 
 def zeroPadMatrix {a b : ℕ} (A B : ℕ) (M : Matrix (Fin a) (Fin b) F) :
     Matrix (Fin A) (Fin B) F :=

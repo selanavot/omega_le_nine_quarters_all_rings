@@ -10,13 +10,13 @@ public section
 
 namespace OAI
 
-/-! Division-free arithmetic programs over a field and their operation counts. -/
+/-! Division-free arithmetic programs over a ring and their operation counts. -/
 
 noncomputable section
 
 namespace MatrixMultiplication.Arithmetic
 
-variable {F : Type*} [Field F]
+variable {F : Type*} [Ring F] [Nontrivial F]
 
 theorem AdmissibleExponent.mono {τ σ : ℝ} (hτ : AdmissibleExponent F τ)
     (hτσ : τ ≤ σ) : AdmissibleExponent F σ := by

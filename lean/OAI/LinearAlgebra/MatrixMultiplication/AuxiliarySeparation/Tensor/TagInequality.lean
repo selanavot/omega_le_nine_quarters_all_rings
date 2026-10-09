@@ -35,7 +35,7 @@ open scoped BigOperators Classical
 
 namespace MatrixMultiplication.AuxiliarySeparation
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommSemiring K]
 
 variable {s : ℕ} {X Y Z : Type}
   [Fintype X] [Fintype Y] [Fintype Z]
@@ -120,11 +120,24 @@ theorem Character.exactType_value_le_power (χ : (Character K))
   rw [← exactType_power_pullback B counts e, ← χ.value_power]
   exact χ.value_pullback_le _ _ _ _
 
-variable [IsAlgClosed K]
+omit [Fintype X] [Fintype Y] [Fintype Z] in
+/-- A nonzero branch remains visible in the tensor with a shared first leg. -/
+theorem sharedFirstTensor_ne_zero_of_branch (B : Fin s → Tensor K X Y Z)
+    (a : Fin s) (ha : B a ≠ 0) : sharedFirstTensor B ≠ 0 := by
+  intro h
+  apply ha
+  funext x y z
+  have hxyz := congrFun (congrFun (congrFun h x) (a, y)) (a, z)
+  simpa only [sharedFirstTensor, ↓reduceIte, Pi.zero_apply] using hxyz
 
-/-- The finite separation construction and exact-type restriction give the
-integral inequality, with no assumed character comparison. -/
-theorem Character.integral_type_comparison (χ : (Character K))
+
+/-- An explicit finite separation comparison and exact-type restriction
+give the integral type bound over any coefficient semiring. -/
+theorem Character.integral_type_comparison_of_separation (χ : Character K)
+    (hsep : ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+      0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+        (∑ i, χ.value (B' i)) * (M : ℝ) ^ χ.pX ≤
+          6 * (M : ℝ) * χ.value (sharedFirstTensor B'))
     (B : Fin s → Tensor K X Y Z) (counts : Fin s → ℕ) :
     (Fintype.card (ExactWords counts) : ℝ) ^ χ.pX *
         ∏ a, χ.value (B a) ^ counts a ≤
@@ -136,11 +149,11 @@ theorem Character.integral_type_comparison (χ : (Character K))
     fun h => branchWordTensor B (e h).val
   have hM : 0 < M := by
     simpa only [M, Fintype.card_eq_nat_card] using exactWords_card_pos counts
-  have hsep : ((M : ℝ) * ∏ a, χ.value (B a) ^ counts a) * (M : ℝ) ^ χ.pX ≤
+  have hfinite : ((M : ℝ) * ∏ a, χ.value (B a) ^ counts a) * (M : ℝ) ^ χ.pX ≤
       6 * (M : ℝ) * χ.value (sharedFirstTensor W) := by
     simpa only [W, χ.value_exact_branchWordTensor, Finset.sum_const,
       Finset.card_univ, Fintype.card_fin, nsmul_eq_mul] using
-      χ.finiteSeparation_bound hM W
+      hsep hM W
   have hsource : χ.value (sharedFirstTensor W) ≤
       χ.value (sharedFirstTensor B) ^ (∑ a, counts a) :=
     χ.exactType_value_le_power B counts e
@@ -149,22 +162,178 @@ theorem Character.integral_type_comparison (χ : (Character K))
         (M : ℝ) * (6 * χ.value (sharedFirstTensor B) ^ (∑ a, counts a)) := by
     calc
       _ = ((M : ℝ) * ∏ a, χ.value (B a) ^ counts a) * (M : ℝ) ^ χ.pX := by ring
-      _ ≤ 6 * (M : ℝ) * χ.value (sharedFirstTensor W) := hsep
+      _ ≤ 6 * (M : ℝ) * χ.value (sharedFirstTensor W) := hfinite
       _ ≤ 6 * (M : ℝ) * χ.value (sharedFirstTensor B) ^ (∑ a, counts a) :=
         mul_le_mul_of_nonneg_left hsource (by positivity)
       _ = _ := by ring
   have hbound := (mul_le_mul_iff_right₀ (Nat.cast_pos.mpr hM : (0 : ℝ) < M)).mp hcancel
   simpa only [M, Fintype.card_eq_nat_card] using hbound
 
-omit [IsAlgClosed K] [Fintype X] [Fintype Y] [Fintype Z] in
-/-- A nonzero branch remains visible in the tensor with a shared first leg. -/
-theorem sharedFirstTensor_ne_zero_of_branch (B : Fin s → Tensor K X Y Z)
-    (a : Fin s) (ha : B a ≠ 0) : sharedFirstTensor B ≠ 0 := by
-  intro h
-  apply ha
-  funext x y z
-  have hxyz := congrFun (congrFun (congrFun h x) (a, y)) (a, z)
-  simpa only [sharedFirstTensor, ↓reduceIte, Pi.zero_apply] using hxyz
+/-- Positive branch values imply the shared-input tag inequality from a
+finite separation bound. No field structure is used. -/
+theorem Character.sharedFirst_tag_of_separation (χ : Character K)
+    (hsep : ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+      0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+        (∑ i, χ.value (B' i)) * (M : ℝ) ^ χ.pX ≤
+          6 * (M : ℝ) * χ.value (sharedFirstTensor B'))
+    (q : FiniteLaw (Fin s)) (B : Fin s → Tensor K X Y Z)
+    (hB : ∀ a, 0 < χ.value (B a)) :
+    Real.exp (χ.pX * finiteEntropy q.mass) *
+        ∏ a, χ.value (B a) ^ q.mass a ≤ χ.value (sharedFirstTensor B) := by
+  have hs : 0 < s := by
+    by_contra hn
+    have hs0 : s = 0 := Nat.eq_zero_of_not_pos hn
+    subst s
+    have htotal := q.total
+    simp at htotal
+  let a : Fin s := ⟨0, hs⟩
+  have hbranch : Tensor.pullback id (fun y => (a, y)) (fun z => (a, z))
+      (sharedFirstTensor B) = B a := by
+    funext x y z
+    simp [Tensor.pullback, sharedFirstTensor]
+  have hbnd := χ.value_pullback_le (sharedFirstTensor B) id
+    (fun y => (a, y)) (fun z => (a, z))
+  rw [hbranch] at hbnd
+  have hT : 0 < χ.value (sharedFirstTensor B) := (hB a).trans_le hbnd
+  apply χ.tag_of_integral_type_comparison_of_value_pos q (sharedFirstTensor B) B χ.pX hT hB
+  intro counts _hcounts
+  simpa only [Fintype.card_eq_nat_card] using
+    χ.integral_type_comparison_of_separation hsep B counts
+
+/-- Logarithmic form of the shared-input tag inequality with positive values. -/
+theorem Character.log_sharedFirst_tag_of_separation (χ : Character K)
+    (hsep : ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+      0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+        (∑ i, χ.value (B' i)) * (M : ℝ) ^ χ.pX ≤
+          6 * (M : ℝ) * χ.value (sharedFirstTensor B'))
+    (q : FiniteLaw (Fin s)) (B : Fin s → Tensor K X Y Z)
+    (hB : ∀ a, 0 < χ.value (B a)) :
+    χ.pX * finiteEntropy q.mass + ∑ a, q.mass a * Real.log (χ.value (B a)) ≤
+      Real.log (χ.value (sharedFirstTensor B)) := by
+  have hs : 0 < s := by
+    by_contra hn
+    have hs0 : s = 0 := Nat.eq_zero_of_not_pos hn
+    subst s
+    have htotal := q.total
+    simp at htotal
+  let a : Fin s := ⟨0, hs⟩
+  have hbranch : Tensor.pullback id (fun y => (a, y)) (fun z => (a, z))
+      (sharedFirstTensor B) = B a := by
+    funext x y z
+    simp [Tensor.pullback, sharedFirstTensor]
+  have hbnd := χ.value_pullback_le (sharedFirstTensor B) id
+    (fun y => (a, y)) (fun z => (a, z))
+  rw [hbranch] at hbnd
+  have hT : 0 < χ.value (sharedFirstTensor B) := (hB a).trans_le hbnd
+  apply χ.log_tag_of_integral_type_comparison_of_value_pos q (sharedFirstTensor B) B χ.pX hT hB
+  intro counts _hcounts
+  simpa only [Fintype.card_eq_nat_card] using
+    χ.integral_type_comparison_of_separation hsep B counts
+
+/-- A coefficient one in each branch supplies positivity for the tag bound. -/
+theorem Character.sharedFirst_tag_of_separation_of_coefficient_one (χ : Character K)
+    (hsep : ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+      0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+        (∑ i, χ.value (B' i)) * (M : ℝ) ^ χ.pX ≤
+          6 * (M : ℝ) * χ.value (sharedFirstTensor B'))
+    (q : FiniteLaw (Fin s)) (B : Fin s → Tensor K X Y Z)
+    (hB : ∀ a, ∃ x y z, B a x y z = 1) :
+    Real.exp (χ.pX * finiteEntropy q.mass) *
+        ∏ a, χ.value (B a) ^ q.mass a ≤ χ.value (sharedFirstTensor B) :=
+  χ.sharedFirst_tag_of_separation hsep q B
+    (fun a => zero_lt_one.trans_le (χ.one_le_value_of_coefficient_one (hB a)))
+
+/-- Logarithmic tag bound when each branch has a coefficient one. -/
+theorem Character.log_sharedFirst_tag_of_separation_of_coefficient_one (χ : Character K)
+    (hsep : ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+      0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+        (∑ i, χ.value (B' i)) * (M : ℝ) ^ χ.pX ≤
+          6 * (M : ℝ) * χ.value (sharedFirstTensor B'))
+    (q : FiniteLaw (Fin s)) (B : Fin s → Tensor K X Y Z)
+    (hB : ∀ a, ∃ x y z, B a x y z = 1) :
+    χ.pX * finiteEntropy q.mass + ∑ a, q.mass a * Real.log (χ.value (B a)) ≤
+      Real.log (χ.value (sharedFirstTensor B)) :=
+  χ.log_sharedFirst_tag_of_separation hsep q B
+    (fun a => zero_lt_one.trans_le (χ.one_le_value_of_coefficient_one (hB a)))
+
+section DependentGeneral
+
+variable {U V : Fin s → Type} [∀ a, Fintype (U a)] [∀ a, Fintype (V a)]
+
+/-- Shared-input tag bound for varying branch dimensions and positive values. -/
+theorem Character.sharedFirstDependent_tag_of_separation (χ : Character K)
+    (hsep : ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+      0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+        (∑ i, χ.value (B' i)) * (M : ℝ) ^ χ.pX ≤
+          6 * (M : ℝ) * χ.value (sharedFirstTensor B'))
+    (q : FiniteLaw (Fin s)) (B : ∀ a, Tensor K X (U a) (V a))
+    (hB : ∀ a, 0 < χ.value (B a)) :
+    Real.exp (χ.pX * finiteEntropy q.mass) *
+        ∏ a, χ.value (B a) ^ q.mass a ≤ χ.value (sharedFirstDependentTensor B) := by
+  have hpad : ∀ a, 0 < χ.value (paddedSharedBranch B a) := by
+    intro a
+    simpa only [χ.value_paddedSharedBranch] using hB a
+  simpa only [χ.value_paddedSharedBranch, χ.value_sharedFirstTensor_padded] using
+    χ.sharedFirst_tag_of_separation hsep q (paddedSharedBranch B) hpad
+
+/-- Logarithmic shared-input tag bound for varying branch dimensions. -/
+theorem Character.log_sharedFirstDependent_tag_of_separation (χ : Character K)
+    (hsep : ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+      0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+        (∑ i, χ.value (B' i)) * (M : ℝ) ^ χ.pX ≤
+          6 * (M : ℝ) * χ.value (sharedFirstTensor B'))
+    (q : FiniteLaw (Fin s)) (B : ∀ a, Tensor K X (U a) (V a))
+    (hB : ∀ a, 0 < χ.value (B a)) :
+    χ.pX * finiteEntropy q.mass + ∑ a, q.mass a * Real.log (χ.value (B a)) ≤
+      Real.log (χ.value (sharedFirstDependentTensor B)) := by
+  have hpad : ∀ a, 0 < χ.value (paddedSharedBranch B a) := by
+    intro a
+    simpa only [χ.value_paddedSharedBranch] using hB a
+  simpa only [χ.value_paddedSharedBranch, χ.value_sharedFirstTensor_padded] using
+    χ.log_sharedFirst_tag_of_separation hsep q (paddedSharedBranch B) hpad
+
+/-- Varying-dimension tag bound for branches with a coefficient one. -/
+theorem Character.sharedFirstDependent_tag_of_separation_of_coefficient_one (χ : Character K)
+    (hsep : ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+      0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+        (∑ i, χ.value (B' i)) * (M : ℝ) ^ χ.pX ≤
+          6 * (M : ℝ) * χ.value (sharedFirstTensor B'))
+    (q : FiniteLaw (Fin s)) (B : ∀ a, Tensor K X (U a) (V a))
+    (hB : ∀ a, ∃ x y z, B a x y z = 1) :
+    Real.exp (χ.pX * finiteEntropy q.mass) *
+        ∏ a, χ.value (B a) ^ q.mass a ≤ χ.value (sharedFirstDependentTensor B) :=
+  χ.sharedFirstDependent_tag_of_separation hsep q B
+    (fun a => zero_lt_one.trans_le (χ.one_le_value_of_coefficient_one (hB a)))
+
+/-- Logarithmic varying-dimension tag bound for coefficient-one branches. -/
+theorem Character.log_sharedFirstDependent_tag_of_separation_of_coefficient_one (χ : Character K)
+    (hsep : ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+      0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+        (∑ i, χ.value (B' i)) * (M : ℝ) ^ χ.pX ≤
+          6 * (M : ℝ) * χ.value (sharedFirstTensor B'))
+    (q : FiniteLaw (Fin s)) (B : ∀ a, Tensor K X (U a) (V a))
+    (hB : ∀ a, ∃ x y z, B a x y z = 1) :
+    χ.pX * finiteEntropy q.mass + ∑ a, q.mass a * Real.log (χ.value (B a)) ≤
+      Real.log (χ.value (sharedFirstDependentTensor B)) :=
+  χ.log_sharedFirstDependent_tag_of_separation hsep q B
+    (fun a => zero_lt_one.trans_le (χ.one_le_value_of_coefficient_one (hB a)))
+
+end DependentGeneral
+
+section Field
+
+variable {K : Type*} [Field K] [IsAlgClosed K]
+
+/-- The original algebraically closed field statement, obtained from its
+concrete Fourier separation construction. -/
+theorem Character.integral_type_comparison (χ : Character K)
+    (B : Fin s → Tensor K X Y Z) (counts : Fin s → ℕ) :
+    (Fintype.card (ExactWords counts) : ℝ) ^ χ.pX *
+        ∏ a, χ.value (B a) ^ counts a ≤
+      6 * χ.value (sharedFirstTensor B) ^ (∑ a, counts a) := by
+  apply χ.integral_type_comparison_of_separation ?_ B counts
+  intro M X' Y' Z' _ _ _ hM B'
+  exact χ.finiteSeparation_bound hM B'
 
 /-- The actual shared-input tensor tag inequality, including probability laws
 with zero coordinates. The branch labels are disjoint on the second and third
@@ -230,6 +399,8 @@ theorem Character.log_sharedFirstDependent_tag (χ : (Character K))
       (fun a => paddedSharedBranch_ne_zero B a (hB a))
 
 end Dependent
+
+end Field
 
 end MatrixMultiplication.AuxiliarySeparation
 

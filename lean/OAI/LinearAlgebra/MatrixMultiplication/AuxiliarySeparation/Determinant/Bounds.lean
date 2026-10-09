@@ -130,7 +130,7 @@ def kernelEquiv (e : ℕ) : degreeLT R e ≃ₗ[R] LinearMap.ker (diagonal (R :=
   LinearEquiv.ofBijective (toKernel e) (toKernel_bijective e)
 
 /-- The finite determinant kernel has dimension `e`. -/
-theorem finrank_kernel (K : Type*) [Field K] (e : ℕ) :
+theorem finrank_kernel (K : Type*) [CommRing K] [Nontrivial K] (e : ℕ) :
     Module.finrank K (LinearMap.ker (diagonal (R := K) e)) = e := by
   rw [← (kernelEquiv (R := K) e).finrank_eq]
   simpa using Module.finrank_eq_card_basis (degreeLT.basis K e)

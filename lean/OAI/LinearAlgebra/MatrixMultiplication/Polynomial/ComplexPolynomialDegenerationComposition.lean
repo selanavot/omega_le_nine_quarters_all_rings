@@ -65,7 +65,7 @@ end ScalarRestriction
 
 section PolynomialCoefficients
 
-variable {F : Type*} [Field F]
+variable {F : Type*} [CommRing F]
 
 theorem coeff_mul_expand_eq_constant (M p : Polynomial F) (a : F)
     (hp : p.coeff 0 = a) (k j : ℕ) (hj : j ≤ k) :
@@ -94,7 +94,7 @@ end PolynomialCoefficients
 
 section PolynomialLocalMaps
 
-variable {F X Y Z X' Y' Z' : Type*} [Field F]
+variable {F X Y Z X' Y' Z' : Type*} [CommRing F]
 variable [Fintype X] [Fintype Y] [Fintype Z]
 
 structure PolynomialRestrictionDegeneration

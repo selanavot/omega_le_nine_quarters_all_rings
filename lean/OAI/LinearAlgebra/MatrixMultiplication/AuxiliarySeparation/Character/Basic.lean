@@ -2,7 +2,8 @@ module
 
 /-
 Upstream source and modification notice
-Modified from OpenAI's matrix-multiplication sources to support arbitrary fields.
+Modified from OpenAI's matrix-multiplication sources and the all-fields extension
+to support the integral/ring proof. Field-only claims remain explicitly scoped.
 See UPSTREAM.md for provenance and changes; Apache-2.0 license retained in LICENSE.
 -/
 
@@ -16,7 +17,7 @@ public section
 namespace OAI
 
 /-!
-# Characters of finite tensors over a field
+# Characters of finite tensors over a commutative coefficient semiring
 
 The tensor operations in this file are the coefficient operations from
 `MatrixMultiplication.Foundation.Tensor`. A character is an assumption on those
@@ -32,7 +33,9 @@ open scoped BigOperators
 
 namespace MatrixMultiplication.AuxiliarySeparation
 
-variable {K : Type*} [Field K]
+section General
+
+variable {K : Type*} [CommSemiring K]
 
 /-- The scalar multiplication tensor, the multiplicative unit. -/
 def unitTensor : Tensor K PUnit PUnit PUnit := fun _ _ _ => 1
@@ -46,7 +49,7 @@ def scalarTensor (r : ℕ) : Tensor K (Fin r) (Fin r) (Fin r) :=
 Index types vary over all finite types in `Type`. No character-existence result is
 included among the fields or claimed by this definition.
 -/
-structure Character (K : Type*) [Field K] where
+structure Character (K : Type*) [CommSemiring K] where
   value : {X Y Z : Type} → [Fintype X] → [Fintype Y] → [Fintype Z] →
     Tensor K X Y Z → ℝ
   nonneg : ∀ {X Y Z : Type} [Fintype X] [Fintype Y] [Fintype Z]
@@ -137,6 +140,38 @@ theorem value_le_rank {T : Tensor K X Y Z} {r : ℕ} (h : Tensor.RankAtMost T r)
   rw [← restrict_scalarTensor r a b c]
   exact (χ.monotone ((scalarTensor (K := K)) r) _ _ _).trans_eq (χ.value_scalarTensor r)
 
+/-- A unit coefficient gives a scalar restriction over every commutative semiring. -/
+theorem one_le_value_of_coefficient_one {T : Tensor K X Y Z}
+    (hT : ∃ x y z, T x y z = 1) : 1 ≤ χ.value T := by
+  classical
+  obtain ⟨x, y, z, hxyz⟩ := hT
+  let A : PUnit → X → K := fun _ x' => if x' = x then 1 else 0
+  let B : PUnit → Y → K := fun _ y' => if y' = y then 1 else 0
+  let C : PUnit → Z → K := fun _ z' => if z' = z then 1 else 0
+  have heq : Tensor.restrict A B C T = (unitTensor (K := K)) := by
+    funext i j k
+    simp [Tensor.restrict, A, B, C, unitTensor, ite_mul, mul_ite, hxyz]
+  simpa only [heq, χ.map_one] using χ.monotone T A B C
+
+/-- Positivity from an actual scalar restriction, without a field assumption. -/
+theorem one_le_value_of_unitRestriction {T : Tensor K X Y Z}
+    (A : PUnit.{1} → X → K) (B : PUnit.{1} → Y → K) (C : PUnit.{1} → Z → K)
+    (h : Tensor.restrict A B C T = unitTensor) : 1 ≤ χ.value T := by
+  simpa only [h, χ.map_one] using χ.monotone T A B C
+
+end Character
+
+end General
+
+namespace Character
+
+section Field
+
+variable {K : Type*} [Field K]
+variable (χ : Character K)
+variable {X Y Z : Type}
+variable [Fintype X] [Fintype Y] [Fintype Z]
+
 /-- Every nonzero tensor restricts to the scalar multiplication tensor. -/
 theorem one_le_value {T : Tensor K X Y Z} (hT : T ≠ 0) : 1 ≤ χ.value T := by
   classical
@@ -162,6 +197,8 @@ theorem one_le_value {T : Tensor K X Y Z} (hT : T ≠ 0) : 1 ≤ χ.value T := b
     exact (not_le_of_gt zero_lt_one) hle
   · rintro rfl
     exact χ.map_zero
+
+end Field
 
 end Character
 

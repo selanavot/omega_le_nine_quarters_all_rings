@@ -35,7 +35,7 @@ open MatrixMultiplication.Foundation
 
 namespace MatrixMultiplication.AuxiliarySeparation.Character
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommRing K] [Nontrivial K]
 
 variable (χ : (Character K))
 
@@ -65,7 +65,13 @@ theorem prod_permutedCharacter_swapped_convolution (a b : ℕ) :
   exact χ.sixfoldProduct_swap23 _
 
 /-- The actual polynomial profile is concave in its second positive index. -/
-theorem convolutionProfile_concave [IsAlgClosed K] {a b : ℕ} (ht : 0 < χ.meanExponent)
+theorem convolutionProfile_concave_of_separation
+    (hsep : ∀ ψ : Character K,
+      ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+        0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+          (∑ i, ψ.value (B' i)) * (M : ℝ) ^ ψ.pX ≤
+            6 * (M : ℝ) * ψ.value (sharedFirstTensor B'))
+    {a b : ℕ} (ht : 0 < χ.meanExponent)
     (ha : 0 < a) (hb : 2 ≤ b) :
     χ.convolutionProfile a (b - 1) + χ.convolutionProfile a (b + 1) ≤
       2 * χ.convolutionProfile a b := by
@@ -79,21 +85,25 @@ theorem convolutionProfile_concave [IsAlgClosed K] {a b : ℕ} (ht : 0 < χ.mean
     (fun i => χ.permutedCharacter_convolution_pos ha (by omega) i)
     (fun i => χ.permutedCharacter_convolution_pos ha (by omega) i)
     (fun i q hq₀ hq₁ =>
-      (χ.permutedCharacter i).convolution_concavity_tag a b ha hb q hq₀ hq₁)
+      (χ.permutedCharacter i).convolution_concavity_tag_of_separation
+        (hsep (χ.permutedCharacter i)) a b ha hb q hq₀ hq₁)
   simp only [χ.prod_permutedCharacter_value] at h
   change χ.convolutionProfile a (b + 1) + χ.convolutionProfile a (b - 1) ≤
     2 * χ.convolutionProfile a b at h
   simpa only [add_comm] using h
 
 /-- The actual three-sector degeneration triples the normalized profile. -/
-theorem convolutionProfile_tripling [IsAlgClosed K] {a h : ℕ} (ht : 0 < χ.meanExponent)
+theorem convolutionProfile_tripling_of_separation
+    (hsep : ∀ ψ : Character K,
+      ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+        0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+          (∑ i, ψ.value (B' i)) * (M : ℝ) ^ ψ.pX ≤
+            6 * (M : ℝ) * ψ.value (sharedFirstTensor B'))
+    {a h : ℕ} (ht : 0 < χ.meanExponent)
     (ha : 0 < a) (hh : 0 < h) :
     3 * χ.convolutionProfile a h ≤ χ.convolutionProfile a (3 * h + a - 1) := by
-  have hsw : (fun i s r => (convolution (K := K)) a h i r s) ≠ 0 := by
-    intro hz
-    apply convolution_nonzero (K := K) ha hh
-    exact congrArg
-      (fun T : Tensor K (Fin a) (Fin (a + h - 1)) (Fin h) => fun i j k => T i k j) hz
+  have hsw : ∃ x z y, (fun i s r => convolution (K := K) a h i r s) x z y = 1 :=
+    ⟨⟨0, ha⟩, convolutionOutput ⟨0, ha⟩ ⟨0, hh⟩, ⟨0, hh⟩, convolution_at_output _ _⟩
   have h := finite_product_tripling
     (fun i : Fin 6 => (χ.permutedCharacter i).value ((convolution (K := K)) a (3 * h + a - 1)))
     (fun i : Fin 6 => (χ.permutedCharacter i).value ((convolution (K := K)) a h))
@@ -102,36 +112,100 @@ theorem convolutionProfile_tripling [IsAlgClosed K] {a h : ℕ} (ht : 0 < χ.mea
     (mul_pos (by norm_num : (0 : ℝ) < 6) ht) χ.sum_permutedCharacter_pX_mean
     (fun i => χ.permutedCharacter_convolution_pos ha (by omega) i)
     (fun i => χ.permutedCharacter_convolution_pos ha hh i)
-    (fun i => (χ.permutedCharacter i).value_pos hsw)
-    (fun i => Sector.convolution_tripling_tag (χ.permutedCharacter i) a h ha hh)
+    (fun i => zero_lt_one.trans_le
+      ((χ.permutedCharacter i).one_le_value_of_coefficient_one hsw))
+    (fun i => Sector.convolution_tripling_tag_of_separation (χ.permutedCharacter i)
+      (hsep (χ.permutedCharacter i)) a h ha hh)
     (χ.prod_permutedCharacter_swapped_convolution a h)
   simpa only [χ.prod_permutedCharacter_value, convolutionProfile, symmetrizedProfile] using h
 
 /-- The polynomial profile satisfies every hypothesis of the scalar growth theorem. -/
-def toScalarProfile [IsAlgClosed K] (ht : 0 < χ.meanExponent) : ScalarProfile χ.meanExponent where
+def toScalarProfile_of_separation_and_convolution
+    (hsep : ∀ ψ : Character K,
+      ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+        0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+          (∑ i, ψ.value (B' i)) * (M : ℝ) ^ ψ.pX ≤
+            6 * (M : ℝ) * ψ.value (sharedFirstTensor B'))
+    (hconv : ∀ ψ : Character K, ∀ a b : ℕ,
+      ψ.value (convolution (K := K) a b) ≤ (a + b - 1 : ℕ))
+    (ht : 0 < χ.meanExponent) : ScalarProfile χ.meanExponent where
   value := χ.convolutionProfile
   positive a b ha hb := χ.convolutionProfile_pos (by omega) (by omega)
   symmetric a b _ _ := χ.convolutionProfile_comm a b
   boundary b hb := χ.convolutionProfile_one_left ht (by omega)
-  concave a b ha hb := χ.convolutionProfile_concave ht (by omega) hb
-  tripling a h ha hh := χ.convolutionProfile_tripling ht (by omega) (by omega)
+  concave a b ha hb := χ.convolutionProfile_concave_of_separation hsep ht (by omega) hb
+  tripling a h ha hh := χ.convolutionProfile_tripling_of_separation hsep ht (by omega) (by omega)
   rank_bound a b ha hb := by
-    have h := χ.convolutionProfile_le (a := a) (b := b) ht
+    have h := χ.convolutionProfile_le_of_character_value_bounds (a := a) (b := b) ht
+      (fun ψ => hconv ψ a b)
     have hab : 1 ≤ a + b := by omega
     simpa only [Nat.cast_sub hab, Nat.cast_add, Nat.cast_one] using h
 
 /-- Every actual tensor character has mean singleton-leg exponent at most `3/4`. -/
-theorem meanExponent_le_three_quarters [IsAlgClosed K] : χ.meanExponent ≤ 3 / 4 := by
+theorem meanExponent_le_three_quarters_of_separation_and_convolution
+    (hsep : ∀ ψ : Character K,
+      ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+        0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+          (∑ i, ψ.value (B' i)) * (M : ℝ) ^ ψ.pX ≤
+            6 * (M : ℝ) * ψ.value (sharedFirstTensor B'))
+    (hconv : ∀ ψ : Character K, ∀ a b : ℕ,
+      ψ.value (convolution (K := K) a b) ≤ (a + b - 1 : ℕ))
+    : χ.meanExponent ≤ 3 / 4 := by
   by_cases ht : 0 < χ.meanExponent
-  · exact (χ.toScalarProfile ht).exponent_le_three_quarters ht
+  · exact (χ.toScalarProfile_of_separation_and_convolution hsep hconv ht).exponent_le_three_quarters ht
   · have hle : χ.meanExponent ≤ 0 := le_of_not_gt ht
     linarith
 
 /-- The three dot-product exponents of an actual character sum to at most `9/4`. -/
-theorem exponent_sum_le_nine_quarters [IsAlgClosed K] : χ.pX + χ.pY + χ.pZ ≤ 9 / 4 := by
-  have h := χ.meanExponent_le_three_quarters
+theorem exponent_sum_le_nine_quarters_of_separation_and_convolution
+    (hsep : ∀ ψ : Character K,
+      ∀ {M : ℕ} {X' Y' Z' : Type} [Fintype X'] [Fintype Y'] [Fintype Z'],
+        0 < M → ∀ B' : Fin M → Tensor K X' Y' Z',
+          (∑ i, ψ.value (B' i)) * (M : ℝ) ^ ψ.pX ≤
+            6 * (M : ℝ) * ψ.value (sharedFirstTensor B'))
+    (hconv : ∀ ψ : Character K, ∀ a b : ℕ,
+      ψ.value (convolution (K := K) a b) ≤ (a + b - 1 : ℕ))
+    : χ.pX + χ.pY + χ.pZ ≤ 9 / 4 := by
+  have h := χ.meanExponent_le_three_quarters_of_separation_and_convolution hsep hconv
   unfold meanExponent at h
   linarith
+
+section Field
+
+variable {K : Type*} [Field K] [IsAlgClosed K] (χ : Character K)
+
+/-- Legacy field profile concavity, with the concrete separation theorem supplied. -/
+theorem convolutionProfile_concave {a b : ℕ} (ht : 0 < χ.meanExponent)
+    (ha : 0 < a) (hb : 2 ≤ b) :
+    χ.convolutionProfile a (b - 1) + χ.convolutionProfile a (b + 1) ≤
+      2 * χ.convolutionProfile a b :=
+  χ.convolutionProfile_concave_of_separation (by
+    intro ψ M X' Y' Z' _ _ _ hM B'
+    exact ψ.finiteSeparation_bound hM B') ht ha hb
+
+theorem convolutionProfile_tripling {a h : ℕ} (ht : 0 < χ.meanExponent)
+    (ha : 0 < a) (hh : 0 < h) :
+    3 * χ.convolutionProfile a h ≤ χ.convolutionProfile a (3 * h + a - 1) :=
+  χ.convolutionProfile_tripling_of_separation (by
+    intro ψ M X' Y' Z' _ _ _ hM B'
+    exact ψ.finiteSeparation_bound hM B') ht ha hh
+
+def toScalarProfile (ht : 0 < χ.meanExponent) : ScalarProfile χ.meanExponent :=
+  χ.toScalarProfile_of_separation_and_convolution (by
+    intro ψ M X' Y' Z' _ _ _ hM B'
+    exact ψ.finiteSeparation_bound hM B') (fun ψ a b => ψ.value_convolution_le a b) ht
+
+theorem meanExponent_le_three_quarters : χ.meanExponent ≤ 3 / 4 :=
+  χ.meanExponent_le_three_quarters_of_separation_and_convolution (by
+    intro ψ M X' Y' Z' _ _ _ hM B'
+    exact ψ.finiteSeparation_bound hM B') (fun ψ a b => ψ.value_convolution_le a b)
+
+theorem exponent_sum_le_nine_quarters : χ.pX + χ.pY + χ.pZ ≤ 9 / 4 :=
+  χ.exponent_sum_le_nine_quarters_of_separation_and_convolution (by
+    intro ψ M X' Y' Z' _ _ _ hM B'
+    exact ψ.finiteSeparation_bound hM B') (fun ψ a b => ψ.value_convolution_le a b)
+
+end Field
 
 end MatrixMultiplication.AuxiliarySeparation.Character
 

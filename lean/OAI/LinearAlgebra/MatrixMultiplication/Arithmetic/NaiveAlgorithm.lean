@@ -9,7 +9,7 @@ public section
 
 namespace OAI
 
-/-! Division-free arithmetic programs over a field and their operation counts. -/
+/-! Division-free arithmetic programs over a ring and their operation counts. -/
 
 noncomputable section
 
@@ -17,7 +17,7 @@ open scoped BigOperators
 
 namespace MatrixMultiplication.Arithmetic
 
-variable {F : Type*} [Field F]
+variable {F : Type*} [Ring F]
 
 namespace Expression
 

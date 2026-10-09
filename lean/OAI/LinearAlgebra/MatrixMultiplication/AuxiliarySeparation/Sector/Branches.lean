@@ -32,7 +32,7 @@ open scoped Classical
 
 namespace MatrixMultiplication.AuxiliarySeparation.Sector
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommRing K] [Nontrivial K]
 
 /-- Embed the left second-leg interval. -/
 def leftY (a h : ℕ) (r : Fin h) : YIndex a h :=

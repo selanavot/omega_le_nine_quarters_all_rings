@@ -8,13 +8,13 @@ public section
 
 namespace OAI
 
-/-! Division-free arithmetic programs over a field and their operation counts. -/
+/-! Division-free arithmetic programs over a ring and their operation counts. -/
 
 noncomputable section
 
 namespace MatrixMultiplication.Arithmetic
 
-variable {F : Type*} [Field F]
+variable {F : Type*} [Ring F]
 
 namespace Gate
 
@@ -32,7 +32,7 @@ def mapInput (f : Input → Input') : Gate F Input Register → Gate F Input' Re
     (g.mapInput f).eval inputs registers = g.eval (inputs ∘ f) registers := by
   cases g <;> rfl
 
-omit [Field F] in
+omit [Ring F] in
 @[simp] theorem cost_mapInput (f : Input → Input') (g : Gate F Input Register) :
     (g.mapInput f).cost = g.cost := by
   cases g <;> rfl
@@ -57,7 +57,7 @@ def mapSource (f : Input → Input' ⊕ F) : Gate F Input Register → Gate F In
   | sub => rfl
   | mul => rfl
 
-omit [Field F] in
+omit [Ring F] in
 @[simp] theorem cost_mapSource (f : Input → Input' ⊕ F) (g : Gate F Input Register) :
     (g.mapSource f).cost = g.cost := by
   cases g with
@@ -89,7 +89,7 @@ def mapInput (f : Input → Input') : {r : ℕ} → Program F Input r → Progra
       rw [funext ih]
     · exact ih j
 
-omit [Field F] in
+omit [Ring F] in
 @[simp] theorem cost_mapInput (f : Input → Input') {r : ℕ} (p : Program F Input r) :
     (p.mapInput f).cost = p.cost := by
   induction p with
@@ -113,7 +113,7 @@ def mapSource (f : Input → Input' ⊕ F) : {r : ℕ} → Program F Input r →
       rw [funext ih]
     · exact ih j
 
-omit [Field F] in
+omit [Ring F] in
 @[simp] theorem cost_mapSource (f : Input → Input' ⊕ F) {r : ℕ}
     (p : Program F Input r) : (p.mapSource f).cost = p.cost := by
   induction p with

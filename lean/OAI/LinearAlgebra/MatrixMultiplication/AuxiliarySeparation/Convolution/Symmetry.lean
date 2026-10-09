@@ -31,7 +31,7 @@ noncomputable section
 namespace MatrixMultiplication.AuxiliarySeparation
 namespace Character
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommSemiring K]
 
 open MatrixMultiplication.Foundation
 
@@ -135,12 +135,8 @@ theorem convolutionProfile_nonneg (a b : ℕ) : 0 ≤ χ.convolutionProfile a b 
 /-- Nonzero polynomial multiplication gives a positive normalized profile. -/
 theorem convolutionProfile_pos {a b : ℕ} (ha : 0 < a) (hb : 0 < b) :
     0 < χ.convolutionProfile a b :=
-  χ.symmetrizedProfile_pos _ (convolution_nonzero ha hb)
-
-/-- The evaluation/interpolation algorithm bounds the normalized profile. -/
-theorem convolutionProfile_le [Infinite K] {a b : ℕ} (ht : 0 < χ.meanExponent) :
-    χ.convolutionProfile a b ≤ (a + b - 1 : ℕ) ^ (1 / χ.meanExponent) :=
-  χ.symmetrizedProfile_le_rank ht (convolution_rankAtMost a b)
+  χ.symmetrizedProfile_pos_of_coefficient_one _
+    ⟨⟨0, ha⟩, ⟨0, hb⟩, convolutionOutput ⟨0, ha⟩ ⟨0, hb⟩, convolution_at_output _ _⟩
 
 /-- The normalization gives the exact initial value `P(1,b) = b`. -/
 theorem convolutionProfile_one_left {b : ℕ} (ht : 0 < χ.meanExponent) (hb : 0 < b) :
@@ -157,15 +153,35 @@ theorem convolutionProfile_one_right {a : ℕ} (ht : 0 < χ.meanExponent) (ha : 
     χ.convolutionProfile a 1 = a := by
   rw [χ.convolutionProfile_comm, χ.convolutionProfile_one_left ht ha]
 
+/-- Positive input sizes give a positive individual character value. -/
+theorem value_convolution_pos {a b : ℕ} (ha : 0 < a) (hb : 0 < b) :
+    0 < χ.value (convolution (K := K) a b) :=
+  zero_lt_one.trans_le (χ.one_le_value_of_coefficient_one
+    ⟨⟨0, ha⟩, ⟨0, hb⟩, convolutionOutput ⟨0, ha⟩ ⟨0, hb⟩, convolution_at_output _ _⟩)
+
+/-- An integral asymptotic character bound gives the same convolution
+profile estimate as interpolation over a field. It need not assert an exact
+rank-`a+b-1` decomposition over the coefficient ring. -/
+theorem convolutionProfile_le_of_character_value_bounds {a b : ℕ}
+    (ht : 0 < χ.meanExponent)
+    (h : ∀ ψ : Character K, ψ.value (convolution (K := K) a b) ≤ (a + b - 1 : ℕ)) :
+    χ.convolutionProfile a b ≤ (a + b - 1 : ℕ) ^ (1 / χ.meanExponent) :=
+  χ.symmetrizedProfile_le_of_character_value_bounds ht _ h
+
+section Field
+variable {K : Type*} [Field K] (χ : Character K)
+
+/-- The evaluation/interpolation algorithm bounds the normalized profile. -/
+theorem convolutionProfile_le [Infinite K] {a b : ℕ} (ht : 0 < χ.meanExponent) :
+    χ.convolutionProfile a b ≤ (a + b - 1 : ℕ) ^ (1 / χ.meanExponent) :=
+  χ.symmetrizedProfile_le_rank ht (convolution_rankAtMost a b)
+
 /-- Interpolation bounds an individual character on polynomial convolution. -/
 theorem value_convolution_le [Infinite K] (a b : ℕ) :
     χ.value (convolution (K := K) a b) ≤ (a + b - 1 : ℕ) :=
   χ.value_le_rank (convolution_rankAtMost a b)
 
-/-- Positive input sizes give a positive individual character value. -/
-theorem value_convolution_pos {a b : ℕ} (ha : 0 < a) (hb : 0 < b) :
-    0 < χ.value (convolution (K := K) a b) :=
-  zero_lt_one.trans_le (χ.one_le_value (convolution_nonzero ha hb))
+end Field
 
 end Character
 end MatrixMultiplication.AuxiliarySeparation

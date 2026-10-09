@@ -29,7 +29,7 @@ noncomputable section
 
 namespace MatrixMultiplication.AuxiliarySeparation
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommSemiring K]
 
 namespace Character
 

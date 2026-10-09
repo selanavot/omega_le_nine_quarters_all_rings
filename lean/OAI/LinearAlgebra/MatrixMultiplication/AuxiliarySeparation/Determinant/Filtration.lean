@@ -33,7 +33,7 @@ open MatrixMultiplication.Foundation Polynomial
 
 namespace MatrixMultiplication.AuxiliarySeparation.DeterminantFiltration
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommRing K] [Nontrivial K]
 
 abbrev Index (e : ℕ) := Sum (Fin (e + 2)) (Fin e)
 

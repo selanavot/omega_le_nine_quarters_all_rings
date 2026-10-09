@@ -1,0 +1,460 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{microtype}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\hypersetup{pdftitle={The Matrix Multiplication Bound omega <= 9/4 over Associative Rings},pdfauthor={},pdfsubject={AI-generated manuscript on an integral extension of the OpenAI matrix multiplication proof}}
+\ifdefined\pdfinfoomitdate\pdfinfoomitdate=1\fi
+\ifdefined\pdftrailerid\pdftrailerid{}\fi
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\rk}{R}
+\newcommand{\Z}{\mathbb Z}
+\newcommand{\Q}{\mathbb Q}
+\newcommand{\C}{\mathbb C}
+\newcommand{\F}{\mathbb F}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\res}{\preceq}
+\newcommand{\tp}[1]{^{\otimes #1}}
+\numberwithin{equation}{section}
+\title{The Matrix Multiplication Bound\\$\omega\leq9/4$ over Associative Rings}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+OpenAI's auxiliary-separation argument gives the matrix multiplication
+exponent bound $9/4$ over the complex numbers \cite{OAI,OAILean}; our earlier
+extension establishes the same bound over every field \cite{Fields}.
+We describe an integral version of that argument. Its stronger
+intermediate conclusion is a bound on exact tensor rank over $\Z$, which
+supplies the same exponent upper bound over every associative unital ring.
+The zero ring is included using an explicit zero-cost program and the
+real-infimum convention in the formal definition.
+The changes are a primitive tensor semiring for spectral detection,
+coefficient extraction and finite free descent, and coprime patching of
+unnormalized Fourier and interpolation constructions. The numerical
+exponent and the underlying profile-growth argument are those of OpenAI.
+\end{abstract}
+
+\noindent\textbf{Verification status.} The full upper-bound theorem,
+including the zero ring, has compiled and passed its axiom audit,
+fresh-kernel replay, and frozen-specification Comparator with all bundled checkers.
+These checks validate formal declarations, not this prose document.
+
+\paragraph{AI disclosure.}
+This manuscript is AI-generated. The proof development and Lean
+formalization were produced with Codex under human direction. Attribution
+to the underlying OpenAI proof and the previous field extension is given
+below; no claim of independent numerical improvement or human peer review
+is made.
+
+\section{Statement and contribution}
+
+For an associative unital ring $R$, define $\omega(R)$ using division-free
+arithmetic programs: addition, subtraction, and multiplication each cost
+one operation; input and constant gates cost zero. The order of factors
+in a multiplication gate is significant. An exponent $\tau$ is admissible
+when
+\[
+ \forall\eps>0\ \exists C>0\ \forall n\geq1\ \exists P_n:\quad
+ P_n\text{ computes matrix multiplication over }R,\qquad
+ \operatorname{cost}(P_n)\leq Cn^{\tau+\eps}.
+\]
+Correctness means correctness for every pair of input matrices of the
+specified size. The exponent is the real-valued \texttt{sInf} of admissible
+exponents, with the convention for the zero ring explained below.
+This is the arithmetic model used in the OpenAI Lean development, with
+its scalar type generalized from a field to a ring.
+
+Write $M_n$ for the square matrix multiplication tensor and $\rk_\Z(T)$
+for exact tensor rank with integer coefficient vectors. Put
+\[
+ \nu_\Z=\inf_{n\geq2}\log_n\rk_\Z(M_n).
+\]
+A tensor identity here is equality at every coefficient, not merely
+agreement of the corresponding functions over finite fields.
+
+\begin{theorem}\label{thm:main}
+The exact integer coefficient rank exponent satisfies $\nu_\Z\leq9/4$.
+Consequently, for every associative unital ring $R$ and every $\eps>0$,
+there are division-free arithmetic programs computing square matrix
+multiplication with cost $O_{R,\eps}(n^{9/4+\eps})$.
+For every such $R$, the formally defined exponent satisfies
+\[
+ \omega(R)\leq\frac94.
+\]
+\end{theorem}
+
+\begin{remark}[The zero ring and the real infimum]\label{rem:zero-ring}
+In the zero ring, one free constant-zero register supplies every output,
+giving a correct program of cost zero. Every real exponent is therefore
+admissible. The admissible set is $\mathbb R$, which is not bounded below;
+Mathlib's real-valued \texttt{sInf} convention gives $\omega(R)=0$.
+The extended-real infimum would instead be $-\infty$.
+For nontrivial rings, admissible exponents are bounded below by $2$, so the
+usual infimum interpretation applies. The integral argument handles that
+case; the zero-ring case uses the explicit program and the stated convention.
+\end{remark}
+
+OpenAI supplies the complex-field bound, auxiliary separation,
+determinant and sector constructions, and the real profile-growth
+argument \cite{OAI,OAILean}. The previous field extension changes the
+Fourier period in positive characteristic and descends from an algebraic
+closure through a fixed finite extension \cite{Fields}. We do not infer
+Theorem~\ref{thm:main} from the existence of solutions over all fields.
+Instead we construct and patch integer coefficient identities. This also
+handles rings with zero divisors, nilpotents, and noncommutative
+multiplication. The coefficient algebras used in the proof remain
+commutative.
+
+\section{The integral spectral setting}
+
+Write $U\res T$ if three integer linear maps restrict $T$ to $U$.
+Pass to tensors modulo mutual restriction, with direct sum as addition
+and tensor product as multiplication. Let $\mathcal S$ be the subsemiring
+consisting of zero and the classes satisfying $1\res T$.
+We call these classes \emph{unit-dominating}. A tensor with a coefficient
+$1$ or $-1$ is unit-dominating.
+
+This restriction on the spectral setting matters. The nonzero scalar
+tensor with coefficient $2$ does not restrict over $\Z$ to the scalar
+tensor $1$: such a restriction would give $2abc=1$ for integers $a,b,c$.
+Thus nonzero tensors cannot simply be treated as positive spectral
+objects in the field proof.
+
+For nonzero $T\in\mathcal S$ one has
+\[
+ 1\res T\res\langle\rk_\Z(T)\rangle,
+\]
+where $\langle m\rangle$ denotes the diagonal tensor of $m$ copies of
+$1$. These comparisons give precisely the cofinality and positivity used
+by the detecting-character argument of \cite[Appendix~A]{OAI}.
+The order of diagonal tensors is the ordinary order of their sizes,
+as follows from flattening over $\Q$. Flattening gives $\nu_\Z\geq2$; the naive multiplication scheme gives
+$\nu_\Z\leq3$.
+
+The detecting-character proof therefore runs on $\mathcal S$: for
+$d\geq2$ and an integer $0\leq k<d^{\nu_\Z}$, there is a normalized,
+additive, multiplicative, restriction-monotone character $\varphi$ with
+$\varphi(M_d)\geq k$. Its compactness, rational separation, and fixed-point
+steps are inherited from \cite{OAILean}; every division by a character
+value is justified by $\varphi(T)\geq1$ for nonzero $T\in\mathcal S$.
+The catalytic rank argument extracts $1$ only from such an object.
+
+For convenience, these characters extend to all tensor classes:
+\begin{equation}\label{eq:extend}
+ \chi(T)=\varphi(T\oplus1)-1.
+\end{equation}
+Since $T\oplus1$ is unit-dominating, this is defined everywhere.
+Additivity and multiplicativity follow by adjoining copies of $1$ and
+expanding $(T\oplus1)\otimes(U\oplus1)$; monotonicity and nonnegativity
+follow from restriction. The extension agrees with $\varphi$ on
+$\mathcal S$. In particular it preserves the detecting value on $M_d$.
+This avoids asserting positivity for every nonzero integer tensor.
+
+\section{Transport of exact coefficient identities}
+
+The following two elementary constructions replace field-valued
+interpolation in the treatment of polynomial degenerations.
+
+\begin{lemma}[Fixed finite free descent]\label{lem:descent}
+Let $E$ be a commutative $\Z$-algebra free of finite rank $D$, with a
+$\Z$-linear map $\pi:E\to\Z$ satisfying $\pi(1)=1$.
+If integer tensors $U,T$ satisfy $U\res_E T$, then
+\[
+ U\res_\Z \bigoplus_{D^2}T.
+\]
+The same overhead $D^2$ applies after taking any tensor power in this
+one fixed algebra $E$.
+\end{lemma}
+
+\begin{proof}
+Choose a basis $e_1,\ldots,e_D$ of $E$. Expand the first two local
+maps as $A=\sum_i A_i e_i$ and $B=\sum_j B_j e_j$, with integer
+coefficient maps $A_i,B_j$. For each pair $(i,j)$ apply
+$c\mapsto\pi(e_i e_jc)$ to the third local map. Summing the resulting
+$D^2$ integer restrictions recovers $U$, because $\pi$ splits integer
+coefficients. Taking powers before this expansion retains $D^2$;
+descending first and then taking powers would instead incur $D^{2k}$.
+\end{proof}
+
+\begin{lemma}[Coefficient extraction]\label{lem:extract}
+Suppose polynomial local maps $A(t),B(t),C(t)$ of degrees at most
+$a,b,c$ transform $T$ into a polynomial tensor whose coefficient of
+$t^h$ is $U$. Then $U$ is a restriction of $(a+1)(b+1)$ copies of $T$.
+For a degeneration with leading coefficient $U$, its $k$th tensor power
+has extraction cost at most $(ka+1)(kb+1)$.
+\end{lemma}
+
+\begin{proof}
+The required coefficient is the sum of the restrictions with maps
+$A_i,B_j,C_{h-i-j}$ for $0\leq i\leq a$ and $0\leq j\leq b$.
+A negative coefficient index contributes zero. Powers multiply the
+leading coefficient and scale each degree bound by $k$.
+\end{proof}
+
+Both lemmas hold over commutative base rings with the corresponding
+finite free data. No evaluations or division are needed. Monic quotients
+$E=\Z[t]/(f)$ supply the needed map $\pi$: reduce to degree below $\deg f$
+and take the constant coefficient, assuming $\deg f>0$.
+
+We also use a literal Bezout patch. If $d_1,\ldots,d_s$ generate the
+unit ideal in $\Z$, their $k$th powers do too. Choose integers $u_j$ with
+$\sum_j u_jd_j^k=1$. Concatenating rank decompositions for $d_j^kT\tp{k}$,
+and multiplying one local map by $u_j$, gives a decomposition for
+$T\tp{k}$. This is a coefficient identity; it does not divide by any
+$d_j$ or treat scalar multiplication as a number of direct-sum copies.
+
+\section{Integral convolution and Fourier separation}
+
+\subsection{Interpolation with coprime norms}
+
+For positive integers $a,b$, let $C(a,b)$ be the polynomial multiplication tensor with coefficients
+$[i+j=\ell]$, and put $h=a+b-1$. The required statement is an asymptotic
+rank bound, not a rank-$h$ decomposition over $\Z$ at the first power.
+
+\begin{proposition}\label{prop:convolution}
+For each $a,b$ there is a positive integer $K_{a,b}$ such that
+\[
+ \rk_\Z\bigl(C(a,b)\tp{k}\bigr)\leq K_{a,b}h^k
+ \qquad(k\geq0).
+\]
+Every normalized nonnegative character monotone under restriction obeys
+$\chi(C(a,b))\leq h$.
+\end{proposition}
+
+\begin{proof}
+Fix a prime $p$. Choose a finite extension of $\F_p$ with at least $h$
+elements and a power basis, then lift its monic minimal polynomial to a
+monic $f\in\Z[t]$. The quotient $E=\Z[t]/(f)$ is finite free of some
+positive rank $D$, and its basis specializes to the finite-field basis.
+Choose lifts $v_1,\ldots,v_h$ of distinct residue elements. Write $V$ for
+their Vandermonde matrix and $\Delta=\det V$.
+
+Evaluation followed by $\operatorname{adj}(V)$ gives an $h$-term scheme
+for $\Delta C(a,b)$ over $E$. Let $M_\Delta$ be the integer matrix of
+multiplication by $\Delta$ in the chosen basis, and put $d=\det M_\Delta$.
+If $w$ is the element with coordinate vector
+$\operatorname{adj}(M_\Delta)[1]$, then $\Delta w=d\,1$.
+Multiplying the output map by $w$ therefore gives an $h$-term scheme
+for $dC(a,b)$ over $E$, without passing to a localization.
+
+Modulo $p$, the nodes remain distinct. Thus $\Delta$ is nonzero in the
+residue field, multiplication by it is invertible, and $p\nmid d$.
+Taking powers in this fixed $E$ and applying
+Lemma~\ref{lem:descent} gives
+\[
+ \rk_\Z\bigl(d^k C(a,b)\tp{k}\bigr)\leq D^2h^k.
+\]
+Perform this construction for each prime. No prime divides all resulting
+clearing integers, so the ideal they generate is $\Z$. Membership of $1$
+in that ideal uses only a finite subfamily $d_1,\ldots,d_s$.
+Fix this subfamily and its algebras before varying $k$. The Bezout patch
+gives the assertion with $K_{a,b}=\sum_jD_j^2$. Taking $k$th roots of
+the character inequality removes this fixed constant.
+\end{proof}
+
+\subsection{Two unnormalized Fourier periods}
+
+For $M\geq1$ matched sectors, take $L=5M$ and use each period
+$q\in\{L,L+1\}$. Work in the finite free cyclotomic algebra
+$E_q=\Z[z]/(\Phi_q(z))$, with $\zeta$ the image of $z$. It is a unit
+and satisfies the unnormalized identity
+\[
+ \sum_{r=0}^{q-1}\zeta^{re}=
+ \begin{cases}q,&q\mid e,\\0,&q\nmid e.\end{cases}
+\]
+Apply the substitutions of \cite[Proposition~3.1]{OAI}, omitting their
+factor $1/q$. The relevant phases have absolute value at most
+$3(M-1)<q$, so the same matched terms survive. The relative monomial
+weights select the same leading tensor, multiplied by $q$. To make all
+local exponents nonnegative, add $M^2$ to each second- and third-leg
+weight. The selected coefficient moves to degree $2M^2$; its tensor is
+unchanged.
+
+Let $A$ be the shared-first-leg source and $B$ its separated target,
+including the auxiliary dot-product factor. The construction gives a
+polynomial degeneration from $q$ copies of $A$ to the coefficient
+multiple $qB$ over $E_q$. Taking powers first, then extracting and
+descending, gives
+\[
+ q^kB\tp{k}\res_\Z
+ \bigoplus_{D_q^2 P_q(k)q^k} A\tp{k},
+\]
+where $D_q=\deg\Phi_q$ and $P_q$ is a fixed quadratic polynomial bound.
+The $q^k$ on the left multiplies coefficients; on the right it counts
+copies. Since $L^k$ and $(L+1)^k$ are coprime, patch the two restrictions
+before taking character values. Then
+\[
+ \chi(B)^k\leq
+ \bigl(D_L^2P_L(k)L^k+D_{L+1}^2P_{L+1}(k)(L+1)^k\bigr)\chi(A)^k.
+\]
+Taking roots yields $\chi(B)\leq(L+1)\chi(A)\leq6M\chi(A)$.
+The constant six replaces the original constant five and disappears in
+the entropy limit. For each fixed outer type length, the sector count
+$M$, both algebras, and all degree bounds are fixed before the inner
+power $k$ tends to infinity. No estimate uniform in growing $M$ is needed.
+
+\section{The retained profile argument and ring algorithms}
+
+The determinant filtration uses an integral adapted basis. On its affine
+chart, for pairs $(A(X),B(X))$ of degree at most $e$, take quotient
+vectors $(X^i,0)$ for $0\leq i\leq e$ and $(0,X^e)$, and kernel vectors
+$(-X^{j+1},X^j)$ for $0\leq j<e$. The inverse reads quotient coordinates
+from $A+XB$ and kernel coordinates from $B_0,\ldots,B_{e-1}$.
+These are mutually inverse integer maps; no field dimension argument is
+needed. The sector construction similarly uses coordinate maps and
+integer monomial weights.
+
+Thus the determinant, shifted-tripling, and entropy inequalities of
+\cite{OAI} retain their form, while Proposition~\ref{prop:convolution}
+supplies the needed convolution upper bound. For the symmetrized profile
+$P$ and its parameter $t>0$, the retained laws include symmetry,
+row concavity, shifted tripling
+\[
+ P(a,3b+a-1)\geq3P(a,b),
+ \qquad P(a,b)\leq(a+b-1)^{1/t}.
+\]
+OpenAI's real diagonal-growth argument forces $t\leq3/4$, hence
+$\chi(M_n)\leq n^{9/4}$. Detecting characters from Section~2 then give
+$\nu_\Z\leq9/4$. This step invokes their proof rather than supplying a
+new profile inequality or a better numerical exponent.
+
+Fix a block size $u\geq2$ and an integer rank-$r$ scheme with
+$r<u^{9/4+\delta}$, where $0<\delta<\eps$. Every output of the scheme is
+\[
+ \sum_{\ell=1}^r w_{c\ell}
+ \left(\sum_a u_{\ell a}x_a\right)
+ \left(\sum_b v_{\ell b}y_b\right),
+ \qquad u_{\ell a},v_{\ell b},w_{c\ell}\in\Z.
+\]
+Integer constants are central in every associative unital ring.
+Expansion always keeps $x_a$ before $y_b$, so the coefficient identity
+works without commuting input variables. It also works for matrix
+blocks, enabling the original recursive program construction.
+Its recurrence is $S(uv)\leq rS(v)+6ru^2v^2$ with $u,r$ fixed.
+Using $r\geq u^2$, padding, and positive exponent slack gives the
+operation bound in Theorem~\ref{thm:main}. The direct operation-count
+statement covers every ring. Nontriviality remains a hypothesis of the
+bounded-below and lower-bound statements; the zero-ring exponent is handled
+as in Remark~\ref{rem:zero-ring}.
+
+\section{Formal scope and provenance}
+
+The exported theorem in namespace
+\texttt{OAI.MatrixMultiplication} is
+\begin{verbatim}
+theorem omega_le_nine_quarters_all_rings
+    (R : Type u) [Ring R] :
+    Arithmetic.omega R <= (9 : Real) / 4
+\end{verbatim}
+Lean's \texttt{Ring} class here means associative unital ring, not
+necessarily commutative or nontrivial. The bounded-below admissibility and
+$\omega(R)\geq2$ theorems retain \texttt{[Nontrivial R]}; neither holds
+for the zero ring. Auxiliary tensor rank and coefficient-algebra
+constructions are over commutative rings, with the main intermediate
+specialized to $\Z$.
+
+The formal conclusion is existence of a family of arithmetic programs.
+It does not assert an $O(n^{9/4})$ endpoint bound, an efficient uniform
+circuit generator, or bit complexity for encodings of ring elements.
+In particular an arbitrary ring is not assumed to have a finite-tape
+representation. The integer schemes are stronger coefficient statements
+than functional correctness modulo a chosen characteristic.
+
+The new repository \cite{Rings} starts from the minimal import closure
+of the prior all-fields entry point at revision
+\texttt{08481ef22bca7dc9ffba091083b7c1e81e537220}. Its import manifest
+records the inherited source hashes and OpenAI upstream revision.
+The current toolchain is Lean 4.35.0-rc4 with Mathlib revision
+\texttt{f0469b25d97aef3998d4bc06f6f01da670b3d18e}
+\cite{Lean,Mathlib}.
+
+Within the matrix-multiplication subtree, the relevant files under
+\nolinkurl{AuxiliarySeparation/} are:
+\begin{itemize}
+\item \nolinkurl{Tensor/Primitive*.lean} and
+\nolinkurl{Character/Existence.lean}: the spectral domain and detection;
+\item \nolinkurl{Integral/}: coefficient extraction,
+finite free descent, norm clearing, coprime patching, Fourier separation,
+and the arithmetic bridge;
+\item \nolinkurl{Determinant/} and
+\nolinkurl{Sector/}: the integral versions of the inherited constructions.
+\end{itemize}
+The checked transport declarations include
+\begin{quote}\small\ttfamily
+convolution\_integer\_power\_rank\\
+exists\_prime\_clearing\_convolution
+\end{quote}
+and the polynomial degeneration \texttt{power}/\texttt{extract} methods.
+
+The six audited claims use only \texttt{propext}, \texttt{Classical.choice},
+and \texttt{Quot.sound}. Their complete dependencies passed fresh-kernel
+replay: the upper bound for all rings, boundedness and nonemptiness of the
+admissible set, the lower bound, direct costs, and integer coefficient
+identities. Boundedness and the lower bound retain nontriviality hypotheses.
+Comparator checks these against a frozen model with exactly seven
+field-to-ring substitutions and no definition holes. Its Lean paranoid,
+lean4lean, nanoda, con-leche, con-ron, and default Lean checkers all accepted
+the strengthened statement.
+Verification uses trusted local sources, pinned dependencies, and incremental
+build caches. Comparator's build sandbox is disabled. The repository records
+commands, outcomes, prior failure-control tests, and separate AI source reviews.
+
+\paragraph{Attribution.}
+The numerical $9/4$ bound and its main mathematical architecture are due
+to OpenAI \cite{OAI,OAILean}. The prior field extension is credited in
+\cite{Fields}. This manuscript concerns the integral spectral setting,
+explicit multiplier elimination, fixed-algebra transport, and the passage
+to arbitrary associative rings. Standard descent, adjugate, and Bezout
+principles are used without a historical-priority claim. The manuscript
+and the extension's Lean proof development are AI-generated; neither is
+presented as independent human peer review.
+
+\begin{thebibliography}{9}
+\raggedright
+\bibitem{OAI}
+OpenAI, \emph{An Upper Bound of $9/4$ for the Matrix Multiplication
+Exponent}, October 2, 2026.
+\href{https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Matrix-Multiplication-Nine-Fourths-October-2-2026/paper.pdf}{Preprint},
+revision \texttt{adc7f1241b42e322a6451854ab7e4b4c146bf78a}.
+
+\bibitem{OAILean}
+OpenAI, \emph{Lean sources for matrix multiplication}, 2026.
+\href{https://github.com/openai/math/tree/adc7f1241b42e322a6451854ab7e4b4c146bf78a/lean/OAI/LinearAlgebra/MatrixMultiplication}{MatrixMultiplication source subtree},
+same pinned revision.
+
+\bibitem{Fields}
+S.~Navot, \emph{Matrix multiplication exponent at most $9/4$ over
+arbitrary fields: a Lean formalization}, version 1.0.0, 2026.
+\href{https://doi.org/10.5281/zenodo.23219128}{doi:10.5281/zenodo.23219128}.
+The present source baseline is
+\href{https://github.com/selanavot/matrix-multiplication-all-fields/tree/08481ef22bca7dc9ffba091083b7c1e81e537220}{revision 08481ef2}
+of that repository; see its provenance records for the archived release.
+
+\bibitem{Rings}
+\emph{Matrix multiplication exponent at most $9/4$ over associative
+rings: Lean development}, source repository.
+\url{https://github.com/selanavot/omega_le_nine_quarters_all_rings}.
+Source, paper, import provenance, and verification records are versioned
+together; the manuscript is associated with its repository commit.
+
+\bibitem{Lean}
+L.~de Moura and S.~Ullrich, \emph{The Lean 4 theorem prover and
+programming language}, Automated Deduction---CADE~28,
+LNCS \textbf{12699} (2021), 625--635.
+\href{https://doi.org/10.1007/978-3-030-79876-5_37}{doi:10.1007/978-3-030-79876-5\_37}.
+
+\bibitem{Mathlib}
+The mathlib Community, \emph{The Lean mathematical library},
+CPP~2020, 367--381.
+\href{https://doi.org/10.1145/3372885.3373824}{doi:10.1145/3372885.3373824}.
+\end{thebibliography}
+\end{document}

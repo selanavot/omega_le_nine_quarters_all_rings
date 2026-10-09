@@ -12,11 +12,15 @@ explicit approval identifying that particular PR.
 ## Trusted specification
 
 Target: `OAI.MatrixMultiplication.omega_le_nine_quarters_all_rings` with
-`(F : Type u) [Ring F] [Nontrivial F]` and conclusion
-`Arithmetic.omega F ≤ (9 : ℝ) / 4`.
+`(R : Type u) [Ring R]` and conclusion
+`Arithmetic.omega R ≤ (9 : ℝ) / 4`.
 Preserve the existing program semantics, gate costs, correctness quantifiers,
 positive exponent slack, and infimum definition. Generalize typeclasses only
-where supported. Prove BddBelow and the direct operation-count theorem.
+where supported. Prove BddBelow for nontrivial rings and the direct operation-count
+theorem for all rings. Sela explicitly authorized removing Nontrivial from the
+upper bound on 2026-10-09: handle the zero ring with an explicit zero-cost program
+and document the real-infimum convention. Retain Nontrivial on the lower bound
+and BddBelow statements; do not change the definition of omega.
 The stronger intermediate is exact integer coefficient rank exponent ≤9/4.
 No new axioms, sorry/admit, vacuous assumptions, or circular definitions in
 completed proofs. Keep incomplete obligations explicit and outside the final
@@ -34,7 +38,8 @@ Retain licenses and clear attribution for inherited and modified code.
 
 ## Verification and resources
 
-Use Lean4.35.0-rc2 and pinned dependencies. Do not silently upgrade.
+Use Lean 4.35.0-rc4 and mathlib f0469b25d97aef3998d4bc06f6f01da670b3d18e,
+upgraded at Sela’s explicit request on 2026-10-09. Keep exact versions pinned.
 24GB host: LEAN_NUM_THREADS=1. Only root starts build processes. Source
 editing may be parallel. If a serialized build queue is installed, agents
 may submit requests; they may not start additional Lake/Lean processes.
@@ -54,3 +59,8 @@ and compiler for source preview. A reproducible repo PDF build may additionally
 use existing tools. Do not install TeX solely for the native editor.
 
 No brain icons or graphics. Never merge without specific human approval.
+
+Before reusing dependency caches, resolve `.lake/packages` itself and every
+ancestor: inspecting its children does not detect a parent symlink. Keep a
+physical copy per independently upgraded project; verify `lake env printenv
+LEAN_PATH` stays inside this checkout before starting builds.

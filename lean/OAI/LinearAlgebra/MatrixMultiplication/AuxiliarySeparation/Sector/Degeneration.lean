@@ -32,7 +32,7 @@ open scoped BigOperators Classical
 
 namespace MatrixMultiplication.AuxiliarySeparation.Sector
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommRing K] [Nontrivial K]
 
 open MatrixMultiplication.Foundation
 open Polynomial
@@ -217,6 +217,9 @@ theorem normalizedPolynomial_eval (a h : ℕ) (t : K) (i : Fin a)
   simp only [normalizedPolynomial, Polynomial.eval_add, Polynomial.eval_mul,
     Polynomial.eval_C, Polynomial.eval_X]
 
+section Field
+variable {K : Type*} [Field K]
+
 /-- At nonzero parameters, the unshifted normalized polynomial is still an
 ordinary restriction: divide the first local map by the parameter. -/
 theorem normalizedPolynomial_eval_restriction (a h : ℕ) (t : K) (ht : t ≠ 0) :
@@ -248,6 +251,8 @@ theorem retained_power_rankAtMost [Infinite K] (a h r n : ℕ)
     (hsource : Tensor.RankAtMost (source (K := K) a h) r) :
     Tensor.RankAtMost (Tensor.power (retained (K := K) a h) n) ((2 * n + 1) * r ^ n) := by
   simpa using restrictionDegeneration_power_rankAtMost (restriction (K := K) a h) hsource n
+
+end Field
 
 end MatrixMultiplication.AuxiliarySeparation.Sector
 

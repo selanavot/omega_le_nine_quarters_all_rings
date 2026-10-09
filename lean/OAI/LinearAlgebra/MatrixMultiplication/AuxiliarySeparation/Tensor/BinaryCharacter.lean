@@ -2,7 +2,8 @@ module
 
 /-
 Upstream source and modification notice
-Modified from OpenAI's matrix-multiplication sources to support arbitrary fields.
+Modified from OpenAI's matrix-multiplication sources and the all-fields extension
+to support the integral/ring proof. Field-only claims remain explicitly scoped.
 See UPSTREAM.md for provenance and changes; Apache-2.0 license retained in LICENSE.
 -/
 
@@ -29,7 +30,7 @@ open scoped BigOperators
 
 namespace MatrixMultiplication.AuxiliarySeparation.Character
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommSemiring K]
 
 /-- A character is additive on binary direct sums with arbitrary finite
 coordinate types. -/

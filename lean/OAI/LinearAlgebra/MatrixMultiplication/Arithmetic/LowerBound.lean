@@ -11,7 +11,7 @@ public section
 
 namespace OAI
 
-/-! Division-free arithmetic programs over a field and their operation counts. -/
+/-! Division-free arithmetic programs over a ring and their operation counts. -/
 
 noncomputable section
 
@@ -33,7 +33,7 @@ theorem sum_registerCost {r : ℕ} (p : Program F Input r) :
   | nil => simp [registerCost, cost]
   | step p g ih => simp [registerCost, Fin.sum_univ_succ, ih, Nat.add_comm]
 
-theorem eval_eq_constant_or_input_of_registerCost_eq_zero [Field F]
+theorem eval_eq_constant_or_input_of_registerCost_eq_zero [Ring F]
     {r : ℕ} (p : Program F Input r) (i : Fin r) (hi : p.registerCost i = 0) :
     (∃ z : F, ∀ inputs, p.eval inputs i = z) ∨
       (∃ a : Input, ∀ inputs, p.eval inputs i = inputs a) := by
@@ -59,7 +59,7 @@ end Program
 
 section ElementaryMatrices
 
-variable {F : Type*} [Field F] {a b c : ℕ}
+variable {F : Type*} [Ring F] {a b c : ℕ}
 
 def elementaryLeft (i : Fin a) (j : Fin b) : Matrix (Fin a) (Fin b) F :=
   fun x y => if x = i then if y = j then 1 else 0 else 0
@@ -77,7 +77,7 @@ end ElementaryMatrices
 
 namespace MatrixAlgorithm
 
-variable {F : Type*} [Field F] {a b c : ℕ}
+variable {F : Type*} [Ring F] [Nontrivial F] {a b c : ℕ}
 
 theorem output_injective (P : MatrixAlgorithm F a b c) (hb : 1 ≤ b)
     (hP : P.Correct) : Function.Injective (fun o : Fin a × Fin c => P.output o.1 o.2) := by
@@ -147,7 +147,7 @@ theorem output_size_le_cost (P : MatrixAlgorithm F a b c) (hb : 1 ≤ b)
 
 end MatrixAlgorithm
 
-theorem rectangularAdmissibleExponent_two_le {F : Type*} [Field F] {k τ : ℝ}
+theorem rectangularAdmissibleExponent_two_le {F : Type*} [Ring F] [Nontrivial F] {k τ : ℝ}
     (hτ : RectangularAdmissibleExponent F k τ) : 2 ≤ τ := by
   by_contra hneg
   have hτlt : τ < 2 := lt_of_not_ge hneg
@@ -177,15 +177,15 @@ theorem rectangularAdmissibleExponent_two_le {F : Type*} [Field F] {k τ : ℝ}
       norm_num
   exact (lt_irrefl _ hstrict)
 
-theorem rectangularAdmissibleExponent_bddBelow (F : Type*) [Field F] (k : ℝ) :
+theorem rectangularAdmissibleExponent_bddBelow (F : Type*) [Ring F] [Nontrivial F] (k : ℝ) :
     BddBelow {τ : ℝ | RectangularAdmissibleExponent F k τ} :=
   ⟨2, fun _ h => rectangularAdmissibleExponent_two_le h⟩
 
-theorem rectangularOmega_le_of_admissibleExponent {F : Type*} [Field F] {k τ : ℝ}
+theorem rectangularOmega_le_of_admissibleExponent {F : Type*} [Ring F] [Nontrivial F] {k τ : ℝ}
     (hτ : RectangularAdmissibleExponent F k τ) : rectangularOmega F k ≤ τ :=
   csInf_le (rectangularAdmissibleExponent_bddBelow F k) hτ
 
-theorem admissibleExponent_iff_rectangular_one (F : Type*) [Field F] (τ : ℝ) :
+theorem admissibleExponent_iff_rectangular_one (F : Type*) [Ring F] [Nontrivial F] (τ : ℝ) :
     AdmissibleExponent F τ ↔ RectangularAdmissibleExponent F 1 τ := by
   constructor
   · intro h ε hε
@@ -202,19 +202,19 @@ theorem admissibleExponent_iff_rectangular_one (F : Type*) [Field F] (τ : ℝ) 
     rw [innerSize_one] at hnBound
     exact hnBound
 
-theorem admissibleExponent_two_le {F : Type*} [Field F] {τ : ℝ}
+theorem admissibleExponent_two_le {F : Type*} [Ring F] [Nontrivial F] {τ : ℝ}
     (hτ : AdmissibleExponent F τ) : 2 ≤ τ :=
   rectangularAdmissibleExponent_two_le ((admissibleExponent_iff_rectangular_one F τ).mp hτ)
 
-theorem admissibleExponent_bddBelow (F : Type*) [Field F] :
+theorem admissibleExponent_bddBelow (F : Type*) [Ring F] [Nontrivial F] :
     BddBelow {τ : ℝ | AdmissibleExponent F τ} :=
   ⟨2, fun _ h => admissibleExponent_two_le h⟩
 
-theorem omega_le_of_admissibleExponent {F : Type*} [Field F] {τ : ℝ}
+theorem omega_le_of_admissibleExponent {F : Type*} [Ring F] [Nontrivial F] {τ : ℝ}
     (hτ : AdmissibleExponent F τ) : omega F ≤ τ :=
   csInf_le (admissibleExponent_bddBelow F) hτ
 
-@[simp] theorem rectangularOmega_one (F : Type*) [Field F] :
+@[simp] theorem rectangularOmega_one (F : Type*) [Ring F] [Nontrivial F] :
     rectangularOmega F 1 = omega F := by
   unfold rectangularOmega omega
   congr 1

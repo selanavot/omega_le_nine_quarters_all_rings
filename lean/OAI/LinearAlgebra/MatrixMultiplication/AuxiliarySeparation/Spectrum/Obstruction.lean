@@ -2,7 +2,8 @@ module
 
 /-
 Upstream source and modification notice
-Modified from OpenAI's matrix-multiplication sources to support arbitrary fields.
+Modified from OpenAI's matrix-multiplication sources and the all-fields extension
+to support the integral/ring proof. Field-only claims remain explicitly scoped.
 See UPSTREAM.md for provenance and changes; Apache-2.0 license retained in LICENSE.
 -/
 
@@ -33,7 +34,9 @@ open MatrixMultiplication.Foundation
 
 namespace MatrixMultiplication.AuxiliarySeparation
 
-variable {K : Type*} [Field K]
+section General
+
+variable {K : Type*} [CommSemiring K] [Nontrivial K]
 
 /-- Tensor powers of a fixed exact matrix algorithm retain their exact rank
 bound after identifying the product coordinates with one matrix dimension. -/
@@ -264,12 +267,11 @@ theorem catalytic_semiring_obstruction {S : Type*} [CommSemiring S] [Preorder S]
 restriction, a fixed catalyst cannot make `k` copies dominate multiplication
 by `T_d` unless `k ≥ d^ν`.  The nonzero hypothesis is exactly what supplies
 the scalar restriction `s ≥ 1`; the catalyst remains fixed throughout. -/
-theorem tensor_catalytic_obstruction
+theorem tensor_catalytic_obstruction_of_one_le
     {D s : (TensorSemiring.TensorClass K)} {d k : ℕ}
-    (hd : 0 < d) (hs : s ≠ 0)
+    (hd : 0 < d) (hs1 : 1 ≤ s)
     (hcat : D + (TensorSemiring.matrixClass (K := K)) d * s ≤ D + (k : (TensorSemiring.TensorClass K)) * s) :
     (d : ℝ) ^ (exactRankExponent K) ≤ k := by
-  have hs1 : 1 ≤ s := TensorSemiring.one_le_of_ne_zero hs
   have hcopies : ∀ (m : ℕ) (x : (TensorSemiring.TensorClass K)),
       TensorSemiring.rank ((m : (TensorSemiring.TensorClass K)) * x) ≤
         m * TensorSemiring.rank x := by
@@ -306,13 +308,13 @@ theorem tensor_catalytic_obstruction
 /-- The stronger comparison produced by a finite separation certificate
 has the same consequence.  Its positive scalar summand is only needed
 earlier to rule out `s = 0`; that nonzero fact is explicit here. -/
-theorem tensor_catalytic_obstruction_of_scalar_gain
+theorem tensor_catalytic_obstruction_of_scalar_gain_of_one_le
     {D s : (TensorSemiring.TensorClass K)} {d k m : ℕ}
-    (hd : 0 < d) (hs : s ≠ 0)
+    (hd : 0 < d) (hs : 1 ≤ s)
     (hcat : D + (m : (TensorSemiring.TensorClass K)) + (TensorSemiring.matrixClass (K := K)) d * s ≤
       D + (k : (TensorSemiring.TensorClass K)) * s) :
     (d : ℝ) ^ (exactRankExponent K) ≤ k := by
-  apply tensor_catalytic_obstruction hd hs
+  apply tensor_catalytic_obstruction_of_one_le hd hs
   refine le_trans ?_ hcat
   simpa only [add_zero] using TensorSemiring.add_mono
     (TensorSemiring.add_mono (le_refl D)
@@ -350,6 +352,30 @@ theorem not_tensor_add_positive_nat_le_self (D : (TensorSemiring.TensorClass K))
   have hlarge : TensorSemiring.rank D + 1 ≤ TensorSemiring.rank D := hnm.trans hrank
   omega
 
+end General
+
+section Field
+
+variable {K : Type*} [Field K]
+
+/-- Over a field, every nonzero catalyst admits the required unit restriction. -/
+theorem tensor_catalytic_obstruction
+    {D s : TensorSemiring.TensorClass K} {d k : ℕ}
+    (hd : 0 < d) (hs : s ≠ 0)
+    (hcat : D + TensorSemiring.matrixClass d * s ≤ D + (k : TensorSemiring.TensorClass K) * s) :
+    (d : ℝ) ^ exactRankExponent K ≤ k :=
+  tensor_catalytic_obstruction_of_one_le hd (TensorSemiring.one_le_of_ne_zero hs) hcat
+
+/-- The field specialization of the scalar-gain obstruction. -/
+theorem tensor_catalytic_obstruction_of_scalar_gain
+    {D s : TensorSemiring.TensorClass K} {d k m : ℕ}
+    (hd : 0 < d) (hs : s ≠ 0)
+    (hcat : D + (m : TensorSemiring.TensorClass K) + TensorSemiring.matrixClass d * s ≤
+      D + (k : TensorSemiring.TensorClass K) * s) :
+    (d : ℝ) ^ exactRankExponent K ≤ k :=
+  tensor_catalytic_obstruction_of_scalar_gain_of_one_le hd
+    (TensorSemiring.one_le_of_ne_zero hs) hcat
+
 /-- The exact finite-obstruction comparison from Appendix A.1 forces
 `k ≥ d^ν`.  Both tensors are fixed, `m` is a positive scalar gain, and the
 ordinary tensor rank and restriction order are the actual ones. -/
@@ -375,6 +401,8 @@ theorem no_tensor_catalytic_gain {d k : ℕ} (hd : 0 < d)
         D + (k : (TensorSemiring.TensorClass K)) * s := by
   rintro ⟨D, s, m, hm, hcat⟩
   exact (not_lt_of_ge (tensor_catalytic_obstruction_of_positive_scalar_gain hd hm hcat)) hk
+
+end Field
 
 end MatrixMultiplication.AuxiliarySeparation
 

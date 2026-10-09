@@ -21,6 +21,8 @@ open scoped BigOperators
 namespace MatrixMultiplication.Foundation
 namespace Tensor
 
+section FieldInterpolation
+
 variable {F X Y Z : Type*} [Field F]
 
 theorem coeff_eq_sum_eval {ι : Type*} [Fintype ι] [DecidableEq ι]
@@ -62,6 +64,10 @@ theorem RankAtMost.coeff {ι : Type*} [Fintype ι] [DecidableEq ι]
     ring
   rw [heq]
   simpa only [Fintype.card_prod, Fintype.card_fin] using rankAtMost_sum_rankOne aa bb cc
+
+end FieldInterpolation
+
+variable {F X Y Z : Type*} [CommRing F]
 
 structure PolynomialApproximation (T : Tensor F X Y Z) (r d D : ℕ) where
   polynomial : Tensor (Polynomial F) X Y Z
@@ -120,6 +126,11 @@ def power (A : PolynomialApproximation T r d D) (n : ℕ) :
         exact Polynomial.natDegree_le_of_degree_le (A.degree_bound (x i) (y i) (z i))
       _ = D * n := by simp [Nat.mul_comm]
 
+section FieldRecovery
+
+variable {F : Type*} [Field F]
+variable {T : Tensor F X Y Z}
+
 theorem rank_power [CharZero F] (A : PolynomialApproximation T r d D) (n : ℕ) :
     RankAtMost (Tensor.power T n) ((D * n + 1) * r ^ n) := by
   let nodes : Fin (D * n + 1) → F := fun i => (i.val : F)
@@ -152,6 +163,8 @@ theorem rank_normalized_eval (A : PolynomialApproximation T r d D)
     rw [← mul_assoc, inv_mul_cancel₀ (pow_ne_zero d ht), one_mul]
   rw [heq] at h
   exact h
+
+end FieldRecovery
 
 theorem borderRankAtMost [Fintype X] [Fintype Y] [Fintype Z]
     {S : Tensor ℂ X Y Z} (A : PolynomialApproximation S r d D) :

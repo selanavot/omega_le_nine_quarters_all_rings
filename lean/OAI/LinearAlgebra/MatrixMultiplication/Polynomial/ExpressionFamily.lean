@@ -18,7 +18,7 @@ open scoped BigOperators
 
 namespace MatrixMultiplication.Arithmetic.Expression
 
-variable {F : Type*} [Field F]
+variable {F : Type*} [Ring F]
 
 variable {Input Output : Type*}
 
