@@ -1,5 +1,16 @@
 # Status
 
+## Algebraic-structure diagram
+
+After Sela merged PR #3 at `505371ebed8922bedcc95ae5bcb6e1262323a947`,
+branch `docs/algebraic-structures` adds the requested connected hierarchy to
+the README, with editable SVG, PNG fallback and
+[model/citation notes](ALGEBRAIC-STRUCTURES.md). Green marks the scope of the
+all-rings theorem; orange marks classes containing cubic semiring examples.
+The Jerrum–Snir lower bound is cited background, not an additional Lean result.
+Proof sources, specifications, dependencies, paper and archival files are
+unchanged. The already submitted immutable snapshot remains the same.
+
 ## Public release and Palomar preflight
 
 On 2026-10-09 Sela explicitly approved merging PR #2, making this repository
@@ -140,6 +151,6 @@ kernel. The export method received a separate source review.
 
 Owner status files retain chronological development notes. This status and
 the current receipt supersede earlier pending-build descriptions.
-PRs #1 and #2 are merged. Continue publication documentation on
-`docs/publication-status` through a new PR; obtain Sela's specific approval
+PRs #1, #2 and #3 are merged. Continue diagram documentation on
+`docs/algebraic-structures` through a new PR; obtain Sela's specific approval
 before merging that PR. Keep the submitted snapshot unchanged.

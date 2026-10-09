@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1060" height="1540" viewBox="0 0 1060 1540" role="img" aria-labelledby="title description">
+  <title id="title">Algebraic structures and matrix multiplication: rings versus semirings</title>
+  <desc id="description">One connected hierarchy. Arrows add assumptions. Ring, commutative ring, integral domain, division ring, and field are green: this repository proves the exponent is at most nine fourths throughout these classes. Semiring, additively cancellative semiring, commutative semiring, and semifield are orange: their listed nonnegative examples require cubic cost using only addition, multiplication, and constants. Orange is not a lower bound for every member of a class; rings are also semirings. Leftward arrows add additive inverses. The classical lower bound is from Jerrum and Snir, 1982, section 4.1, page 886. This is an explanatory diagram, not an additional Lean formalization.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#64717a"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: Arial, Helvetica, sans-serif; fill:#192a32; text-anchor:middle; }
+    .heading { font-size:29px; font-weight:600; }
+    .subheading { font-size:19px; }
+    .lane { font-size:22px; font-weight:600; }
+    .muted { fill:#52636c; }
+    .edge { fill:none; stroke:#64717a; stroke-width:1.8; marker-end:url(#arrow); }
+    .label { font-size:18px; paint-order:stroke; stroke:#ffffff; stroke-width:7px; stroke-linejoin:round; }
+    .node-title { font-size:21px; font-weight:600; }
+    .result { font-size:20px; font-weight:600; }
+    .example { font-size:18px; }
+    .upper rect { fill:#e3f3e9; stroke:#abcdb8; stroke-width:1; }
+    .counterexample rect { fill:#fff0e1; stroke:#dec3a7; stroke-width:1; }
+    .footnote { font-size:18px; }
+  </style>
+  <rect width="1060" height="1540" fill="#ffffff"/>
+  <text x="530" y="43" class="heading">Algebraic structures and matrix multiplication</text>
+  <text x="530" y="77" class="subheading">Operations: addition, multiplication, and constants in the structure. No division gates.</text>
+  <rect x="83" y="99" width="15" height="15" rx="3" fill="#26834e"/>
+  <text x="308" y="113" class="subheading">9/4 upper bound for every member</text>
+  <rect x="577" y="99" width="15" height="15" rx="3" fill="#ba6b27"/>
+  <text x="812" y="113" class="subheading">Listed examples have exponent 3</text>
+
+  <text x="190" y="154" class="lane">RINGS</text>
+  <text x="190" y="178" class="subheading muted">Additive inverses required</text>
+  <text x="850" y="154" class="lane">SEMIRINGS</text>
+  <text x="850" y="178" class="subheading muted">Additive inverses not required</text>
+
+  <!-- All arrows add the label's assumptions; crossings without a dot are not junctions. -->
+  <path class="edge" d="M850 335 V389"/>
+  <text x="850" y="369" class="label">additive cancellation</text>
+
+  <path class="edge" d="M710 477 H655 V262 H336"/>
+  <text x="490" y="246" class="label">+ additive inverses</text>
+
+  <path class="edge" d="M190 335 V604"/>
+  <text x="190" y="480" class="label">multiplication commutes</text>
+
+  <path class="edge" d="M190 382 H535 V904"/>
+  <text x="535" y="438" class="label"><tspan x="535">nontrivial; nonzero</tspan><tspan x="535" dy="24">elements invertible</tspan></text>
+
+  <path class="edge" d="M990 262 H1026 V682 H996"/>
+  <text x="1019" y="479" class="label" transform="rotate(-90 1019 479)">multiplication commutes</text>
+
+  <!-- A gap marks the crossing with the division-ring branch. -->
+  <path d="M710 682 H336" fill="none" stroke="#ffffff" stroke-width="8"/>
+  <path class="edge" d="M710 682 H336"/>
+  <text x="520" y="662" class="label">+ additive inverses</text>
+
+  <path class="edge" d="M190 755 V904"/>
+  <text x="190" y="823" class="label"><tspan x="190">nontrivial;</tspan><tspan x="190" dy="24">no zero divisors</tspan></text>
+
+  <path class="edge" d="M190 1055 V1204"/>
+  <text x="190" y="1138" class="label"><tspan x="190">nonzero elements</tspan><tspan x="190" dy="24">invertible</tspan></text>
+
+  <path class="edge" d="M535 1055 V1133 Q535 1168 482 1184 L336 1230"/>
+  <text x="535" y="1160" class="label"><tspan x="535">multiplication</tspan><tspan x="535" dy="24">commutes</tspan></text>
+
+  <path class="edge" d="M850 755 V1204"/>
+  <text x="850" y="984" class="label"><tspan x="850">nontrivial; nonzero</tspan><tspan x="850" dy="24">elements invertible</tspan></text>
+
+  <path class="edge" d="M710 1282 H336"/>
+  <text x="520" y="1262" class="label">+ additive inverses</text>
+
+  <g class="upper">
+    <rect x="50" y="190" width="280" height="145" rx="10"/>
+    <text x="190" y="230" class="node-title">Ring</text>
+    <text x="190" y="267" class="result">ω ≤ 9/4</text>
+    <text x="190" y="301" class="example">Integer matrices M₂(ℤ); ℍ</text>
+  </g>
+  <g class="counterexample">
+    <rect x="710" y="190" width="280" height="145" rx="10"/>
+    <text x="850" y="230" class="node-title">Semiring</text>
+    <text x="850" y="267" class="result">Cubic examples</text>
+    <text x="850" y="301" class="example">ℕ₀; nonnegative reals</text>
+  </g>
+  <g class="counterexample">
+    <rect x="710" y="395" width="280" height="165" rx="10"/>
+    <text x="850" y="430" class="node-title"><tspan x="850">Additively cancellative</tspan><tspan x="850" dy="26">semiring</tspan></text>
+    <text x="850" y="501" class="result">Cubic examples</text>
+    <text x="850" y="535" class="example">ℕ₀; nonnegative reals</text>
+  </g>
+  <g class="upper">
+    <rect x="50" y="610" width="280" height="145" rx="10"/>
+    <text x="190" y="650" class="node-title">Commutative ring</text>
+    <text x="190" y="687" class="result">ω ≤ 9/4</text>
+    <text x="190" y="721" class="example">Integers modulo 6 or 4</text>
+  </g>
+  <g class="counterexample">
+    <rect x="710" y="610" width="280" height="145" rx="10"/>
+    <text x="850" y="650" class="node-title">Commutative semiring</text>
+    <text x="850" y="687" class="result">Cubic examples</text>
+    <text x="850" y="721" class="example">ℕ₀; nonnegative reals</text>
+  </g>
+  <g class="upper">
+    <rect x="50" y="910" width="280" height="145" rx="10"/>
+    <text x="190" y="950" class="node-title">Integral domain</text>
+    <text x="190" y="987" class="result">ω ≤ 9/4</text>
+    <text x="190" y="1021" class="example">ℤ; polynomials ℚ[x]</text>
+  </g>
+  <g class="upper">
+    <rect x="410" y="910" width="250" height="145" rx="10"/>
+    <text x="535" y="950" class="node-title">Division ring</text>
+    <text x="535" y="987" class="result">ω ≤ 9/4</text>
+    <text x="535" y="1021" class="example">Quaternions ℍ</text>
+  </g>
+  <g class="upper">
+    <rect x="50" y="1210" width="280" height="145" rx="10"/>
+    <text x="190" y="1250" class="node-title">Field</text>
+    <text x="190" y="1287" class="result">ω ≤ 9/4</text>
+    <text x="190" y="1321" class="example">Rationals ℚ; complex numbers ℂ</text>
+  </g>
+  <g class="counterexample">
+    <rect x="710" y="1210" width="280" height="165" rx="10"/>
+    <text x="850" y="1250" class="node-title">Semifield</text>
+    <text x="850" y="1287" class="result">Cubic examples</text>
+    <text x="850" y="1321" class="example"><tspan x="850">Nonnegative rationals;</tspan><tspan x="850" dy="25">nonnegative reals</tspan></text>
+  </g>
+
+  <text x="530" y="1414" class="footnote">Arrows add assumptions. The columns overlap: every ring is also a semiring.</text>
+  <text x="530" y="1442" class="footnote">Orange classes contain cubic examples; not every member has cubic complexity. ℕ₀ includes zero.</text>
+  <text x="530" y="1476" class="footnote">Lower bound: Jerrum–Snir (1982), §4.1, p. 886. DOI: 10.1145/322326.322341.</text>
+  <text x="530" y="1504" class="footnote muted">Upper bound: this repository's all-rings theorem. Lower-bound discussion is cited background, not Lean-verified here.</text>
+</svg>
