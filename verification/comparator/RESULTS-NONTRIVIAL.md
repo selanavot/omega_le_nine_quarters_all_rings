@@ -1,5 +1,9 @@
 # Verification receipt
 
+Archived receipt for the preceding nontrivial-ring statement. For the current
+all-ring statement, see [RESULTS.md](RESULTS.md). Source and harness references
+in this archived record refer to revision `2553d35a056d78c677825311ab9a27229c71fd3e`.
+
 Completed 2026-10-09. **PASS**: compilation, axiom guards, fresh-kernel replay,
 native Comparator, all six bundled checkers, and both deliberate failure controls.
 
@@ -125,5 +129,5 @@ e288edd6efbf893e249c01a96b5a70b1e780b16752e9733167c36ceb2a7a5aab  ring-queue/179
 ```
 
 Model, Challenge and dependency-manifest hashes are separately frozen in
-[pins.json](pins.json). The imported source manifest and upstream attribution
+[pins.json](https://github.com/selanavot/omega_le_nine_quarters_all_rings/blob/2553d35a056d78c677825311ab9a27229c71fd3e/verification/comparator/pins.json). The imported source manifest and upstream attribution
 are retained in [UPSTREAM.md](../../UPSTREAM.md).

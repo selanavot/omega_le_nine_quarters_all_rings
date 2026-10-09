@@ -28,8 +28,11 @@ history remains in its [pinned provenance record](https://github.com/selanavot/m
 The ring model differs from this local baseline by exactly seven literal
 `[Field F]` to `[Ring F]` substitutions. Gate costs, program evaluation,
 correctness, exponent slack, and the infimum definition are unchanged.
-The public ring theorem uses the scalar name `R` and explicitly requires
-`Nontrivial R`. The separate operation-count theorem includes trivial rings.
+The public ring theorem uses the scalar name `R` and includes trivial rings.
+An explicit zero-cost program handles the trivial case; the unchanged
+real-valued infimum definition then gives zero by Mathlib's convention for
+unbounded-below sets. Nontriviality remains on the lower-bound and boundedness
+statements. The direct operation-count theorem also includes trivial rings.
 
 ## New proof development
 

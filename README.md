@@ -1,4 +1,4 @@
-# Matrix multiplication: ω ≤ 9/4 over every nontrivial ring
+# Matrix multiplication: ω ≤ 9/4 over every ring
 
 OpenAI proved ω ≤ 9/4 over the complex numbers in its
 [matrix multiplication preprint](https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Matrix-Multiplication-Nine-Fourths-October-2-2026/paper.pdf).
@@ -6,8 +6,8 @@ Our [earlier all-fields extension](https://github.com/selanavot/matrix-multiplic
 establishes the same bound over every field.
 This repository extends the result to arbitrary associative unital
 rings, including noncommutative rings.
-The full theorem compiles in Lean and has passed its axiom audit, fresh-kernel
-replay, and frozen-specification Comparator checks with all six bundled checkers.
+The full theorem, including the trivial ring, has passed compilation, axiom audit,
+fresh-kernel replay, and frozen-specification Comparator with all six bundled checkers.
 See [verification details](verification/comparator/README.md) and
 [current status](docs/STATUS.md).
 
@@ -22,7 +22,7 @@ with no claim of a better numerical bound or independent human peer review.
 
 ```lean
 theorem omega_le_nine_quarters_all_rings
-    (R : Type u) [Ring R] [Nontrivial R] :
+    (R : Type u) [Ring R] :
     Arithmetic.omega R ≤ (9 : ℝ) / 4
 ```
 
@@ -30,13 +30,20 @@ The substantive statement change from the prior theorem is small:
 
 ```diff
 - (F : Type u) [Field F] : Arithmetic.omega F ≤ (9 : ℝ) / 4
-+ (R : Type u) [Ring R] [Nontrivial R] : Arithmetic.omega R ≤ (9 : ℝ) / 4
++ (R : Type u) [Ring R] : Arithmetic.omega R ≤ (9 : ℝ) / 4
 ```
 
 The arithmetic model has exactly seven `Field` → `Ring` substitutions.
 Its gate costs, evaluation, correctness quantifiers, positive exponent slack,
-and infimum definition are unchanged. Nontriviality supplies the usual
-lower bound and makes the infimum interpretation nonvacuous.
+and infimum definition are unchanged. Nontriviality is retained for the lower
+bound 2 and boundedness of the admissible-exponent set.
+
+For the trivial ring, one free constant-zero register supplies every output.
+Every real exponent is therefore admissible. The unchanged real-valued
+definition gives `omega R = 0` by Mathlib's convention `sInf Set.univ = 0`;
+the admissible set in this case has no genuine real infimum. The explicit
+zero-cost program and the direct operation-count theorem avoid reliance on
+that convention for the algorithmic claim.
 
 The stronger intermediate theorem is `exactRankExponent_int_le_nine_quarters`:
 the exponent of exact **integer coefficient tensor rank** is at most 9/4.
@@ -84,8 +91,10 @@ python3 scripts/check-comparator.py --trusted-local --negative-controls
 The specification checker freezes the original model plus only the seven
 approved typeclass substitutions. Comparator checks six statements, including
 BddBelow, the lower bound, direct costs, and exact integer coefficients.
-Its deliberate controls rejected changed multiplication cost and `sorry` for
-the expected reasons; see the [completed verification receipt](verification/comparator/RESULTS.md).
+The strengthened theorem's [verification receipt](verification/comparator/RESULTS.md)
+records the fresh runs. The unchanged harness's earlier deliberate controls rejected
+changed multiplication cost and `sorry`; their [separate receipt](verification/comparator/RESULTS-NONTRIVIAL.md)
+is preserved with its original scope.
 The local Comparator command disables its build sandbox; it is not a claim
 of sandboxed source-provenance verification. See [audit details](verification/comparator/README.md).
 

@@ -1,10 +1,12 @@
 # Frozen-model Comparator verification
 
-Status: the strengthened upper bound with only `[Ring R]` is undergoing a new
-fresh-kernel and Comparator run. The previous nontrivial-ring version passed
-on 2026-10-09, including both deliberate failure controls; its receipt is
-[RESULTS-NONTRIVIAL.md](RESULTS-NONTRIVIAL.md). The model and the other five
-statements are unchanged. [RESULTS.md](RESULTS.md) will record the new run.
+Status: **the strengthened upper bound with only `[Ring R]` passed** compilation,
+axiom guards, fresh-kernel replay, and Comparator with all six bundled checkers
+on 2026-10-09. See [RESULTS.md](RESULTS.md). The previous nontrivial-ring version's
+receipt, including both deliberate failure controls, is preserved separately in
+[RESULTS-NONTRIVIAL.md](RESULTS-NONTRIVIAL.md). The model, other five statements,
+control implementation and injected targets are unchanged; those negative
+controls were not rerun for this strengthening.
 
 The harness uses native `lake comparator` from Lean **4.35.0-rc4**, with its
 bundled independent kernel checkers requested by `--paranoid`. The local run
@@ -99,6 +101,6 @@ The negative controls alter copies, never the real specification or proof:
   `sorry` and requires rejection of `sorryAx`.
 
 Generated control sources are removed in a `finally` block. Ignored detailed
-logs remain under `.lake`. A run passes only when both controls fail for their
-expected reasons. The checked source fingerprint excludes only these temporary
+logs remain under `.lake`. With `--negative-controls`, a run passes only when
+both controls fail for their expected reasons. The checked source fingerprint excludes only these temporary
 control files; ordinary proof, harness, and configuration changes abort the audit.

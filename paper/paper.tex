@@ -34,19 +34,19 @@ exponent bound $9/4$ over the complex numbers \cite{OAI,OAILean}; our earlier
 extension establishes the same bound over every field \cite{Fields}.
 We describe an integral version of that argument. Its stronger
 intermediate conclusion is a bound on exact tensor rank over $\Z$, which
-supplies the same exponent upper bound over every nontrivial associative
-unital ring.
+supplies the same exponent upper bound over every associative unital ring.
+The zero ring is included using an explicit zero-cost program and the
+real-infimum convention in the formal definition.
 The changes are a primitive tensor semiring for spectral detection,
 coefficient extraction and finite free descent, and coprime patching of
 unnormalized Fourier and interpolation constructions. The numerical
 exponent and the underlying profile-growth argument are those of OpenAI.
 \end{abstract}
 
-\noindent\textbf{Verification status.} The complete $9/4$ theorem, exact
-integer rank bound, and explicit operation-count corollary have compiled in
-Lean. The axiom audit, fresh-kernel replay of the complete claim dependencies,
-and frozen-specification Comparator checks passed, including all bundled
-checkers. These checks validate the formal declarations, not this prose document.
+\noindent\textbf{Verification status.} The full upper-bound theorem,
+including the zero ring, has compiled and passed its axiom audit,
+fresh-kernel replay, and frozen-specification Comparator with all bundled checkers.
+These checks validate formal declarations, not this prose document.
 
 \paragraph{AI disclosure.}
 This manuscript is AI-generated. The proof development and Lean
@@ -68,7 +68,8 @@ when
  \operatorname{cost}(P_n)\leq Cn^{\tau+\eps}.
 \]
 Correctness means correctness for every pair of input matrices of the
-specified size. The exponent is the infimum of admissible exponents.
+specified size. The exponent is the real-valued \texttt{sInf} of admissible
+exponents, with the convention for the zero ring explained below.
 This is the arithmetic model used in the OpenAI Lean development, with
 its scalar type generalized from a field to a ring.
 
@@ -85,11 +86,22 @@ The exact integer coefficient rank exponent satisfies $\nu_\Z\leq9/4$.
 Consequently, for every associative unital ring $R$ and every $\eps>0$,
 there are division-free arithmetic programs computing square matrix
 multiplication with cost $O_{R,\eps}(n^{9/4+\eps})$.
-For nontrivial $R$, the stated infimum satisfies
+For every such $R$, the formally defined exponent satisfies
 \[
  \omega(R)\leq\frac94.
 \]
 \end{theorem}
+
+\begin{remark}[The zero ring and the real infimum]\label{rem:zero-ring}
+In the zero ring, one free constant-zero register supplies every output,
+giving a correct program of cost zero. Every real exponent is therefore
+admissible. The admissible set is $\mathbb R$, which is not bounded below;
+Mathlib's real-valued \texttt{sInf} convention gives $\omega(R)=0$.
+The extended-real infimum would instead be $-\infty$.
+For nontrivial rings, admissible exponents are bounded below by $2$, so the
+usual infimum interpretation applies. The integral argument handles that
+case; the zero-ring case uses the explicit program and the stated convention.
+\end{remark}
 
 OpenAI supplies the complex-field bound, auxiliary separation,
 determinant and sector constructions, and the real profile-growth
@@ -329,9 +341,10 @@ works without commuting input variables. It also works for matrix
 blocks, enabling the original recursive program construction.
 Its recurrence is $S(uv)\leq rS(v)+6ru^2v^2$ with $u,r$ fixed.
 Using $r\geq u^2$, padding, and positive exponent slack gives the
-operation bound in Theorem~\ref{thm:main}. Nontriviality is needed for
-the lower bound making the infimum interpretation valid; the direct
-operation-count statement also covers the zero ring.
+operation bound in Theorem~\ref{thm:main}. The direct operation-count
+statement covers every ring. Nontriviality remains a hypothesis of the
+bounded-below and lower-bound statements; the zero-ring exponent is handled
+as in Remark~\ref{rem:zero-ring}.
 
 \section{Formal scope and provenance}
 
@@ -339,11 +352,13 @@ The exported theorem in namespace
 \texttt{OAI.MatrixMultiplication} is
 \begin{verbatim}
 theorem omega_le_nine_quarters_all_rings
-    (R : Type u) [Ring R] [Nontrivial R] :
+    (R : Type u) [Ring R] :
     Arithmetic.omega R <= (9 : Real) / 4
 \end{verbatim}
 Lean's \texttt{Ring} class here means associative unital ring, not
-necessarily commutative. Auxiliary tensor rank and coefficient-algebra
+necessarily commutative or nontrivial. The bounded-below admissibility and
+$\omega(R)\geq2$ theorems retain \texttt{[Nontrivial R]}; neither holds
+for the zero ring. Auxiliary tensor rank and coefficient-algebra
 constructions are over commutative rings, with the main intermediate
 specialized to $\Z$.
 
@@ -380,17 +395,18 @@ exists\_prime\_clearing\_convolution
 \end{quote}
 and the polynomial degeneration \texttt{power}/\texttt{extract} methods.
 
-The audited claims use only the standard axioms \texttt{propext},
-\texttt{Classical.choice}, and \texttt{Quot.sound}. Fresh-kernel replay checks
-the complete dependency closure of six claims: the upper bound, boundedness
-and nonemptiness of the admissible set, the lower bound, direct operation
-costs, and literal integer coefficient identities. Comparator checks these
-against a frozen arithmetic model with exactly seven field-to-ring
-substitutions and no definition holes. Its bundled Lean paranoid, lean4lean,
-nanoda, con-leche, con-ron, and default Lean checkers all accepted the proof.
-The verification used trusted local sources, pinned dependencies, and
-incremental build caches, with fresh replay of the theorem dependencies.
-The repository retains the commands, results, and separate AI source reviews.
+The six audited claims use only \texttt{propext}, \texttt{Classical.choice},
+and \texttt{Quot.sound}. Their complete dependencies passed fresh-kernel
+replay: the upper bound for all rings, boundedness and nonemptiness of the
+admissible set, the lower bound, direct costs, and integer coefficient
+identities. Boundedness and the lower bound retain nontriviality hypotheses.
+Comparator checks these against a frozen model with exactly seven
+field-to-ring substitutions and no definition holes. Its Lean paranoid,
+lean4lean, nanoda, con-leche, con-ron, and default Lean checkers all accepted
+the strengthened statement.
+Verification uses trusted local sources, pinned dependencies, and incremental
+build caches. Comparator's build sandbox is disabled. The repository records
+commands, outcomes, prior failure-control tests, and separate AI source reviews.
 
 \paragraph{Attribution.}
 The numerical $9/4$ bound and its main mathematical architecture are due

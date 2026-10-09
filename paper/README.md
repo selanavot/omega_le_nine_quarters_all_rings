@@ -1,20 +1,22 @@
 # Manuscript
 
 The source and PDF describe the integral extension of OpenAI's 9/4 proof and
-its consequence for associative unital rings. Both the manuscript and the
+its consequence for every associative unital ring, including the zero ring.
+The latter has a zero-cost program and exponent zero under the real-valued
+`sInf` convention (the admissible set is all real numbers, hence is not
+bounded below). The substantive integral argument is unchanged. Both the manuscript and the
 new Lean proof development are AI-generated with Codex under human direction.
 OpenAI's original result and the prior all-fields extension are explicitly
 credited in the paper. There is no author byline or document date; the source
 and PDF are associated with their repository commit.
 
-**Verification:** the complete AllRings entry point compiled, including the
-integer rank bound, arbitrary-ring exponent theorem, and explicit operation-count
-corollary. Six audited claims use only the three standard Lean axioms. Fresh
-replay of their complete dependencies and frozen-specification Comparator checks
-passed, including all six bundled checkers. See the
-[verification records](../verification/comparator/README.md) for commands and
-scope. These checks validate the formal declarations; the PDF and separate AI
-source reviews are not human peer review.
+**Verification:** the theorem requires only `[Ring R]`. The strengthened
+statement passed compilation, axiom audit, fresh dependency replay, and
+frozen-specification Comparator, including all six bundled checkers. Boundedness
+below and the lower bound of 2 retain `[Nontrivial R]`; the zero ring satisfies neither.
+See the [verification records](../verification/comparator/README.md) for
+commands and scope. These checks validate formal declarations; the PDF and
+separate AI source reviews are not human peer review.
 
 - [PDF](paper.pdf)
 - [LaTeX source](paper.tex)
@@ -39,7 +41,7 @@ be committed alongside the source after validation.
 
 ## PDF checks
 
-The six-page PDF was compiled successfully both by the desktop editor and by
+The current seven-page PDF was compiled successfully both by the desktop editor and by
 `paper/build.sh`, rendered with Poppler, and every page visually inspected.
 The final TeX log has no overfull/underfull boxes or unresolved references.
 `pdfinfo` confirms an empty Author field and no creation/modification dates.
@@ -47,3 +49,5 @@ The mathematical wording in the spectral and Fourier sections was separately
 reviewed against the corresponding Lean modules. OpenAI's title, finite
 separation proposition (3.1), and detecting-character appendix (A) were checked
 against the pinned upstream manuscript source.
+
+These checks include the revised zero-ring remark and updated verification text.
