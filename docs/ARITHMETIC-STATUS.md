@@ -1,10 +1,11 @@
 # Arithmetic and analytic endgame
 
-2026-10-09. All arithmetic and generic analytic modules assigned to this agent
-have passed target builds on Lean 4.35.0-rc4. The final `AllRings.lean` assembly
-and `FinalAudit.lean` are drafted and queued as `1791557571747002000-a5404e`.
-Their build still depends on the coordinator's integral separation proof.
-Do not treat the final numerical theorem as checked until that build passes.
+2026-10-09. The complete unconditional theorem, package entrypoint, and final
+statement/axiom audit PASSED on Lean 4.35.0-rc4 in queue request
+`1791557812451628000-2aa7a8` (exit 0; 9175 jobs; no source changed during the
+build). All arithmetic and generic analytic modules assigned to this agent
+also passed their earlier target builds. Independent Comparator/fresh-kernel
+verification and adversarial review are separate coordinator-owned checks.
 
 ## Unchanged specification
 
@@ -105,4 +106,34 @@ build environment is isolated inside this repository.
 the lower bound, the explicit direct-cost correctness quantifiers, and a
 concrete coefficient ring `Matrix (Fin 2) (Fin 2) Int` to catch hidden
 commutativity hypotheses. It prints the model definitions and transitive
-axioms. Fresh-kernel and Comparator harnesses are owned by the spectrum agent.
+axioms. The complete audit passed in `1791557812451628000-2aa7a8`. Every audited
+endpoint depends only on `[propext, Classical.choice, Quot.sound]`: the final
+ring theorem, BddBelow, lower bound, direct cost statement, exact integer rank
+exponent bound, and integer-to-ring bridge. No `sorryAx` or project-specific
+axiom appeared.
+
+The compiler printed the advertised theorem as:
+
+```lean
+theorem OAI.MatrixMultiplication.omega_le_nine_quarters_all_rings.{u} :
+  ∀ (R : Type u) [Ring R] [Nontrivial R], Arithmetic.omega R ≤ 9 / 4
+```
+
+Fresh-kernel and Comparator harnesses are owned by the spectrum agent.
+Legacy `AllFields.lean` is retained, but its separate full entrypoint build
+is not part of this final ring-target check.
+
+
+## Final public files and declarations
+
+- `lean/OAI.lean` imports `MatrixMultiplication/AllRings.lean`.
+- `AllRings.lean` proves
+  `AuxiliarySeparation.Integral.exactRankExponent_int_le_nine_quarters`,
+  `omega_le_nine_quarters_all_rings`,
+  `admissibleExponent_nine_quarters_all_rings`, and
+  `matrix_multiplication_cost_le_nine_quarters_all_rings`.
+- `FinalAudit.lean` checks exact statement types and prints axioms/definitions.
+
+The model comparison was also checked mechanically against baseline
+`45f5de1`: replacing all seven `[Field F]` tokens by `[Ring F]` reproduces
+`Model.lean` byte-for-byte. No other model edit is present.

@@ -1,0 +1,11 @@
+{
+  "toolchain": "leanprover/lean4:v4.35.0-rc4",
+  "model_baseline": "45f5de13717ea1e3323730fccdd3ef58bd0c68b3",
+  "model_path": "lean/OAI/LinearAlgebra/MatrixMultiplication/Model.lean",
+  "baseline_model_sha256": "1d431b406a1b8bb23b9c99dd0429fed8b8e425062d888b597d05ba5cc23cd729",
+  "ring_model_sha256": "e98d51cf7cf83e7b7fa048b3d3b1a2bb4489d873c6c322be2c68b33802311a8d",
+  "allowed_model_change": "Exactly seven literal [Field F] -> [Ring F] substitutions, no other bytes changed",
+  "manifest_sha256": "24a4da16c4fcd0eafa5002e45ec6fa1f181c4ebf8789cc034cc9fc0721e2cc6a",
+  "implementation": "native lake comparator and bundled independent kernels",
+  "challenge_sha256": "1a0e162d1a5c259bf08c5b0a57475319df31fabd19c3a16e3c9d1f302b0f5e71"
+}

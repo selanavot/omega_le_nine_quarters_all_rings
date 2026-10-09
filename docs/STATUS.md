@@ -3,7 +3,7 @@
 2026-10-09. Repository and draft PR #1 are PRIVATE. Branch: prove-all-rings.
 https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/1
 
-**The ring 9/4 theorem is not yet verified end-to-end.**
+**The full ring 9/4 theorem and final axiom audit compile. Independent kernel/Comparator runs are in progress.**
 
 Target: `omega_le_nine_quarters_all_rings (R : Type u) [Ring R] [Nontrivial R]`.
 Lean 4.35.0-rc4 and mathlib f0469b25d97aef3998d4bc06f6f01da670b3d18e
@@ -28,13 +28,23 @@ are installed and pinned. The checkout has independent physical dependencies.
 - SpectrumAudit and TransportAudit report only propext, Classical.choice,
   and Quot.sound for the audited intermediate declarations.
 
+## Complete theorem evidence
+
+- Integral finite separation passed request50abc3.
+- AllRings, OAI and FinalAudit passed request2aa7a8 (9175 jobs), no source
+  changes during the build. Printed target has only Ring R and Nontrivial R.
+  Exact integer rank, main ring theorem, BddBelow, lower bound and direct cost
+  statements all use only the three standard axioms listed above.
+- Comparator Challenge, Solution and guarded KernelAudit passed053bf2.
+- The original AllFields entry point also passed4a30e6 (9165 jobs).
+- Specification hash check and all nine pinned source dependencies pass.
+
 ## Remaining
 
-- Integral finite-separation assembly (consecutive periods, descent, coprime
-  powers and polynomial overhead): compiler repair in progress.
-- AllRings and FinalAudit drafted; awaiting that last dependency and checks.
-- Comparator with frozen definitions and negative controls, full build and
-  fresh kernel replay remain. Manuscript and PDF are being prepared.
+- Fresh-kernel replay and native Comparator with deliberate negative controls.
+- Three fresh adversarial reviews are underway.
+- Paper source/PDF compile and every page has been rendered and inspected;
+  final verification wording will be updated after the remaining checks.
 
 Build requests/logs are ignored under .lake/ring-queue. Only root runs the
 worker. Owner details are in ARITHMETIC/SPECTRUM/TRANSPORT-STATUS.md.

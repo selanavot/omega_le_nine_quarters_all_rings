@@ -112,3 +112,14 @@ overhead and feed the sharp value bound into the normalized profile.
 (3362 jobs). Both the sharp integer convolution value and normalized-profile
 bounds are now compiler-verified. The read-only mathematical review of root
 finite-separation sources is in `docs/FINITE-SEPARATION-AUDIT.md`.
+
+
+## Final verification harness
+
+ComparatorAudit Challenge/Solution/KernelAudit and frozen specification scripts
+are drafted. Model is byte-identical to baseline 45f5de1 after exactly seven
+Field-to-Ring substitutions. Read-only source dependency validation passed for
+all nine frozen Git packages. Queue 1791557832666381000-053bf2 requests Challenge
+and KernelAudit. Native Comparator, negative controls, and fresh kernel replay
+remain coordinator-run obligations. Commands and scope are documented in
+verification/comparator/README.md.

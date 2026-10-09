@@ -16,3 +16,5 @@ require mathlib from git
 lean_lib OAI
 
 lean_lib FixedPointTheorems
+
+lean_lib ComparatorAudit
