@@ -1,7 +1,9 @@
 # Ownership
 
-- Root: setup, docs/paper, build coordinator, integration, transport until delegated.
-- ring_statement: Model and Arithmetic generic programs/exponent bridge (await assignment).
-- ring_spectrum: generic coefficient rank/tensor semiring/primitive spectrum (await assignment).
-- No other writers authorized until assigned an explicit file list.
-- Every audit gets a unique filename; do not overwrite another agent's report.
+- Root: setup, docs/paper, serialized build coordinator; integral Fourier/separation and determinant/sector integration; Integral/{Cyclotomic,UnnormalizedFourier}.
+- ring_statement: Model; Arithmetic/{Complexity,Programs,ProgramComposition,NaiveAlgorithm,Padding,LowerBound,Exponent,RecursiveBlockPrograms,Growth}; Polynomial/ExpressionFamily; Integral/Arithmetic; Character/{Dot,Permutation,Symmetrization}; Convolution/{Basic,Symmetry}; Growth/NormalizedProfile; Entropy/Tag; docs/ARITHMETIC-STATUS.md.
+- ring_spectrum: Tensor/ComplexTensorFlattening; AuxiliarySeparation/Arithmetic/RankExponent; AuxiliarySeparation/Tensor/{Semiring,Scalar,Characters,CharacterBounds,BinaryCharacter,DirectSumClass,SupportExtension,SixfoldProductBounds,Primitive,PrimitiveClass}; Character/{Basic,Existence}; Spectrum/Obstruction; docs/SPECTRUM-STATUS.md.
+- omega_constructions: AuxiliarySeparation/Integral/{Restriction,CoefficientExtraction,FiniteFreeDescent,CoprimePatch,Vandermonde} and additional transport modules except Integral/Arithmetic; Polynomial/{ComplexPolynomialApproximation,ComplexPolynomialDegenerationComposition}; docs/TRANSPORT-STATUS.md.
+- No other writers until assigned an explicit file list. Every audit gets a unique filename.
+
+Only root runs the queue worker; agents submit builds using scripts/lean-queue.py.

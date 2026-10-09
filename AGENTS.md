@@ -12,8 +12,8 @@ explicit approval identifying that particular PR.
 ## Trusted specification
 
 Target: `OAI.MatrixMultiplication.omega_le_nine_quarters_all_rings` with
-`(F : Type u) [Ring F] [Nontrivial F]` and conclusion
-`Arithmetic.omega F ≤ (9 : ℝ) / 4`.
+`(R : Type u) [Ring R] [Nontrivial R]` and conclusion
+`Arithmetic.omega R ≤ (9 : ℝ) / 4`.
 Preserve the existing program semantics, gate costs, correctness quantifiers,
 positive exponent slack, and infimum definition. Generalize typeclasses only
 where supported. Prove BddBelow and the direct operation-count theorem.
@@ -34,7 +34,8 @@ Retain licenses and clear attribution for inherited and modified code.
 
 ## Verification and resources
 
-Use Lean4.35.0-rc2 and pinned dependencies. Do not silently upgrade.
+Use Lean 4.35.0-rc4 and mathlib f0469b25d97aef3998d4bc06f6f01da670b3d18e,
+upgraded at Sela’s explicit request on 2026-10-09. Keep exact versions pinned.
 24GB host: LEAN_NUM_THREADS=1. Only root starts build processes. Source
 editing may be parallel. If a serialized build queue is installed, agents
 may submit requests; they may not start additional Lake/Lean processes.
