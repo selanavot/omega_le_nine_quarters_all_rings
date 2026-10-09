@@ -57,6 +57,25 @@ includes the zero ring. It is an existence theorem for arithmetic programs;
 it does not establish an exact O(n^(9/4)) endpoint, an efficient uniform
 circuit generator, or a bit-complexity bound.
 
+## Where the bound applies
+
+![One connected algebraic hierarchy: green ring classes satisfy the nine-fourths bound; orange semiring classes contain the listed cubic examples.](docs/assets/algebraic-structures.svg)
+
+Green means the `9/4` upper bound holds throughout the class. Orange means the
+class contains cubic examples, not that every member is cubic; rings are also
+semirings. The comparison uses addition, multiplication and constants within
+the chosen structure, with no division gates. Over rings, negative constants
+simulate subtraction with constant-factor overhead.
+
+For the nonnegative reals, matrix multiplication requires `n³` multiplication
+gates in this model: Jerrum and Snir (1982),
+[§4.1, p. 886](https://snir.cs.illinois.edu/listed/J7.pdf#page=13),
+[DOI: 10.1145/322326.322341](https://doi.org/10.1145/322326.322341).
+That counterexample rules out a universal semiring extension. This classical
+lower bound is cited background, not formalized in this repository. See
+[definitions, model details and full citation](docs/ALGEBRAIC-STRUCTURES.md)
+or the [PNG diagram](docs/assets/algebraic-structures.png).
+
 ## What the extension adds
 
 - A suitable integral tensor spectrum, avoiding the false assumption that
