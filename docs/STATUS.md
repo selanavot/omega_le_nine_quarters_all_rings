@@ -1,5 +1,28 @@
 # Status
 
+## Release preparation
+
+PR #1 was merged by Sela at `97298f64dc4ae420a104db473b6a74162a280729`.
+Branch `release/zenodo-palomar` prepares citation/archive metadata and the
+pinned Palomar preflight workflow. The Lean proof, model, six Comparator
+statements, toolchain, dependency pins and paper are unchanged. The previously
+completed proof verification below still applies to those exact files.
+
+Zenodo publication and Palomar submission are not yet complete. The repository
+is still private; its visibility must be explicitly authorized before public
+release. Palomar also requires a passing full mechanical preflight and an
+agreed immutable commit, config path and submitter relationship before intake.
+See [ZENODO.md](ZENODO.md) and [PALOMAR.md](PALOMAR.md).
+
+Preparation checks passed: CFF 1.2.0 validation with cffconvert 2.0.0,
+the pinned official Palomar metadata contract, the full formalization v0.4
+schema, JSON syntax, unchanged proof/specification checks, and a separate
+source review of the metadata and workflow. The prior project's Zenodo DOI
+and ORCID come from its existing citation record; a live Zenodo API read
+returned HTTP 504 during preparation. No new Zenodo record or release exists.
+
+The following is the completed proof snapshot, before archival preparation.
+
 2026-10-09. Branch: prove-all-rings.
 https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/1
 

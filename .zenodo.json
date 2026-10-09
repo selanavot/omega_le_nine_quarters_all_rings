@@ -1,0 +1,45 @@
+{
+  "title": "The Matrix Multiplication Bound ω ≤ 9/4 over Associative Rings",
+  "version": "0.1.0",
+  "upload_type": "software",
+  "creators": [
+    {
+      "name": "Navot, Sela",
+      "orcid": "0009-0001-8002-5835"
+    }
+  ],
+  "description": "<p>A Lean formalization of the matrix multiplication exponent bound ω(R) ≤ 9/4 for every associative unital ring R, including noncommutative rings. The stronger intermediate result bounds the exponent of exact integer coefficient tensor rank by 9/4. For every positive ε, the development proves the existence of correct arithmetic programs using at most C n^(9/4+ε) additions, subtractions and multiplications. The trivial ring is covered by an explicit zero-cost program; its real-valued exponent is zero by the unchanged infimum convention.</p><p>This software archive includes the Lean sources, accompanying paper, dependency pins and verification records. Compilation, axiom inspection, fresh-kernel replay of the six-claim dependency closure, and frozen-specification Comparator with all six bundled checkers passed locally. These checks are mechanical verification, not human peer review. No improved numerical exponent, exact O(n^(9/4)) endpoint, efficient uniform circuit generator or bit-complexity result is claimed.</p><p>The extension's proof development and manuscript are AI-generated with Codex under Sela Navot's human direction. Creator credit records that direction of the project; the included PDF has no author byline. OpenAI supplied the numerical bound, main proof architecture and arithmetic-program specification. This project builds on the earlier all-fields extension and adds integral tensor methods and the passage to all associative unital rings. Exact source provenance is recorded in UPSTREAM.md and docs/IMPORT-MANIFEST.json.</p><p>The project uses Apache-2.0. Five vendored fixed-point proof modules retain their separate MIT license at lean/FixedPointTheorems/LICENSE.txt.</p>",
+  "access_right": "open",
+  "license": "Apache-2.0",
+  "language": "eng",
+  "keywords": [
+    "matrix multiplication",
+    "arithmetic complexity",
+    "associative rings",
+    "integer tensor rank",
+    "Lean",
+    "formal verification"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/selanavot/matrix-multiplication-all-fields/tree/08481ef22bca7dc9ffba091083b7c1e81e537220",
+      "relation": "isDerivedFrom",
+      "resource_type": "software"
+    },
+    {
+      "identifier": "10.5281/zenodo.23219128",
+      "relation": "isDerivedFrom",
+      "resource_type": "software"
+    },
+    {
+      "identifier": "https://github.com/openai/math/tree/adc7f1241b42e322a6451854ab7e4b4c146bf78a",
+      "relation": "isDerivedFrom",
+      "resource_type": "software"
+    },
+    {
+      "identifier": "https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Matrix-Multiplication-Nine-Fourths-October-2-2026/paper.pdf",
+      "relation": "cites",
+      "resource_type": "publication-preprint"
+    }
+  ]
+}

@@ -20,3 +20,10 @@ Final integration assignments:
 - ring_spectrum: ComparatorAudit, verification/comparator, verification scripts; read-only adversarial separation audit.
 - omega_constructions: paper source, build script, PDF and paper README.
 - Root: Integral/{SeparationDescent,FiniteSeparation}, main README, final verification orchestration and Git.
+
+Publication preparation (after PR #1 merge):
+- ring_spectrum: formalization.yaml, .github/workflows/palomar-preflight.yml, docs/PALOMAR.md.
+- omega_constructions: .zenodo.json, CITATION.cff, docs/ZENODO.md.
+- Root: main README, status, validation, release archive, Git and external actions.
+- check_reply_direction: read-only metadata and release review.
+Proof, frozen specification and paper are unchanged during this metadata task.
