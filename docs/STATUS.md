@@ -1,5 +1,31 @@
 # Status
 
+## Active strengthening: include the trivial ring
+
+Sela authorized removing Nontrivial from the upper-bound theorem on 2026-10-09.
+The new target is `(R : Type u) [Ring R] : Arithmetic.omega R ≤ 9/4`.
+Arithmetic/TrivialRing gives an explicit zero-cost program, all-real admissibility,
+failure of BddBelow in the trivial case, and omega=0 by Real.sInf_univ.
+The main theorem splits trivial/nontrivial cases. Lower bound and BddBelow keep
+Nontrivial; Model and its frozen prefix are unchanged.
+
+The revised full build PASSED (9179 jobs, exit 0, unchanged source snapshot), with
+output in `.lake/all-rings-zero-build.log`. All printed axiom lists contain only
+the standard three. Paper source has been revised; its native compile passed.
+Fresh-kernel and positive Comparator checks are next for this stronger statement;
+sources and harness files must stay frozen throughout these sequential runs.
+The prior negative-control implementation and targets are unchanged; keep their
+previous-run evidence identified separately. No merge or publication authorized.
+
+Owners for this change: ring_statement (TrivialRing, AllRings, FinalAudit),
+ring_spectrum (Challenge, Solution, pins), omega_constructions (paper source and
+paper README), root (builds, all other docs, PDF, Git). They have finished edits.
+beame_scope_review is reviewing the small new proof and paper remark independently.
+
+## Previous completed nontrivial-ring snapshot
+
+The following records the earlier scope, not validation of the new change.
+
 2026-10-09. Branch: prove-all-rings.
 https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/1
 

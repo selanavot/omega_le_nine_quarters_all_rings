@@ -16,12 +16,12 @@ namespace OAI.MatrixMultiplication.FinalAudit
 
 universe u
 
-/-- The advertised statement requires only an arbitrary nontrivial ring. -/
-theorem ring_statement (R : Type u) [Ring R] [Nontrivial R] :
+/-- The advertised statement requires only an arbitrary ring. -/
+theorem ring_statement (R : Type u) [Ring R] :
     Arithmetic.omega R ≤ (9 : ℝ) / 4 :=
   omega_le_nine_quarters_all_rings R
 
-/-- The admissible-exponent set really is bounded below for the same ring. -/
+/-- The admissible-exponent set is bounded below for every nontrivial ring. -/
 theorem infimum_bounded_below (R : Type u) [Ring R] [Nontrivial R] :
     BddBelow {τ : ℝ | Arithmetic.AdmissibleExponent R τ} :=
   Arithmetic.admissibleExponent_bddBelow R
@@ -44,6 +44,20 @@ theorem direct_cost_statement (R : Type u) [Ring R] (ε : ℝ) (hε : 0 < ε) :
 example : Arithmetic.omega (Matrix (Fin 2) (Fin 2) ℤ) ≤ (9 : ℝ) / 4 :=
   omega_le_nine_quarters_all_rings _
 
+/-- The trivial ring is included, with the existing real-infimum convention. -/
+theorem zero_ring_statement : Arithmetic.omega PUnit = 0 :=
+  Arithmetic.omega_eq_zero_of_subsingleton PUnit
+
+/-- A trivial ring has correct zero-cost programs at every matrix size. -/
+theorem zero_cost_statement (R : Type u) [Ring R] [Subsingleton R] (n : ℕ) :
+    ∃ P : Arithmetic.MatrixAlgorithm R n n n, P.Correct ∧ P.cost = 0 :=
+  ⟨Arithmetic.zeroConstantAlgorithm R n n n,
+    Arithmetic.zeroConstantAlgorithm_correct R n n n,
+    Arithmetic.zeroConstantAlgorithm_cost R n n n⟩
+
+example : Arithmetic.omega PUnit ≤ (9 : ℝ) / 4 :=
+  omega_le_nine_quarters_all_rings PUnit
+
 #print omega_le_nine_quarters_all_rings
 #print Arithmetic.AdmissibleExponent
 #print Arithmetic.omega
@@ -53,6 +67,10 @@ example : Arithmetic.omega (Matrix (Fin 2) (Fin 2) ℤ) ≤ (9 : ℝ) / 4 :=
 #print axioms infimum_bounded_below
 #print axioms ring_lower_bound
 #print axioms direct_cost_statement
+#print axioms zero_ring_statement
+#print axioms zero_cost_statement
+#print axioms Arithmetic.admissibleExponent_of_subsingleton
+#print axioms Arithmetic.admissibleExponent_not_bddBelow_of_subsingleton
 #print axioms AuxiliarySeparation.Integral.exactRankExponent_int_le_nine_quarters
 #print axioms AuxiliarySeparation.Integral.omega_le_exactRankExponent_int
 

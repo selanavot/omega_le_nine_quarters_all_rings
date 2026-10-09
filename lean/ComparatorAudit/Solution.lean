@@ -16,7 +16,7 @@ open scoped BigOperators
 universe u
 open OAI.MatrixMultiplication
 
-theorem omega_bound (R : Type u) [Ring R] [Nontrivial R] :
+theorem omega_bound (R : Type u) [Ring R] :
     Arithmetic.omega R ≤ (9 : ℝ) / 4 :=
   omega_le_nine_quarters_all_rings R
 

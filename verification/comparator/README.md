@@ -1,9 +1,10 @@
 # Frozen-model Comparator verification
 
-Status: **passed on 2026-10-09**, including the fresh-kernel replay, native
-Comparator with all six bundled checkers, and both deliberate failure controls.
-See [RESULTS.md](RESULTS.md) for the tested revision, commands, exact outcomes,
-log hashes, and scope. No proof or harness source changed during either run.
+Status: the strengthened upper bound with only `[Ring R]` is undergoing a new
+fresh-kernel and Comparator run. The previous nontrivial-ring version passed
+on 2026-10-09, including both deliberate failure controls; its receipt is
+[RESULTS-NONTRIVIAL.md](RESULTS-NONTRIVIAL.md). The model and the other five
+statements are unchanged. [RESULTS.md](RESULTS.md) will record the new run.
 
 The harness uses native `lake comparator` from Lean **4.35.0-rc4**, with its
 bundled independent kernel checkers requested by `--paranoid`. The local run
@@ -31,8 +32,8 @@ The Challenge has six theorem holes. They are a specification, not proof holes
 in the actual development. Neither the real OAI proof nor the Solution/KernelAudit
 imports Challenge. The actual six Solution theorems are:
 
-1. `omega_bound`: omega(R)≤9/4 for every nontrivial ring in any universe.
-2. `admissible_bddBelow`: the infimum's admissible set is bounded below.
+1. `omega_bound`: omega(R)≤9/4 for every ring in any universe, including the trivial ring.
+2. `admissible_bddBelow`: for nontrivial rings, the infimum's admissible set is bounded below.
 3. `admissible_nonempty`: the admissible set is nonempty, also for the zero ring.
 4. `omega_lower`: omega(R)≥2 for every nontrivial ring.
 5. `epsilon_cost`: for every ring and positive epsilon, one positive constant

@@ -12,18 +12,21 @@ public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Polynom
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Integral.FiniteSeparation
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Integral.ConvolutionCharacter
 public import OAI.LinearAlgebra.MatrixMultiplication.AuxiliarySeparation.Integral.Arithmetic
+public import OAI.LinearAlgebra.MatrixMultiplication.Arithmetic.TrivialRing
 
 public section
 
 @[expose] section
 
 /-!
-# Matrix multiplication over every nontrivial ring
+# Matrix multiplication over every ring
 
 Exact integer coefficient schemes give the bound `9/4` over every associative
 unital ring, including noncommutative rings. The arithmetic exponent uses the
 same program semantics, gate costs, positive slack, and infimum as the prior
-all-fields theorem. Nontriviality makes its infimum bounded below.
+all-fields theorem. For nontrivial rings its admissible-exponent set is bounded
+below. For trivial rings multiplication has zero arithmetic cost, and the
+real-valued infimum is zero by Mathlib's convention for an unbounded-below set.
 
 The direct operation-count theorem also includes the zero ring. Its exponent
 is `9/4 + ε` for every positive `ε`; it does not assert an exact `O(n^(9/4))`
@@ -56,12 +59,16 @@ theorem exactRankExponent_int_le_nine_quarters :
 
 end AuxiliarySeparation.Integral
 
-/-- The square matrix multiplication exponent over every nontrivial
-associative unital ring is at most `9/4`. -/
-theorem omega_le_nine_quarters_all_rings (R : Type u) [Ring R] [Nontrivial R] :
-    Arithmetic.omega R ≤ (9 : ℝ) / 4 :=
-  (AuxiliarySeparation.Integral.omega_le_exactRankExponent_int R).trans
-    AuxiliarySeparation.Integral.exactRankExponent_int_le_nine_quarters
+/-- The square matrix multiplication exponent over every associative unital
+ring is at most `9/4`. In the trivial case the existing infimum definition
+returns zero; the substantive integer-rank argument covers nontrivial rings. -/
+theorem omega_le_nine_quarters_all_rings (R : Type u) [Ring R] :
+    Arithmetic.omega R ≤ (9 : ℝ) / 4 := by
+  cases subsingleton_or_nontrivial R
+  · rw [Arithmetic.omega_eq_zero_of_subsingleton R]
+    norm_num
+  · exact (AuxiliarySeparation.Integral.omega_le_exactRankExponent_int R).trans
+      AuxiliarySeparation.Integral.exactRankExponent_int_le_nine_quarters
 
 /-- Every ring admits the positive-slack arithmetic bound at exponent `9/4`.
 This statement also includes the zero ring. -/

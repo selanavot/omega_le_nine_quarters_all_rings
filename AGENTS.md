@@ -12,11 +12,15 @@ explicit approval identifying that particular PR.
 ## Trusted specification
 
 Target: `OAI.MatrixMultiplication.omega_le_nine_quarters_all_rings` with
-`(R : Type u) [Ring R] [Nontrivial R]` and conclusion
+`(R : Type u) [Ring R]` and conclusion
 `Arithmetic.omega R ≤ (9 : ℝ) / 4`.
 Preserve the existing program semantics, gate costs, correctness quantifiers,
 positive exponent slack, and infimum definition. Generalize typeclasses only
-where supported. Prove BddBelow and the direct operation-count theorem.
+where supported. Prove BddBelow for nontrivial rings and the direct operation-count
+theorem for all rings. Sela explicitly authorized removing Nontrivial from the
+upper bound on 2026-10-09: handle the zero ring with an explicit zero-cost program
+and document the real-infimum convention. Retain Nontrivial on the lower bound
+and BddBelow statements; do not change the definition of omega.
 The stronger intermediate is exact integer coefficient rank exponent ≤9/4.
 No new axioms, sorry/admit, vacuous assumptions, or circular definitions in
 completed proofs. Keep incomplete obligations explicit and outside the final

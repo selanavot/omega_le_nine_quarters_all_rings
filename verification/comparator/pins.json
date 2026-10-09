@@ -7,5 +7,5 @@
   "allowed_model_change": "Exactly seven literal [Field F] -> [Ring F] substitutions, no other bytes changed",
   "manifest_sha256": "24a4da16c4fcd0eafa5002e45ec6fa1f181c4ebf8789cc034cc9fc0721e2cc6a",
   "implementation": "native lake comparator and bundled independent kernels",
-  "challenge_sha256": "1a0e162d1a5c259bf08c5b0a57475319df31fabd19c3a16e3c9d1f302b0f5e71"
+  "challenge_sha256": "e5ce8a1491d77029211b59a6b54d066e7e6a7449ef9c619c23e96c0a09b9978c"
 }
