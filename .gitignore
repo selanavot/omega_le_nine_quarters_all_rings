@@ -1,0 +1,10 @@
+/.lake/
+/lakefile.olean*
+/lakefile.ilean
+__pycache__/
+.DS_Store
+/build/
+/paper/*.aux
+/paper/*.log
+/paper/*.out
+/paper/*.toc
