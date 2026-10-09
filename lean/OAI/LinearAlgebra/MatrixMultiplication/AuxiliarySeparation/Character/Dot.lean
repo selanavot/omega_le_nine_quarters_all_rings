@@ -31,13 +31,15 @@ open scoped BigOperators
 
 namespace MatrixMultiplication.AuxiliarySeparation.Character
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommSemiring K]
 
 variable (χ : (Character K))
 
-theorem value_pos {X Y Z : Type} [Fintype X] [Fintype Y] [Fintype Z]
-    {T : Tensor K X Y Z} (hT : T ≠ 0) : 0 < χ.value T :=
-  lt_of_lt_of_le zero_lt_one (χ.one_le_value hT)
+/-- Unit coefficients give positivity without division. -/
+theorem value_pos_of_coefficient_one {X Y Z : Type}
+    [Fintype X] [Fintype Y] [Fintype Z] {T : Tensor K X Y Z}
+    (x : X) (y : Y) (z : Z) (h : T x y z = 1) : 0 < χ.value T :=
+  lt_of_lt_of_le zero_lt_one (χ.one_le_value_of_coefficient_one ⟨x, y, z, h⟩)
 
 /-- Precomposing a character with a cyclic permutation gives a character. -/
 def cyclicCharacter : (Character K) where
@@ -69,12 +71,6 @@ def cyclicCharacter : (Character K) where
     [Fintype X] [Fintype Y] [Fintype Z] (T : Tensor K X Y Z) :
     χ.cyclicCharacter.value T = χ.value (Tensor.cyclic T) := rfl
 
-private theorem dotPairing_ne_zero {m : ℕ} (hm : 0 < m) :
-    Tensor.dotPairing (K := K) (Fin m) ≠ 0 := by
-  intro h
-  have hv := congrFun (congrFun (congrFun h ⟨0, hm⟩) ⟨0, hm⟩) ()
-  simp [Tensor.dotPairing] at hv
-
 private theorem dotPairing_rank (m : ℕ) :
     Tensor.RankAtMost (Tensor.dotPairing (K := K) (Fin m)) m := by
   let a : Fin m → Fin m → K := fun i j => if i = j then 1 else 0
@@ -87,7 +83,7 @@ private theorem dotPairing_rank (m : ℕ) :
 
 theorem value_dotPairing_pos {m : ℕ} (hm : 0 < m) :
     0 < χ.value (Tensor.dotPairing (K := K) (Fin m)) :=
-  χ.value_pos (dotPairing_ne_zero hm)
+  χ.value_pos_of_coefficient_one ⟨0, hm⟩ ⟨0, hm⟩ () (by simp [Tensor.dotPairing])
 
 theorem value_dotPairing_le (m : ℕ) :
     χ.value (Tensor.dotPairing (K := K) (Fin m)) ≤ m :=
@@ -129,7 +125,8 @@ def pX : ℝ := χ.cyclicCharacter.cyclicCharacter.pZ
 
 theorem pZ_nonneg : 0 ≤ χ.pZ := by
   apply div_nonneg _ (Real.log_nonneg (by norm_num))
-  exact Real.log_nonneg (χ.one_le_value (dotPairing_ne_zero (by norm_num)))
+  exact Real.log_nonneg (χ.one_le_value_of_coefficient_one
+    (T := Tensor.dotPairing (K := K) (Fin 2)) ⟨0, 0, (), by simp [Tensor.dotPairing]⟩)
 
 theorem pZ_le_one : χ.pZ ≤ 1 := by
   apply (div_le_one (Real.log_pos (by norm_num))).2
@@ -181,6 +178,15 @@ theorem value_matrixMultiplication {m : ℕ} (hm : 0 < m) :
       (m : ℝ) ^ (χ.pX + χ.pY + χ.pZ) := by
   simpa only [matrixMultiplicationTensor_eq_matrixCoefficients] using
     χ.value_matrixCoefficients_square hm
+
+section Field
+variable {K : Type*} [Field K] (χ : Character K)
+
+theorem value_pos {X Y Z : Type} [Fintype X] [Fintype Y] [Fintype Z]
+    {T : Tensor K X Y Z} (hT : T ≠ 0) : 0 < χ.value T :=
+  lt_of_lt_of_le zero_lt_one (χ.one_le_value hT)
+
+end Field
 
 end MatrixMultiplication.AuxiliarySeparation.Character
 

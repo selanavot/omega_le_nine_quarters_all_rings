@@ -10,7 +10,7 @@ public section
 
 namespace OAI
 
-/-! Division-free arithmetic programs over a field and their operation counts. -/
+/-! Division-free arithmetic programs over a ring and their operation counts. -/
 
 noncomputable section
 
@@ -28,11 +28,11 @@ namespace Program
 
 variable {F Input : Type*}
 
-@[simp] theorem eval_step_zero [Field F] {r : ℕ} (p : Program F Input r)
+@[simp] theorem eval_step_zero [Ring F] {r : ℕ} (p : Program F Input r)
     (g : Gate F Input (Fin r)) (inputs : Input → F) :
     (p.step g).eval inputs 0 = g.eval inputs (p.eval inputs) := rfl
 
-@[simp] theorem eval_step_succ [Field F] {r : ℕ} (p : Program F Input r)
+@[simp] theorem eval_step_succ [Ring F] {r : ℕ} (p : Program F Input r)
     (g : Gate F Input (Fin r)) (inputs : Input → F) (i : Fin r) :
     (p.step g).eval inputs i.succ = p.eval inputs i := rfl
 
@@ -43,7 +43,7 @@ end Program
 
 namespace MatrixAlgorithm
 
-variable {F : Type*} [Field F] {a b c : ℕ}
+variable {F : Type*} [Ring F] {a b c : ℕ}
 
 theorem correct_iff_entries (P : MatrixAlgorithm F a b c) :
     P.Correct ↔ ∀ (A : Matrix (Fin a) (Fin b) F) (B : Matrix (Fin b) (Fin c) F)
@@ -58,13 +58,13 @@ theorem correct_iff_entries (P : MatrixAlgorithm F a b c) :
 
 end MatrixAlgorithm
 
-def scalarAlgorithm (F : Type*) [Field F] : MatrixAlgorithm F 1 1 1 where
+def scalarAlgorithm (F : Type*) [Ring F] : MatrixAlgorithm F 1 1 1 where
   registers := 3
   program := ((Program.nil.step (.input (.inl (0, 0)))).step
     (.input (.inr (0, 0)))).step (.mul 1 0)
   output := fun _ _ => 0
 
-theorem scalarAlgorithm_correct (F : Type*) [Field F] : (scalarAlgorithm F).Correct := by
+theorem scalarAlgorithm_correct (F : Type*) [Ring F] : (scalarAlgorithm F).Correct := by
   intro A B
   funext i k
   have hi : i = 0 := Subsingleton.elim _ _
@@ -74,7 +74,7 @@ theorem scalarAlgorithm_correct (F : Type*) [Field F] : (scalarAlgorithm F).Corr
   change A 0 0 * B 0 0 = (A * B) 0 0
   simp [Matrix.mul_apply]
 
-@[simp] theorem scalarAlgorithm_cost (F : Type*) [Field F] : (scalarAlgorithm F).cost = 1 := rfl
+@[simp] theorem scalarAlgorithm_cost (F : Type*) [Ring F] : (scalarAlgorithm F).cost = 1 := rfl
 
 theorem one_le_innerSize {n : ℕ} (hn : 1 ≤ n) (k : ℝ) : 1 ≤ innerSize n k := by
   apply Nat.one_le_ceil_iff.mpr

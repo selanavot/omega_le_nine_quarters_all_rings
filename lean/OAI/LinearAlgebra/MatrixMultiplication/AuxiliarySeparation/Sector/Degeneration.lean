@@ -32,7 +32,7 @@ open scoped BigOperators Classical
 
 namespace MatrixMultiplication.AuxiliarySeparation.Sector
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommRing K] [Nontrivial K]
 
 open MatrixMultiplication.Foundation
 open Polynomial

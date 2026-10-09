@@ -22,7 +22,7 @@ public section
 
 namespace OAI
 
-/-! Arithmetic programs over an arbitrary field and asymptotic matrix multiplication costs. -/
+/-! Arithmetic programs over an arbitrary ring and asymptotic matrix multiplication costs. -/
 
 noncomputable section
 
@@ -30,7 +30,9 @@ namespace MatrixMultiplication.Arithmetic
 
 open MatrixMultiplication.Foundation
 
-variable {F : Type*} [Field F]
+section Ring
+
+variable {F : Type*} [Ring F]
 
 /-- Square matrix algorithms over a specified scalar field. -/
 abbrev SquareAlgorithm (F : Type*) (n : ℕ) := MatrixAlgorithm F n n n
@@ -230,6 +232,12 @@ theorem admissibleExponent_of_block_step
   admissibleExponent_of_block_step_of_padding
     (fun h P hP => MatrixAlgorithm.exists_restrict h h h P hP) hb hτ hR hstep
 
+end Ring
+
+section CommRing
+
+variable {F : Type*} [CommRing F]
+
 theorem admissibleExponent_of_rankAtMost {n R : ℕ} (hn : 2 ≤ n)
     (hRank : Tensor.RankAtMost (Tensor.matrixCoefficients (K := F) (Fin n) (Fin n) (Fin n)) R)
     {τ : ℝ} (hτ : 2 ≤ τ) (hR : (R : ℝ) ≤ (n : ℝ) ^ τ) :
@@ -240,6 +248,46 @@ theorem admissibleExponent_of_rankAtMost {n R : ℕ} (hn : 2 ≤ n)
   refine ⟨Q, hQ, ?_⟩
   rw [hcost]
   exact le_of_eq (by ring)
+
+end CommRing
+
+section Ring
+
+variable {F : Type*} [Ring F]
+
+/-- A fixed exact integer coefficient scheme gives the same arithmetic
+exponent over every associative unital ring. -/
+theorem admissibleExponent_of_int_rankAtMost {n r : ℕ} (hn : 2 ≤ n)
+    (hRank : Tensor.RankAtMost (Tensor.matrixCoefficients (K := ℤ) (Fin n) (Fin n) (Fin n)) r)
+    {τ : ℝ} (hτ : 2 ≤ τ) (hr : (r : ℝ) ≤ (n : ℝ) ^ τ) :
+    AdmissibleExponent F τ := by
+  apply admissibleExponent_of_block_step (K := 6 * r * n ^ 2) hn hτ hr
+  intro m P hP
+  obtain ⟨Q, hQ, hcost⟩ := RecursiveBlock.int_rank_block_step hRank P hP
+  refine ⟨Q, hQ, ?_⟩
+  rw [hcost]
+  exact le_of_eq (by ring)
+
+/-- Arbitrarily close integer rank schemes imply the unchanged positive-slack
+arithmetic exponent bound over every ring, including the zero ring. -/
+theorem admissibleExponent_of_int_rank_bounds {τ : ℝ} (hτ : 2 ≤ τ)
+    (hRank : ∀ ε : ℝ, 0 < ε → ∃ n r : ℕ, 2 ≤ n ∧
+      Tensor.RankAtMost (Tensor.matrixCoefficients (K := ℤ) (Fin n) (Fin n) (Fin n)) r ∧
+      (r : ℝ) ≤ (n : ℝ) ^ (τ + ε)) :
+    AdmissibleExponent F τ := by
+  intro ε hε
+  obtain ⟨n, r, hn, hrank, hr⟩ := hRank (ε / 2) (half_pos hε)
+  have hadm : AdmissibleExponent F (τ + ε / 2) :=
+    admissibleExponent_of_int_rankAtMost hn hrank (by linarith) hr
+  obtain ⟨C, hC, hcost⟩ := hadm (ε / 2) (half_pos hε)
+  refine ⟨C, hC, ?_⟩
+  intro m hm
+  obtain ⟨P, hP, hbound⟩ := hcost m hm
+  refine ⟨P, hP, ?_⟩
+  have he : τ + ε / 2 + ε / 2 = τ + ε := by ring
+  simpa only [he] using hbound
+
+end Ring
 
 end MatrixMultiplication.Arithmetic
 

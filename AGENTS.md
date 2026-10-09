@@ -55,3 +55,8 @@ and compiler for source preview. A reproducible repo PDF build may additionally
 use existing tools. Do not install TeX solely for the native editor.
 
 No brain icons or graphics. Never merge without specific human approval.
+
+Before reusing dependency caches, resolve `.lake/packages` itself and every
+ancestor: inspecting its children does not detect a parent symlink. Keep a
+physical copy per independently upgraded project; verify `lake env printenv
+LEAN_PATH` stays inside this checkout before starting builds.

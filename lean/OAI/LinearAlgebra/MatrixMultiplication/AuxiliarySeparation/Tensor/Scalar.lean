@@ -2,7 +2,8 @@ module
 
 /-
 Upstream source and modification notice
-Modified from OpenAI's matrix-multiplication sources to support arbitrary fields.
+Modified from OpenAI's matrix-multiplication sources and the all-fields extension
+to support the integral/ring proof. Field-only claims remain explicitly scoped.
 See UPSTREAM.md for provenance and changes; Apache-2.0 license retained in LICENSE.
 -/
 
@@ -30,7 +31,9 @@ open MatrixMultiplication.Foundation
 
 namespace MatrixMultiplication.AuxiliarySeparation
 
-variable {K : Type*} [Field K]
+section General
+
+variable {K : Type*} [CommSemiring K] [Nontrivial K]
 
 /-- Splitting the diagonal index set splits its scalar tensor into two blocks. -/
 theorem scalarTensor_add_reindex (m n : ℕ) :
@@ -138,6 +141,16 @@ theorem le_rank (T : (TensorClass K)) : T ≤ (rank T : (TensorClass K)) := by
     rw [Nat.cast_add]
     simpa only [add_zero] using add_mono (le_refl (m : (TensorClass K))) (zero_le (k : (TensorClass K)))
 
+end TensorSemiring
+
+end General
+
+namespace TensorSemiring
+
+section Field
+
+variable {K : Type*} [Field K]
+
 /-- A natural multiple of any nonzero tensor contains any prescribed tensor
 by restriction. -/
 theorem le_nat_mul_of_ne_zero (T S : (TensorClass K)) (hS : S ≠ 0) :
@@ -145,6 +158,8 @@ theorem le_nat_mul_of_ne_zero (T S : (TensorClass K)) (hS : S ≠ 0) :
   apply (le_rank T).trans
   simpa only [mul_one] using
     mul_mono (le_refl (rank T : (TensorClass K))) (one_le_of_ne_zero hS)
+
+end Field
 
 end TensorSemiring
 end MatrixMultiplication.AuxiliarySeparation

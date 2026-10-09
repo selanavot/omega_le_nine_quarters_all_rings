@@ -12,7 +12,7 @@ public section
 
 namespace OAI
 
-/-! Division-free arithmetic programs over a field and their operation counts. -/
+/-! Division-free arithmetic programs over a ring and their operation counts. -/
 
 noncomputable section
 
@@ -22,9 +22,11 @@ namespace MatrixMultiplication.Arithmetic.RecursiveBlock
 
 open MatrixMultiplication.Foundation
 
-variable {F : Type*} [Field F]
+variable {F : Type*}
 
 namespace LinearExpression
+
+variable [Ring F]
 
 variable {Input : Type*}
 
@@ -73,6 +75,8 @@ structure Family (F Input Output : Type*) where
 
 namespace Family
 
+variable [Ring F]
+
 variable {Input Mid Output : Type*}
 
 def eval (p : Family F Input Output) (inputs : Input → F) (o : Output) : F :=
@@ -115,7 +119,7 @@ theorem eval_mapInputs {NewInput : Type*} (f : Input → NewInput)
     (p.mapInputs f).eval inputs o = p.eval (fun i => inputs (f i)) o := by
   exact Program.eval_mapInput f p.program inputs (p.output o)
 
-omit [Field F] in
+omit [Ring F] in
 theorem cost_mapInputs {NewInput : Type*} (f : Input → NewInput)
     (p : Family F Input Output) : (p.mapInputs f).cost = p.cost := by
   exact Program.cost_mapInput f p.program
@@ -143,7 +147,7 @@ theorem eval_parallel (r : ℕ) (p : Fin r → Family F Input Output)
     · exact (Program.eval_append_new _ _ inputs _).trans
         (ih (fun j => p j.succ) (j, o))
 
-omit [Field F] in
+omit [Ring F] in
 theorem cost_parallel (r : ℕ) (p : Fin r → Family F Input Output) :
     (parallel r p).cost = ∑ i, (p i).cost := by
   induction r with
@@ -163,7 +167,7 @@ theorem eval_copies (r : ℕ) (p : Family F Input Output)
     (copies r p).eval inputs o = p.eval (fun x => inputs (o.1, x)) o.2 := by
   rw [copies, eval_parallel, eval_mapInputs]
 
-omit [Field F] in
+omit [Ring F] in
 theorem cost_copies (r : ℕ) (p : Family F Input Output) :
     (copies r p).cost = r * p.cost := by
   simp [copies, cost_parallel, cost_mapInputs]
@@ -172,7 +176,7 @@ def ofMatrix {m l q : ℕ} (p : MatrixAlgorithm F m l q) :
     Family F (MatrixInput m l q) (Fin m × Fin q) :=
   ⟨p.registers, p.program, fun o => p.output o.1 o.2⟩
 
-omit [Field F] in
+omit [Ring F] in
 @[simp] theorem cost_ofMatrix {m l q : ℕ} (p : MatrixAlgorithm F m l q) :
     (ofMatrix p).cost = p.cost := rfl
 
@@ -197,7 +201,7 @@ variable {n₁ n₂ n₃ r m₁ m₂ m₃ : ℕ}
 
 def join {n m : ℕ} (i : Fin n) (j : Fin m) : Fin (n * m) := finProdFinEquiv (i, j)
 
-theorem rank_bilinear_identity
+theorem rank_bilinear_identity [CommRing F]
     (a : Fin r → Fin n₁ × Fin n₂ → F)
     (b : Fin r → Fin n₂ × Fin n₃ → F)
     (c : Fin r → Fin n₃ × Fin n₁ → F)
@@ -228,17 +232,17 @@ theorem rank_bilinear_identity
       intro q hq
       ring
 
-def leftBlock (a : Fin r → Fin n₁ × Fin n₂ → F)
+def leftBlock [Ring F] (a : Fin r → Fin n₁ × Fin n₂ → F)
     (A : Matrix (Fin (n₁ * m₁)) (Fin (n₂ * m₂)) F) (q : Fin r) :
     Matrix (Fin m₁) (Fin m₂) F :=
   fun s t => ∑ x, a q x * A (join x.1 s) (join x.2 t)
 
-def rightBlock (b : Fin r → Fin n₂ × Fin n₃ → F)
+def rightBlock [Ring F] (b : Fin r → Fin n₂ × Fin n₃ → F)
     (B : Matrix (Fin (n₂ * m₂)) (Fin (n₃ * m₃)) F) (q : Fin r) :
     Matrix (Fin m₂) (Fin m₃) F :=
   fun t u => ∑ y, b q y * B (join y.1 t) (join y.2 u)
 
-theorem block_identity
+theorem block_identity [CommRing F]
     (a : Fin r → Fin n₁ × Fin n₂ → F)
     (b : Fin r → Fin n₂ × Fin n₃ → F)
     (c : Fin r → Fin n₃ × Fin n₁ → F)
@@ -260,13 +264,98 @@ theorem block_identity
   exact (Fintype.sum_prod_type _).symm.trans
     (finProdFinEquiv.sum_comp (fun j => A (join i s) j * B j (join k u)))
 
+/-- Integer coefficients are central, so a bilinear identity preserves the
+order of the two inputs even in a noncommutative ring. -/
+theorem int_rank_bilinear_identity [Ring F]
+    (a : Fin r → Fin n₁ × Fin n₂ → ℤ)
+    (b : Fin r → Fin n₂ × Fin n₃ → ℤ)
+    (c : Fin r → Fin n₃ × Fin n₁ → ℤ)
+    (h : Tensor.matrixCoefficients (K := ℤ) (Fin n₁) (Fin n₂) (Fin n₃) =
+      fun x y z => ∑ q, Tensor.rankOne (a q) (b q) (c q) x y z)
+    (left : Fin n₁ × Fin n₂ → F) (right : Fin n₂ × Fin n₃ → F)
+    (i : Fin n₁) (k : Fin n₃) :
+    (∑ q, (c q (k, i) : F) * (∑ x, (a q x : F) * left x) *
+      (∑ y, (b q y : F) * right y)) = ∑ j, left (i, j) * right (j, k) := by
+  have hcentral (u v w : ℤ) (x y : F) :
+      (w : F) * ((u : F) * x) * ((v : F) * y) =
+        ((u * v * w : ℤ) : F) * x * y := by
+    have hc : (w : F) * (u : F) * (v : F) = ((u * v * w : ℤ) : F) := by
+      have hz : w * u * v = u * v * w := by ring
+      simpa only [Int.cast_mul] using congrArg (fun z : ℤ => (z : F)) hz
+    calc
+      (w : F) * ((u : F) * x) * ((v : F) * y) =
+          ((w : F) * (u : F) * (v : F)) * x * y := by
+        simp only [mul_assoc]
+        rw [← mul_assoc x (v : F) y, ← Int.cast_comm v x]
+        simp only [mul_assoc]
+      _ = _ := by rw [hc]
+  have hcoeff (x : Fin n₁ × Fin n₂) (y : Fin n₂ × Fin n₃)
+      (z : Fin n₃ × Fin n₁) :
+      (∑ q, ((a q x * b q y * c q z : ℤ) : F)) =
+        ((Tensor.matrixCoefficients (K := ℤ) (Fin n₁) (Fin n₂) (Fin n₃) x y z : ℤ) : F) := by
+    have hc := congrFun (congrFun (congrFun h x) y) z
+    simpa only [Tensor.rankOne, Int.cast_sum] using
+      (congrArg (fun z : ℤ => (z : F)) hc).symm
+  simp only [Finset.sum_mul, Finset.mul_sum]
+  calc
+    (∑ q, ∑ y, ∑ x, (c q (k, i) : F) * ((a q x : F) * left x) *
+        ((b q y : F) * right y)) =
+        ∑ q, ∑ x, ∑ y, (c q (k, i) : F) * ((a q x : F) * left x) *
+          ((b q y : F) * right y) := by
+      apply Finset.sum_congr rfl
+      intro q hq
+      exact Finset.sum_comm
+    _ = ∑ x, ∑ q, ∑ y, (c q (k, i) : F) * ((a q x : F) * left x) *
+          ((b q y : F) * right y) := Finset.sum_comm
+    _ = ∑ x, ∑ y, ∑ q, ((a q x * b q y * c q (k, i) : ℤ) : F) *
+          left x * right y := by
+      apply Finset.sum_congr rfl
+      intro x hx
+      rw [Finset.sum_comm]
+      apply Finset.sum_congr rfl
+      intro y hy
+      apply Finset.sum_congr rfl
+      intro q hq
+      exact hcentral _ _ _ _ _
+    _ = ∑ x, ∑ y, (∑ q, ((a q x * b q y * c q (k, i) : ℤ) : F)) *
+          left x * right y := by simp only [Finset.sum_mul]
+    _ = ∑ x, ∑ y,
+          ((Tensor.matrixCoefficients (K := ℤ) (Fin n₁) (Fin n₂) (Fin n₃)
+            x y (k, i) : ℤ) : F) * left x * right y := by simp_rw [hcoeff]
+    _ = ∑ j, left (i, j) * right (j, k) := by
+      simp [Tensor.matrixCoefficients, Fintype.sum_prod_type, ite_and, ite_mul]
+
+theorem int_block_identity [Ring F]
+    (a : Fin r → Fin n₁ × Fin n₂ → ℤ)
+    (b : Fin r → Fin n₂ × Fin n₃ → ℤ)
+    (c : Fin r → Fin n₃ × Fin n₁ → ℤ)
+    (h : Tensor.matrixCoefficients (K := ℤ) (Fin n₁) (Fin n₂) (Fin n₃) =
+      fun x y z => ∑ q, Tensor.rankOne (a q) (b q) (c q) x y z)
+    (A : Matrix (Fin (n₁ * m₁)) (Fin (n₂ * m₂)) F)
+    (B : Matrix (Fin (n₂ * m₂)) (Fin (n₃ * m₃)) F)
+    (i : Fin n₁) (k : Fin n₃) (s : Fin m₁) (u : Fin m₃) :
+    (∑ q, (c q (k, i) : F) *
+      ((leftBlock (fun q x => (a q x : F)) A q) *
+        (rightBlock (fun q y => (b q y : F)) B q)) s u) =
+      (A * B) (join i s) (join k u) := by
+  simp only [Matrix.mul_apply, Finset.mul_sum]
+  rw [Finset.sum_comm]
+  have hlocal (t : Fin m₂) := int_rank_bilinear_identity a b c h
+    (fun x => A (join x.1 s) (join x.2 t))
+    (fun y => B (join y.1 t) (join y.2 u)) i k
+  simp only [leftBlock, rightBlock]
+  simp_rw [← mul_assoc, hlocal]
+  rw [Finset.sum_comm]
+  exact (Fintype.sum_prod_type _).symm.trans
+    (finProdFinEquiv.sum_comp (fun j => A (join i s) j * B j (join k u)))
+
 end BlockIdentities
 
 section BlockPrograms
 
 variable {n₁ n₂ n₃ r m₁ m₂ m₃ : ℕ}
 
-def inputExpressions (a : Fin r → Fin n₁ × Fin n₂ → F)
+def inputExpressions [Ring F] (a : Fin r → Fin n₁ × Fin n₂ → F)
     (b : Fin r → Fin n₂ × Fin n₃ → F) :
     Fin r × MatrixInput m₁ m₂ m₃ →
       Expression F (MatrixInput (n₁ * m₁) (n₂ * m₂) (n₃ * m₃))
@@ -275,13 +364,13 @@ def inputExpressions (a : Fin r → Fin n₁ × Fin n₂ → F)
   | (q, .inr (t, u)) => LinearExpression.linear (b q)
       (fun y => .inr (join y.1 t, join y.2 u))
 
-def inputFamily (a : Fin r → Fin n₁ × Fin n₂ → F)
+def inputFamily [Ring F] (a : Fin r → Fin n₁ × Fin n₂ → F)
     (b : Fin r → Fin n₂ × Fin n₃ → F) :
     Family F (MatrixInput (n₁ * m₁) (n₂ * m₂) (n₃ * m₃))
       (Fin r × MatrixInput m₁ m₂ m₃) :=
   Family.expressions (inputExpressions a b)
 
-theorem inputFamily_eval (a : Fin r → Fin n₁ × Fin n₂ → F)
+theorem inputFamily_eval [Ring F] (a : Fin r → Fin n₁ × Fin n₂ → F)
     (b : Fin r → Fin n₂ × Fin n₃ → F)
     (A : Matrix (Fin (n₁ * m₁)) (Fin (n₂ * m₂)) F)
     (B : Matrix (Fin (n₂ * m₂)) (Fin (n₃ * m₃)) F)
@@ -296,7 +385,7 @@ theorem inputFamily_eval (a : Fin r → Fin n₁ × Fin n₂ → F)
     simp only [inputFamily, Family.eval_expressions, inputExpressions,
       LinearExpression.eval_linear, matrixInputs, rightBlock]
 
-theorem inputFamily_cost (a : Fin r → Fin n₁ × Fin n₂ → F)
+theorem inputFamily_cost [Ring F] (a : Fin r → Fin n₁ × Fin n₂ → F)
     (b : Fin r → Fin n₂ × Fin n₃ → F) :
     (inputFamily (m₁ := m₁) (m₂ := m₂) (m₃ := m₃) a b).cost =
       2 * r * (n₁ * n₂ * m₁ * m₂ + n₂ * n₃ * m₂ * m₃) := by
@@ -306,13 +395,13 @@ theorem inputFamily_cost (a : Fin r → Fin n₁ × Fin n₂ → F)
     Fintype.card_fin, Finset.sum_const, Finset.card_univ, smul_eq_mul]
   ring
 
-def recursiveProducts (a : Fin r → Fin n₁ × Fin n₂ → F)
+def recursiveProducts [Ring F] (a : Fin r → Fin n₁ × Fin n₂ → F)
     (b : Fin r → Fin n₂ × Fin n₃ → F) (p : MatrixAlgorithm F m₁ m₂ m₃) :
     Family F (MatrixInput (n₁ * m₁) (n₂ * m₂) (n₃ * m₃))
       (Fin r × (Fin m₁ × Fin m₃)) :=
   (inputFamily a b).compose (Family.copies r (Family.ofMatrix p))
 
-theorem recursiveProducts_eval (a : Fin r → Fin n₁ × Fin n₂ → F)
+theorem recursiveProducts_eval [Ring F] (a : Fin r → Fin n₁ × Fin n₂ → F)
     (b : Fin r → Fin n₂ × Fin n₃ → F)
     (p : MatrixAlgorithm F m₁ m₂ m₃) (hp : p.Correct)
     (A : Matrix (Fin (n₁ * m₁)) (Fin (n₂ * m₂)) F)
@@ -324,24 +413,24 @@ theorem recursiveProducts_eval (a : Fin r → Fin n₁ × Fin n₂ → F)
     Family.eval_ofMatrix _ hp]
   simp only [inputFamily_eval, matrixInputs, Matrix.mul_apply]
 
-theorem recursiveProducts_cost (a : Fin r → Fin n₁ × Fin n₂ → F)
+theorem recursiveProducts_cost [Ring F] (a : Fin r → Fin n₁ × Fin n₂ → F)
     (b : Fin r → Fin n₂ × Fin n₃ → F) (p : MatrixAlgorithm F m₁ m₂ m₃) :
     (recursiveProducts a b p).cost =
       2 * r * (n₁ * n₂ * m₁ * m₂ + n₂ * n₃ * m₂ * m₃) + r * p.cost := by
   rw [recursiveProducts, Family.cost_compose, inputFamily_cost,
     Family.cost_copies, Family.cost_ofMatrix]
 
-def outputExpressions (c : Fin r → Fin n₃ × Fin n₁ → F) :
+def outputExpressions [Ring F] (c : Fin r → Fin n₃ × Fin n₁ → F) :
     Fin (n₁ * m₁) × Fin (n₃ * m₃) → Expression F (Fin r × (Fin m₁ × Fin m₃)) :=
   fun o => LinearExpression.linear
     (fun q => c q ((finProdFinEquiv.symm o.2).1, (finProdFinEquiv.symm o.1).1))
     (fun q => (q, ((finProdFinEquiv.symm o.1).2, (finProdFinEquiv.symm o.2).2)))
 
-def outputFamily (c : Fin r → Fin n₃ × Fin n₁ → F) :
+def outputFamily [Ring F] (c : Fin r → Fin n₃ × Fin n₁ → F) :
     Family F (Fin r × (Fin m₁ × Fin m₃)) (Fin (n₁ * m₁) × Fin (n₃ * m₃)) :=
   Family.expressions (outputExpressions c)
 
-theorem outputFamily_eval (c : Fin r → Fin n₃ × Fin n₁ → F)
+theorem outputFamily_eval [Ring F] (c : Fin r → Fin n₃ × Fin n₁ → F)
     (inputs : Fin r × (Fin m₁ × Fin m₃) → F)
     (i : Fin n₁) (k : Fin n₃) (s : Fin m₁) (u : Fin m₃) :
     (outputFamily c).eval inputs (join i s, join k u) =
@@ -349,21 +438,21 @@ theorem outputFamily_eval (c : Fin r → Fin n₃ × Fin n₁ → F)
   simp only [outputFamily, Family.eval_expressions, outputExpressions,
     LinearExpression.eval_linear, join, Equiv.symm_apply_apply]
 
-theorem outputFamily_cost (c : Fin r → Fin n₃ × Fin n₁ → F) :
+theorem outputFamily_cost [Ring F] (c : Fin r → Fin n₃ × Fin n₁ → F) :
     (outputFamily (m₁ := m₁) (m₃ := m₃) c).cost = 2 * r * n₁ * n₃ * m₁ * m₃ := by
   simp only [outputFamily, Family.cost_expressions, outputExpressions,
     LinearExpression.cost_linear, Fintype.card_fin, Finset.sum_const,
     Finset.card_univ, Fintype.card_prod, smul_eq_mul]
   ring
 
-def algorithm (a : Fin r → Fin n₁ × Fin n₂ → F)
+def algorithm [Ring F] (a : Fin r → Fin n₁ × Fin n₂ → F)
     (b : Fin r → Fin n₂ × Fin n₃ → F) (c : Fin r → Fin n₃ × Fin n₁ → F)
     (p : MatrixAlgorithm F m₁ m₂ m₃) :
     MatrixAlgorithm F (n₁ * m₁) (n₂ * m₂) (n₃ * m₃) :=
   let f := (recursiveProducts a b p).compose (outputFamily c)
   ⟨f.registers, f.program, fun i k => f.output (i, k)⟩
 
-theorem algorithm_correct
+theorem algorithm_correct [CommRing F]
     (a : Fin r → Fin n₁ × Fin n₂ → F)
     (b : Fin r → Fin n₂ × Fin n₃ → F) (c : Fin r → Fin n₃ × Fin n₁ → F)
     (h : Tensor.matrixCoefficients (K := F) (Fin n₁) (Fin n₂) (Fin n₃) =
@@ -379,7 +468,7 @@ theorem algorithm_correct
   simp_rw [recursiveProducts_eval a b p hp A B]
   exact block_identity a b c h A B i k s u
 
-theorem algorithm_cost (a : Fin r → Fin n₁ × Fin n₂ → F)
+theorem algorithm_cost [Ring F] (a : Fin r → Fin n₁ × Fin n₂ → F)
     (b : Fin r → Fin n₂ × Fin n₃ → F) (c : Fin r → Fin n₃ × Fin n₁ → F)
     (p : MatrixAlgorithm F m₁ m₂ m₃) :
     (algorithm a b c p).cost = r * p.cost +
@@ -388,7 +477,7 @@ theorem algorithm_cost (a : Fin r → Fin n₁ × Fin n₂ → F)
   rw [Family.cost_compose, recursiveProducts_cost, outputFamily_cost]
   ring
 
-theorem rank_block_step
+theorem rank_block_step [CommRing F]
     (h : Tensor.RankAtMost (Tensor.matrixCoefficients (K := F) (Fin n₁) (Fin n₂) (Fin n₃)) r)
     (p : MatrixAlgorithm F m₁ m₂ m₃) (hp : p.Correct) :
     ∃ q : MatrixAlgorithm F (n₁ * m₁) (n₂ * m₂) (n₃ * m₃), q.Correct ∧
@@ -396,6 +485,41 @@ theorem rank_block_step
         2 * r * (n₁ * n₂ * m₁ * m₂ + n₂ * n₃ * m₂ * m₃ + n₁ * n₃ * m₁ * m₃) := by
   rcases h with ⟨a, b, c, h⟩
   exact ⟨algorithm a b c p, algorithm_correct a b c h p hp, algorithm_cost a b c p⟩
+
+/-- Correctness of the existing recursive program when its scalar maps
+come from an exact integer coefficient scheme. -/
+theorem int_algorithm_correct [Ring F]
+    (a : Fin r → Fin n₁ × Fin n₂ → ℤ)
+    (b : Fin r → Fin n₂ × Fin n₃ → ℤ)
+    (c : Fin r → Fin n₃ × Fin n₁ → ℤ)
+    (h : Tensor.matrixCoefficients (K := ℤ) (Fin n₁) (Fin n₂) (Fin n₃) =
+      fun x y z => ∑ q, Tensor.rankOne (a q) (b q) (c q) x y z)
+    (p : MatrixAlgorithm F m₁ m₂ m₃) (hp : p.Correct) :
+    (algorithm (fun q x => (a q x : F)) (fun q y => (b q y : F))
+      (fun q z => (c q z : F)) p).Correct := by
+  intro A B
+  funext i k
+  obtain ⟨⟨i, s⟩, rfl⟩ := finProdFinEquiv.surjective i
+  obtain ⟨⟨k, u⟩, rfl⟩ := finProdFinEquiv.surjective k
+  change ((recursiveProducts (fun q x => (a q x : F)) (fun q y => (b q y : F)) p).compose
+    (outputFamily (fun q z => (c q z : F)))).eval
+    (matrixInputs A B) (join i s, join k u) = _
+  rw [Family.eval_compose, outputFamily_eval]
+  simp_rw [recursiveProducts_eval _ _ p hp A B]
+  exact int_block_identity a b c h A B i k s u
+
+/-- An integer rank scheme supplies a recursive block step over every
+associative unital ring. No commutativity of input values is assumed. -/
+theorem int_rank_block_step [Ring F]
+    (h : Tensor.RankAtMost (Tensor.matrixCoefficients (K := ℤ) (Fin n₁) (Fin n₂) (Fin n₃)) r)
+    (p : MatrixAlgorithm F m₁ m₂ m₃) (hp : p.Correct) :
+    ∃ q : MatrixAlgorithm F (n₁ * m₁) (n₂ * m₂) (n₃ * m₃), q.Correct ∧
+      q.cost = r * p.cost +
+        2 * r * (n₁ * n₂ * m₁ * m₂ + n₂ * n₃ * m₂ * m₃ + n₁ * n₃ * m₁ * m₃) := by
+  rcases h with ⟨a, b, c, h⟩
+  exact ⟨algorithm (fun q x => (a q x : F)) (fun q y => (b q y : F))
+      (fun q z => (c q z : F)) p,
+    int_algorithm_correct a b c h p hp, algorithm_cost _ _ _ p⟩
 
 end BlockPrograms
 

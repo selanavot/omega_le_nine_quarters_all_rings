@@ -2,7 +2,8 @@ module
 
 /-
 Upstream source and modification notice
-Modified from OpenAI's matrix-multiplication sources to support arbitrary fields.
+Modified from OpenAI's matrix-multiplication sources and the all-fields extension
+to support the integral/ring proof. Field-only claims remain explicitly scoped.
 See UPSTREAM.md for provenance and changes; Apache-2.0 license retained in LICENSE.
 -/
 
@@ -31,7 +32,7 @@ open scoped BigOperators
 
 namespace MatrixMultiplication.AuxiliarySeparation
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommSemiring K] [Nontrivial K]
 
 /-- Every finite coefficient tensor has a finite exact rank decomposition. -/
 theorem exists_rankAtMost {X Y Z : Type*} [Fintype X] [Fintype Y] [Fintype Z]
@@ -47,7 +48,7 @@ theorem exists_rankAtMost {X Y Z : Type*} [Fintype X] [Fintype Y] [Fintype Z]
   rw [heq]
   exact Tensor.rankAtMost_sum_rankOne a b c
 
-/-- Exact rank of a finite coefficient tensor over the scalar field. -/
+/-- Exact rank of a finite tensor over the coefficient semiring. -/
 def exactRank {X Y Z : Type*} [Fintype X] [Fintype Y] [Fintype Z]
     (T : Tensor K X Y Z) : ℕ := by
   classical
@@ -96,7 +97,7 @@ theorem exactRank_product_le {X Y Z U V W : Type*}
   exactRank_le ((exactRank_spec T).product (exactRank_spec S))
 
 /-- Exact rank of the square matrix multiplication tensor. -/
-def exactMatrixRank (K : Type*) [Field K] (n : ℕ) : ℕ := exactRank ((matrixMultiplicationTensor (K := K)) n n n)
+def exactMatrixRank (K : Type*) [CommSemiring K] [Nontrivial K] (n : ℕ) : ℕ := exactRank ((matrixMultiplicationTensor (K := K)) n n n)
 
 theorem exactMatrixRank_spec (n : ℕ) :
     Tensor.RankAtMost ((matrixMultiplicationTensor (K := K)) n n n) ((exactMatrixRank K) n) :=
@@ -154,11 +155,11 @@ theorem exactMatrixRank_pos {n : ℕ} (hn : 0 < n) : 0 < (exactMatrixRank K) n :
   · simpa using exactMatrixRank_lower (n := 1) zero_lt_one
 
 /-- The set of finite exact-rank exponents in the definition of `ν`. -/
-def exactRankExponentSet (K : Type*) [Field K] : Set ℝ :=
+def exactRankExponentSet (K : Type*) [CommSemiring K] [Nontrivial K] : Set ℝ :=
   {τ | ∃ n : ℕ, 2 ≤ n ∧ τ = Real.logb n ((exactMatrixRank K) n)}
 
 /-- The exact-rank exponent `ν = inf_{n ≥ 2} log(R(Tₙ))/log(n)`. -/
-def exactRankExponent (K : Type*) [Field K] : ℝ := sInf (exactRankExponentSet K)
+def exactRankExponent (K : Type*) [CommSemiring K] [Nontrivial K] : ℝ := sInf (exactRankExponentSet K)
 
 theorem exactRankExponentSet_nonempty : (exactRankExponentSet K).Nonempty :=
   ⟨Real.logb 2 ((exactMatrixRank K) 2), 2, le_rfl, rfl⟩

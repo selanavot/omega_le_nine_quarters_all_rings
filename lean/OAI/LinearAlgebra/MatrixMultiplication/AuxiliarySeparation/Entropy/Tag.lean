@@ -34,7 +34,7 @@ open scoped BigOperators Topology
 
 namespace MatrixMultiplication.AuxiliarySeparation
 
-variable {K : Type*} [Field K]
+variable {K : Type*} [CommSemiring K]
 
 variable {A : Type*} [Fintype A] [DecidableEq A]
 
@@ -193,6 +193,72 @@ variable {I X Y Z : Type} [Fintype I] [DecidableEq I]
   {BX BY BZ : I → Type}
   [∀ a, Fintype (BX a)] [∀ a, Fintype (BY a)] [∀ a, Fintype (BZ a)]
 
+/-- The entropy limit over any coefficient semiring needs positivity of the
+actual character values, not a field structure. -/
+theorem log_tag_of_integral_type_comparison_of_value_pos (χ : Character K)
+    (q : FiniteLaw I) (T : Tensor K X Y Z)
+    (B : ∀ a, Tensor K (BX a) (BY a) (BZ a)) (p : ℝ)
+    (hT : 0 < χ.value T) (hB : ∀ a, 0 < χ.value (B a))
+    (hfinite : ∀ counts : I → ℕ, 0 < ∑ a, counts a →
+      (Fintype.card (ExactWords counts) : ℝ) ^ p *
+          ∏ a, χ.value (B a) ^ counts a ≤
+        6 * χ.value T ^ (∑ a, counts a)) :
+    p * finiteEntropy q.mass + ∑ a, q.mass a * Real.log (χ.value (B a)) ≤
+      Real.log (χ.value T) :=
+  MatrixMultiplication.AuxiliarySeparation.log_tag_of_integral_bounds q
+    (fun a => χ.value (B a)) p (χ.value T) 6 hB hT (by norm_num) hfinite
+
+/-- Geometric-mean form of the tag bound with explicit positive values. -/
+theorem tag_of_integral_type_comparison_of_value_pos (χ : Character K)
+    (q : FiniteLaw I) (T : Tensor K X Y Z)
+    (B : ∀ a, Tensor K (BX a) (BY a) (BZ a)) (p : ℝ)
+    (hT : 0 < χ.value T) (hB : ∀ a, 0 < χ.value (B a))
+    (hfinite : ∀ counts : I → ℕ, 0 < ∑ a, counts a →
+      (Fintype.card (ExactWords counts) : ℝ) ^ p *
+          ∏ a, χ.value (B a) ^ counts a ≤
+        6 * χ.value T ^ (∑ a, counts a)) :
+    Real.exp (p * finiteEntropy q.mass) * ∏ a, χ.value (B a) ^ q.mass a ≤
+      χ.value T :=
+  MatrixMultiplication.AuxiliarySeparation.tag_of_integral_bounds q
+    (fun a => χ.value (B a)) p (χ.value T) 6 hB hT (by norm_num) hfinite
+
+/-- A unit coefficient supplies the positivity needed by the integral tag
+argument without division or a nonzero-scalar cancellation argument. -/
+theorem log_tag_of_integral_type_comparison_of_coefficient_one (χ : Character K)
+    (q : FiniteLaw I) (T : Tensor K X Y Z)
+    (B : ∀ a, Tensor K (BX a) (BY a) (BZ a)) (p : ℝ)
+    (hT : ∃ x y z, T x y z = 1)
+    (hB : ∀ a, ∃ x y z, B a x y z = 1)
+    (hfinite : ∀ counts : I → ℕ, 0 < ∑ a, counts a →
+      (Fintype.card (ExactWords counts) : ℝ) ^ p *
+          ∏ a, χ.value (B a) ^ counts a ≤
+        6 * χ.value T ^ (∑ a, counts a)) :
+    p * finiteEntropy q.mass + ∑ a, q.mass a * Real.log (χ.value (B a)) ≤
+      Real.log (χ.value T) :=
+  χ.log_tag_of_integral_type_comparison_of_value_pos q T B p
+    (lt_of_lt_of_le zero_lt_one (χ.one_le_value_of_coefficient_one hT))
+    (fun a => lt_of_lt_of_le zero_lt_one (χ.one_le_value_of_coefficient_one (hB a))) hfinite
+
+/-- The geometric-mean tag bound for tensors with a coefficient equal to one. -/
+theorem tag_of_integral_type_comparison_of_coefficient_one (χ : Character K)
+    (q : FiniteLaw I) (T : Tensor K X Y Z)
+    (B : ∀ a, Tensor K (BX a) (BY a) (BZ a)) (p : ℝ)
+    (hT : ∃ x y z, T x y z = 1)
+    (hB : ∀ a, ∃ x y z, B a x y z = 1)
+    (hfinite : ∀ counts : I → ℕ, 0 < ∑ a, counts a →
+      (Fintype.card (ExactWords counts) : ℝ) ^ p *
+          ∏ a, χ.value (B a) ^ counts a ≤
+        6 * χ.value T ^ (∑ a, counts a)) :
+    Real.exp (p * finiteEntropy q.mass) * ∏ a, χ.value (B a) ^ q.mass a ≤
+      χ.value T :=
+  χ.tag_of_integral_type_comparison_of_value_pos q T B p
+    (lt_of_lt_of_le zero_lt_one (χ.one_le_value_of_coefficient_one hT))
+    (fun a => lt_of_lt_of_le zero_lt_one (χ.one_le_value_of_coefficient_one (hB a))) hfinite
+
+section Field
+
+variable {K : Type*} [Field K]
+
 /-- For a character, nonzero tensors supply all positivity needed by the
 entropy limit. The only quantitative premise is the finite integral-type
 comparison with the field-independent fixed loss six. -/
@@ -225,6 +291,8 @@ theorem tag_of_integral_type_comparison (χ : (Character K))
   MatrixMultiplication.AuxiliarySeparation.tag_of_integral_bounds q (fun a => χ.value (B a)) p
     (χ.value T) 6 (fun a => lt_of_lt_of_le zero_lt_one (χ.one_le_value (hB a)))
     (lt_of_lt_of_le zero_lt_one (χ.one_le_value hT)) (by norm_num) hfinite
+
+end Field
 
 end Character
 

@@ -2,6 +2,8 @@ module
 
 public import OAI.LinearAlgebra.MatrixMultiplication.Tensor.ComplexMatrixTensor
 public import Mathlib.LinearAlgebra.Matrix.Rank
+public import Mathlib.LinearAlgebra.Matrix.Nonsingular
+public import Mathlib.LinearAlgebra.Matrix.ToLin
 
 public section
 
@@ -18,7 +20,7 @@ open scoped BigOperators
 namespace MatrixMultiplication.Foundation
 namespace Tensor
 
-variable {K X Y Z : Type*} [Field K]
+variable {K X Y Z : Type*} [CommSemiring K] [Nontrivial K]
 
 theorem RankAtMost.card_le_of_identity {ι : Type*} [Fintype ι] [DecidableEq ι]
     {T : Tensor K X Y Z} {r : ℕ} (hT : RankAtMost T r)
@@ -35,11 +37,12 @@ theorem RankAtMost.card_le_of_identity {ι : Type*} [Fintype ι] [DecidableEq ι
       (∑ q, (a q (x i) * b q (y i)) * c q (z j)) = T (x i) (y i) (z j) :=
         (congrFun (congrFun (congrFun heq (x i)) (y i)) (z j)).symm
       _ = _ := hidentity i j
-  have hle : (1 : Matrix ι ι K).rank ≤ r := by
-    rw [← hmul]
-    exact (Matrix.rank_mul_le_left L R).trans (by
-      simpa only [Fintype.card_fin] using Matrix.rank_le_card_width L)
-  simpa only [Matrix.rank_one] using hle
+  have hinj : Function.Injective R.mulVecLin := by
+    intro v w hvw
+    have heq := congrArg L.mulVecLin hvw
+    simpa only [← LinearMap.comp_apply, ← Matrix.mulVecLin_mul,
+      hmul, Matrix.mulVecLin_one, LinearMap.id_apply] using heq
+  simpa only [Fintype.card_fin] using card_le_of_injective K R.mulVecLin hinj
 
 theorem directSum_matrixCoefficients_rank_lower
     {Label A B C : Type*} [Fintype Label] [Fintype A] [Fintype C]

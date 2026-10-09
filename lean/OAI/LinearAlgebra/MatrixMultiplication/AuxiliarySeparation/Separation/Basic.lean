@@ -56,7 +56,7 @@ theorem sectorNumber_injective : Function.Injective (@sectorNumber M) := by
   omega
 
 /-- Branches sharing X, with matching and disjoint Y and Z sectors. -/
-def sharedFirstTensor (B : Fin M → Tensor K X Y Z) :
+def sharedFirstTensor {K : Type*} [CommSemiring K] (B : Fin M → Tensor K X Y Z) :
     Tensor K X (Fin M × Y) (Fin M × Z) :=
   fun x y z => if y.1 = z.1 then B y.1 x y.2 z.2 else 0
 
@@ -82,7 +82,7 @@ def thirdProjectionMap (ζ : K) :
     (L : K)⁻¹ *
       ζ ^ ((r.1.val : ℤ) * (-sectorNumber z.2 - sectorNumber z.1.1)) else 0
 
-private theorem restrict_constantCopies
+theorem restrict_constantCopies
     {K A B C A' B' C' R : Type*} [CommSemiring K]
     [Fintype A] [Fintype B] [Fintype C] [Fintype R] [DecidableEq R]
     (T : Tensor K A B C)
@@ -93,7 +93,7 @@ private theorem restrict_constantCopies
   classical
   simp [Tensor.restrict, Tensor.directSum, Fintype.sum_prod_type, mul_ite, ite_and]
 
-private theorem restrict_constantCopies_delta
+theorem restrict_constantCopies_delta
     {K A B C A' B' C' R : Type*} [CommSemiring K]
     [Fintype A] [Fintype B] [Fintype C] [Fintype R] [DecidableEq R]
     [DecidableEq A] [DecidableEq B] [DecidableEq C]
@@ -179,7 +179,7 @@ def separationPolynomial (ζ : K) (L : ℕ) (B : Fin M → Tensor K X Y Z) :
 
 /-- The surviving tensor: sector labels match on all three legs, while the
 additional second/third coordinates form a dot product. -/
-def separationTarget (B : Fin M → Tensor K X Y Z) :
+def separationTarget {K : Type*} [CommSemiring K] (B : Fin M → Tensor K X Y Z) :
     Tensor K (X × Fin M) ((Fin M × Y) × Fin M) ((Fin M × Z) × Fin M) :=
   fun x y z => if x.2 = y.1.1 ∧ y.1.1 = z.1.1 ∧ y.2 = z.2 then
     B y.1.1 x.1 y.1.2 z.1.2 else 0
@@ -345,7 +345,8 @@ def separationSideEquiv (A : Type*) : ((Fin M × A) × Fin M) ≃
     (Fin M × (A × Fin M)) := Equiv.prodAssoc _ _ _
 
 /-- The separated target, expressed as a genuine full direct sum of products. -/
-theorem separationTarget_eq_directSum (B : Fin M → Tensor K X Y Z) :
+theorem separationTarget_eq_directSum {K : Type*} [CommSemiring K]
+    (B : Fin M → Tensor K X Y Z) :
     separationTarget B =
       Tensor.pullback
         separationFirstEquiv (separationSideEquiv Y) (separationSideEquiv Z)

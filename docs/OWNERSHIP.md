@@ -7,3 +7,10 @@
 - No other writers until assigned an explicit file list. Every audit gets a unique filename.
 
 Only root runs the queue worker; agents submit builds using scripts/lean-queue.py.
+
+Further assignments:
+- ring_statement: Arithmetic/CharacterRounding; Tensor/{SharedPadding,TagInequality}.
+- ring_spectrum: Integral/CharacterTransport (after spectral foundation).
+- Root: Integral/{SeparationWeights,SeparationPolynomial}; Separation/{Basic,BranchTagging};
+  Determinant/{Basis,Bounds,Filtration}; Sector/{Branches,Degeneration}.
+- omega_constructions: Integral/{MonicQuotient,ResidueBasis,FiniteFieldLift,ConvolutionRank,RestrictionDescent} too.

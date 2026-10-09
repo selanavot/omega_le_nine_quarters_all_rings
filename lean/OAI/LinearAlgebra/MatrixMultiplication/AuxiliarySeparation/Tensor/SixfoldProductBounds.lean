@@ -2,7 +2,8 @@ module
 
 /-
 Upstream source and modification notice
-Modified from OpenAI's matrix-multiplication sources to support arbitrary fields.
+Modified from OpenAI's matrix-multiplication sources and the all-fields extension
+to support the integral/ring proof. Field-only claims remain explicitly scoped.
 See UPSTREAM.md for provenance and changes; Apache-2.0 license retained in LICENSE.
 -/
 
@@ -26,7 +27,9 @@ the product by the sixth power of its size.
 
 namespace MatrixMultiplication.AuxiliarySeparation
 
-variable {K : Type*} [Field K]
+section General
+
+variable {K : Type*} [CommSemiring K]
 namespace Character
 
 open MatrixMultiplication.Foundation
@@ -54,38 +57,29 @@ theorem sixfoldProduct_nonneg (T : Tensor K X Y Z) : 0 ≤ χ.sixfoldProduct T :
   exact mul_nonneg (mul_nonneg (mul_nonneg (mul_nonneg (mul_nonneg
     (χ.nonneg T) (χ.nonneg _)) (χ.nonneg _)) (χ.nonneg _)) (χ.nonneg _)) (χ.nonneg _)
 
-/-- Every nonzero tensor has symmetrized character product at least one. -/
-theorem one_le_sixfoldProduct {T : Tensor K X Y Z} (hT : T ≠ 0) :
-    1 ≤ χ.sixfoldProduct T := by
-  classical
-  obtain ⟨x, hx⟩ := Function.ne_iff.mp hT
-  obtain ⟨y, hy⟩ := Function.ne_iff.mp hx
-  obtain ⟨z, hz⟩ := Function.ne_iff.mp hy
-  change T x y z ≠ 0 at hz
-  have h0 := χ.one_le_value hT
-  have h1 : 1 ≤ χ.value (fun y z x => T x y z) := χ.one_le_value (by
-    intro h
-    exact hz (congrArg (fun S => S y z x) h))
-  have h2 : 1 ≤ χ.value (fun z x y => T x y z) := χ.one_le_value (by
-    intro h
-    exact hz (congrArg (fun S => S z x y) h))
-  have h3 : 1 ≤ χ.value (fun x z y => T x y z) := χ.one_le_value (by
-    intro h
-    exact hz (congrArg (fun S => S x z y) h))
-  have h4 : 1 ≤ χ.value (fun z y x => T x y z) := χ.one_le_value (by
-    intro h
-    exact hz (congrArg (fun S => S z y x) h))
-  have h5 : 1 ≤ χ.value (fun y x z => T x y z) := χ.one_le_value (by
-    intro h
-    exact hz (congrArg (fun S => S y x z) h))
+/-- A coefficient one gives positivity in all six leg orders over any coefficient semiring. -/
+theorem one_le_sixfoldProduct_of_coefficient_one {T : Tensor K X Y Z}
+    (hT : ∃ x y z, T x y z = 1) : 1 ≤ χ.sixfoldProduct T := by
+  obtain ⟨x, y, z, hxyz⟩ := hT
+  have h0 := χ.one_le_value_of_coefficient_one ⟨x, y, z, hxyz⟩
+  have h1 : 1 ≤ χ.value (fun y z x => T x y z) :=
+    χ.one_le_value_of_coefficient_one ⟨y, z, x, hxyz⟩
+  have h2 : 1 ≤ χ.value (fun z x y => T x y z) :=
+    χ.one_le_value_of_coefficient_one ⟨z, x, y, hxyz⟩
+  have h3 : 1 ≤ χ.value (fun x z y => T x y z) :=
+    χ.one_le_value_of_coefficient_one ⟨x, z, y, hxyz⟩
+  have h4 : 1 ≤ χ.value (fun z y x => T x y z) :=
+    χ.one_le_value_of_coefficient_one ⟨z, y, x, hxyz⟩
+  have h5 : 1 ≤ χ.value (fun y x z => T x y z) :=
+    χ.one_le_value_of_coefficient_one ⟨y, x, z, hxyz⟩
   exact one_le_mul_of_one_le_of_one_le
     (one_le_mul_of_one_le_of_one_le (one_le_mul_of_one_le_of_one_le
       (one_le_mul_of_one_le_of_one_le (one_le_mul_of_one_le_of_one_le h0 h1) h2) h3) h4) h5
 
-/-- In particular, the sixfold product of a nonzero tensor is positive. -/
-theorem sixfoldProduct_pos {T : Tensor K X Y Z} (hT : T ≠ 0) :
-    0 < χ.sixfoldProduct T :=
-  zero_lt_one.trans_le (χ.one_le_sixfoldProduct hT)
+/-- The sixfold product is positive for every tensor with a coefficient one. -/
+theorem sixfoldProduct_pos_of_coefficient_one {T : Tensor K X Y Z}
+    (hT : ∃ x y z, T x y z = 1) : 0 < χ.sixfoldProduct T :=
+  zero_lt_one.trans_le (χ.one_le_sixfoldProduct_of_coefficient_one hT)
 
 private theorem rankAtMost_swap12 {K X Y Z : Type*} [CommSemiring K]
     {T : Tensor K X Y Z} {r : ℕ} (h : Tensor.RankAtMost T r) :
@@ -120,6 +114,56 @@ theorem sixfoldProduct_le_rank {T : Tensor K X Y Z} {r : ℕ}
     _ = _ := by ring
 
 end Character
+
+end General
+
+section Field
+
+variable {K : Type*} [Field K]
+namespace Character
+
+open MatrixMultiplication.Foundation
+
+variable (χ : Character K)
+variable {X Y Z : Type}
+variable [Fintype X] [Fintype Y] [Fintype Z]
+
+/-- Every nonzero tensor has symmetrized character product at least one. -/
+theorem one_le_sixfoldProduct {T : Tensor K X Y Z} (hT : T ≠ 0) :
+    1 ≤ χ.sixfoldProduct T := by
+  classical
+  obtain ⟨x, hx⟩ := Function.ne_iff.mp hT
+  obtain ⟨y, hy⟩ := Function.ne_iff.mp hx
+  obtain ⟨z, hz⟩ := Function.ne_iff.mp hy
+  change T x y z ≠ 0 at hz
+  have h0 := χ.one_le_value hT
+  have h1 : 1 ≤ χ.value (fun y z x => T x y z) := χ.one_le_value (by
+    intro h
+    exact hz (congrArg (fun S => S y z x) h))
+  have h2 : 1 ≤ χ.value (fun z x y => T x y z) := χ.one_le_value (by
+    intro h
+    exact hz (congrArg (fun S => S z x y) h))
+  have h3 : 1 ≤ χ.value (fun x z y => T x y z) := χ.one_le_value (by
+    intro h
+    exact hz (congrArg (fun S => S x z y) h))
+  have h4 : 1 ≤ χ.value (fun z y x => T x y z) := χ.one_le_value (by
+    intro h
+    exact hz (congrArg (fun S => S z y x) h))
+  have h5 : 1 ≤ χ.value (fun y x z => T x y z) := χ.one_le_value (by
+    intro h
+    exact hz (congrArg (fun S => S y x z) h))
+  exact one_le_mul_of_one_le_of_one_le
+    (one_le_mul_of_one_le_of_one_le (one_le_mul_of_one_le_of_one_le
+      (one_le_mul_of_one_le_of_one_le (one_le_mul_of_one_le_of_one_le h0 h1) h2) h3) h4) h5
+
+/-- In particular, the sixfold product of a nonzero tensor is positive. -/
+theorem sixfoldProduct_pos {T : Tensor K X Y Z} (hT : T ≠ 0) :
+    0 < χ.sixfoldProduct T :=
+  zero_lt_one.trans_le (χ.one_le_sixfoldProduct hT)
+
+end Character
+end Field
+
 end MatrixMultiplication.AuxiliarySeparation
 
 end OAI

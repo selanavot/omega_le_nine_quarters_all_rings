@@ -25,7 +25,7 @@ namespace Gate
 
 variable {F Input Register : Type*}
 
-def eval [Field F] (inputs : Input → F) (registers : Register → F) :
+def eval [Ring F] (inputs : Input → F) (registers : Register → F) :
     Gate F Input Register → F
   | .constant z => z
   | .input i => inputs i
@@ -50,7 +50,7 @@ namespace Program
 
 variable {F Input : Type*}
 
-def eval [Field F] : {r : ℕ} → Program F Input r → (Input → F) → Fin r → F
+def eval [Ring F] : {r : ℕ} → Program F Input r → (Input → F) → Fin r → F
   | 0, .nil, _ => Fin.elim0
   | _ + 1, .step p g, inputs =>
     Fin.cases (g.eval inputs (p.eval inputs)) (p.eval inputs)
@@ -76,7 +76,7 @@ structure MatrixAlgorithm (F : Type*) (a b c : ℕ) where
 
 namespace MatrixAlgorithm
 
-variable {F : Type*} [Field F] {a b c : ℕ}
+variable {F : Type*} [Ring F] {a b c : ℕ}
 
 def eval (P : MatrixAlgorithm F a b c)
     (A : Matrix (Fin a) (Fin b) F) (B : Matrix (Fin b) (Fin c) F) :
@@ -91,22 +91,22 @@ def cost (P : MatrixAlgorithm F a b c) : ℕ := P.program.cost
 end MatrixAlgorithm
 
 /-- Positive slack, one uniform constant, and a correct program at every size. -/
-def AdmissibleExponent (F : Type*) [Field F] (τ : ℝ) : Prop :=
+def AdmissibleExponent (F : Type*) [Ring F] (τ : ℝ) : Prop :=
   ∀ ε : ℝ, 0 < ε → ∃ C : ℝ, 0 < C ∧
     ∀ n : ℕ, 1 ≤ n → ∃ P : MatrixAlgorithm F n n n,
       P.Correct ∧ (P.cost : ℝ) ≤ C * (n : ℝ) ^ (τ + ε)
 
-def omega (F : Type*) [Field F] : ℝ := sInf {τ : ℝ | AdmissibleExponent F τ}
+def omega (F : Type*) [Ring F] : ℝ := sInf {τ : ℝ | AdmissibleExponent F τ}
 
 /-- The inner dimension of an `n × n^k` by `n^k × n` multiplication. -/
 def innerSize (n : ℕ) (k : ℝ) : ℕ := ⌈(n : ℝ) ^ k⌉₊
 
-def RectangularAdmissibleExponent (F : Type*) [Field F] (k τ : ℝ) : Prop :=
+def RectangularAdmissibleExponent (F : Type*) [Ring F] (k τ : ℝ) : Prop :=
   ∀ ε : ℝ, 0 < ε → ∃ C : ℝ, 0 < C ∧
     ∀ n : ℕ, 1 ≤ n → ∃ P : MatrixAlgorithm F n (innerSize n k) n,
       P.Correct ∧ (P.cost : ℝ) ≤ C * (n : ℝ) ^ (τ + ε)
 
-def rectangularOmega (F : Type*) [Field F] (k : ℝ) : ℝ :=
+def rectangularOmega (F : Type*) [Ring F] (k : ℝ) : ℝ :=
   sInf {τ : ℝ | RectangularAdmissibleExponent F k τ}
 
 /-- The dual exponent is a supremum of exact exponent-two rectangular shapes. -/

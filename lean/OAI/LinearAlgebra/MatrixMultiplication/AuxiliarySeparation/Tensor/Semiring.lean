@@ -2,7 +2,8 @@ module
 
 /-
 Upstream source and modification notice
-Modified from OpenAI's matrix-multiplication sources to support arbitrary fields.
+Modified from OpenAI's matrix-multiplication sources and the all-fields extension
+to support the integral/ring proof. Field-only claims remain explicitly scoped.
 See UPSTREAM.md for provenance and changes; Apache-2.0 license retained in LICENSE.
 -/
 
@@ -33,7 +34,9 @@ open scoped BigOperators
 
 namespace MatrixMultiplication.AuxiliarySeparation.TensorSemiring
 
-variable {K : Type*} [Field K]
+section General
+
+variable {K : Type*} [CommSemiring K] [Nontrivial K]
 
 section Restriction
 
@@ -137,7 +140,7 @@ theorem IsRestriction.eq_zero_of_zero {T : Tensor K X Y Z}
 end Restriction
 
 /-- A set-sized presentation of any finite coefficient tensor over `K`. -/
-structure FiniteTensor (K : Type*) [Field K] where
+structure FiniteTensor (K : Type*) [CommSemiring K] [Nontrivial K] where
   nx : ℕ
   ny : ℕ
   nz : ℕ
@@ -185,7 +188,7 @@ end FiniteTensor
 
 /-- Finite tensors over `K`, with two presentations identified exactly when
 each is a linear restriction of the other. -/
-abbrev TensorClass (K : Type*) [Field K] := Antisymmetrization (FiniteTensor K) (· ≤ ·)
+abbrev TensorClass (K : Type*) [CommSemiring K] [Nontrivial K] := Antisymmetrization (FiniteTensor K) (· ≤ ·)
 
 /-- The class of a finite tensor presentation. -/
 def tensorClass (T : (FiniteTensor K)) : (TensorClass K) := toAntisymmetrization (· ≤ ·) T
@@ -522,6 +525,25 @@ instance : Nontrivial (TensorClass K) := by
   have := congrFun (congrFun (congrFun heq PUnit.unit) PUnit.unit) PUnit.unit
   exact one_ne_zero this
 
+/-- Selecting a coefficient one gives a unit restriction without division. -/
+theorem one_le_classOf_of_coefficient_one {X Y Z : Type*}
+    [Fintype X] [Fintype Y] [Fintype Z] {T : Tensor K X Y Z}
+    (hT : ∃ x y z, T x y z = 1) : 1 ≤ classOf T := by
+  classical
+  obtain ⟨x, y, z, hxyz⟩ := hT
+  apply (classOf_le_iff _ _).mpr
+  refine ⟨(fun _ u => if u = x then 1 else 0),
+    (fun _ v => if v = y then 1 else 0),
+    (fun _ w => if w = z then 1 else 0), ?_⟩
+  funext a b c
+  simp [Tensor.restrict, ite_mul, mul_ite, hxyz]
+
+end General
+
+section Field
+
+variable {K : Type*} [Field K]
+
 /-- A nonzero tensor has a nonzero coefficient, which restricts to scalar multiplication. -/
 theorem one_le_classOf_of_ne_zero {X Y Z : Type*}
     [Fintype X] [Fintype Y] [Fintype Z] {T : Tensor K X Y Z} (hT : T ≠ 0) :
@@ -547,6 +569,8 @@ theorem one_le_of_ne_zero {T : (TensorClass K)} (hT : T ≠ 0) : 1 ≤ T := by
   change 1 ≤ tensorClass T
   rw [← classOf_coeff T] at hT ⊢
   exact one_le_classOf_of_ne_zero (fun h => hT ((classOf_eq_zero_iff _).mpr h))
+
+end Field
 
 end MatrixMultiplication.AuxiliarySeparation.TensorSemiring
 
