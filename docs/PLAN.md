@@ -13,9 +13,11 @@ and documentation commits do not retarget that result. All six steps below
 are complete. Sela approved PR #6's merge and the corrected intake;
 `psdxspsdhwdz` is accepted for that exact candidate, and its
 [registry mechanical verification passed](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082).
+Its [official registry rendering also passed](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38027359827),
+resolving the earlier rc4 rendering blocker.
 Monitor that intake under the authorized 15-minute schedule through
-2026-10-10 09:00 America/New_York. Registry rendering and review remain
-unconfirmed; registration requires a further explicit instruction after Sela has
+2026-10-10 09:00 America/New_York. The review is not yet available;
+registration requires a further explicit instruction after Sela has
 seen the review. The existing Zenodo archive and original submission remain unchanged.
 
 1. Test the exact submitted Challenge against supported unmodified renderers
@@ -33,8 +35,8 @@ seen the review. The existing Zenodo archive and original submission remain unch
 6. Push the verified snapshot, open a compatibility PR, and run the official
    full mechanical preflight against that exact commit. PR #6's approved merge
    and the corrected intake are complete. Registry mechanical verification
-   passed separately; registry rendering, review and registration are not
-   established by that pass.
+   and rendering each passed in their own registry workflow. Review and
+   registration are not established by those passes.
 
 ## Original proof-development plan
 

@@ -130,9 +130,12 @@ documentation commits are outside the exact snapshot checked by that workflow.
 The corrected intake **`psdxspsdhwdz`** was accepted for that exact rc3 commit,
 and its [registry mechanical verification passed](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082).
 The [public report](verification/palomar/registry-psdxspsdhwdz.json) records all
-six claims with empty error and warning lists. Registry rendering and review
-remain unconfirmed; no registration is claimed. The original failed rc4
-submission remains a separate record.
+six claims with empty error and warning lists. The
+[official rc3 rendering workflow also passed](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38027359827)
+for the same frozen Challenge, resolving the earlier rendering blocker; see
+[the rendering receipt](verification/palomar/README.md#current-rc3-registry-rendering).
+The review is not yet available and no registration is claimed. The original
+failed rc4 submission remains a separate record.
 
 ## Build and verify
 

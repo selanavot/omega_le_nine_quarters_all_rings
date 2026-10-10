@@ -16,12 +16,18 @@ then passed mechanical verification. The
 It verifies the exact source, root configuration and all six claims with default
 Lean, NanoDa and con-ron under `palomar-namespace-16x32-v1`. The public artifact
 and report hash are recorded in [the receipt](../verification/palomar/README.md).
-This does not establish registry rendering, review or registration.
+The [official rendering workflow](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38027359827)
+then passed for the same source, root configuration and frozen Challenge hash.
+Its [bounded report](../verification/palomar/registry-render-psdxspsdhwdz.json)
+records `pass`/`complete`, no errors and rendered time `2026-10-10T05:28:41Z`.
+All six declarations are present, and all 19 downloaded artifact file hashes
+match the retained manifest. See [the rendering receipt](../verification/palomar/README.md#current-rc3-registry-rendering).
+The earlier rendering blocker is resolved on the official rc3 pipeline.
 
-At 05:01 UTC, the submission-status API returned HTTP 500 while health returned
-200. No rendering workflow for this candidate had been observed; rendering and
-review remain unconfirmed. Do not infer an advanced registry API state or a
-rendering failure from those observations.
+At 05:31 UTC the private-review endpoint returned HTTP 404, so no review was
+yet available. The last submission-status request returned HTTP 500. Do not
+infer an advanced registry API state, completed review or registration from
+the successful mechanical and rendering workflows.
 
 Monitor this new ID; do not start another intake. The authorized monitor runs
 every 15 minutes through 2026-10-10 09:00 America/New_York. Credentials and any
