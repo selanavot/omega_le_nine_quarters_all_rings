@@ -1,9 +1,36 @@
 # Palomar mechanical verification
 
-The reports below certify the original rc4 snapshot. The later rc3 compatibility
-branch has a separate [local rendering receipt](RC3-RENDER.md) and
-[proof verification receipt](../comparator/RESULTS-RC3.md). Those local checks
-do not replace a hosted preflight for a new submitted commit.
+## Current rc3 compatibility preflight
+
+**PASS, 2026-10-10**, checked at `2026-10-10T04:38:01Z`.
+The official full workflow verified the corrected immutable source snapshot
+[`9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`](https://github.com/selanavot/omega_le_nine_quarters_all_rings/tree/9d10116c89f9bdcdaccd58aacea353d4b7ae6e90)
+in [PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6).
+This report was added afterward; it does not certify later documentation commits
+as separate snapshots. The theorem sources and executable audit harness are
+unchanged between that tested commit and this receipt update.
+
+- [Hosted run 38024128253](https://github.com/selanavot/omega_le_nine_quarters_all_rings/actions/runs/38024128253).
+- Request/artifact: `ringsrc3test` / `mechanical-report-ringsrc3test`.
+- [Complete bounded report](preflight-ringsrc3test.json), SHA-256:
+  `fe82e887c25ae2764247c888e3213a5b045e9312f2376c4660c13baf866bc305`.
+- Pipeline: `d4e41c1d5b0d114c4859e6e5831dc6d3ad1d0d44`;
+  mode `full`, execution profile `palomar-standard-v1`.
+- Lean `leanprover/lean4:v4.35.0-rc3`, Mathlib
+  `c55e6e786f49471c72fbddbec5415808896aec1e`.
+- Root `comparator.json`, all six claims, matching configuration and Challenge hashes.
+- Report `status: pass`, `stage: complete`, empty error and warning lists.
+- Protected Comparator accepted the solution with default Lean, NanoDa and con-ron.
+
+This hosted Linux provenance/sandbox check complements the
+[local six-checker/fresh-kernel receipt](../comparator/RESULTS-RC3.md).
+The workflow does not include Challenge rendering; the complete native rc3
+rendering check has its [own receipt](RC3-RENDER.md). Local rendering and a
+passed hosted mechanical preflight do not establish registry rendering,
+editorial acceptance or registration. No corrected intake has been made.
+The original rc4 submission and frozen Zenodo archive remain unchanged.
+
+## Historical rc4 preflight
 
 **PASS**, 2026-10-09. This is the full official preflight, distinct from
 Palomar's subsequent verification, editorial review and permanent registration.

@@ -107,8 +107,10 @@ Lean declarations, not manuscript prose or historical novelty.
 
 The [rc4 receipt](RESULTS.md) and [earlier nontrivial-ring receipt](RESULTS-NONTRIVIAL.md)
 remain historical records. No new Palomar registration or Zenodo release is
-established by this local run. Hosted verification must name its own exact
-commit and report.
+established by this local run. A later [official hosted preflight](../palomar/README.md) also passed for
+`9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`; its bounded report has its own
+source identity and Linux provenance/sandbox scope. It does not include rendering
+or editorial review.
 
 Detailed logs remain under ignored `.lake/rc3-verification/` and `.lake/`.
 Their SHA-256 hashes identify these runs; reruns need not produce identical logs:

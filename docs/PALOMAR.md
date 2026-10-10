@@ -56,8 +56,17 @@ checkers and both negative controls also passed locally under rc3 at
 source/pins/harness commit `fd3d1cf942ae05c1437d26cc0d83d813ce20a4c9`. All 160
 Lean files under `lean/` are unchanged. See
 [the rc3 verification receipt](../verification/comparator/RESULTS-RC3.md).
-The official hosted rc3 preflight has not started. These local proof and
-rendering passes are not a passing hosted Palomar workflow or acceptance.
+The [official hosted rc3 full mechanical preflight](https://github.com/selanavot/omega_le_nine_quarters_all_rings/actions/runs/38024128253)
+also passed candidate `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90` with root
+`comparator.json` and the same six claims. The
+[retained report](../verification/palomar/preflight-ringsrc3test.json) records
+`status: pass`, `stage: complete`, empty error/warning lists and checked time
+`2026-10-10T04:38:01Z`. Later commits adding receipts and documentation preserve
+the proof, pins and harness but are not the exact snapshot targeted by that
+workflow. Preflight does not include rendering, editorial review or registration.
+The compatibility change is in open
+[PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6);
+no merge or registry acceptance is claimed.
 The original intake still names the rc4 commit. No replacement submission has
 been authorized or made; preserve that intake and its token. A dependency
 change in Git cannot repair or silently retarget an immutable submission.
@@ -72,14 +81,14 @@ unsuccessful submissions to leave **Existing Palomar ID** blank when retrying;
 that field is for a new version of an already registered result. The intake ID
 `pq5sjorephuw` is not a registered-result ID and must not be placed there.
 
-The local rc3 proof and rendering checks are complete. Before any corrected
-intake, push the exact intended commit and obtain Sela's approval identifying its full
-immutable SHA, `comparator.json` and the responsible-maintainer relationship.
-Run the official full mechanical preflight for that same snapshot and require
-its report to say `status: pass`. Preflight does not include Challenge
-rendering, editorial review or registration, so preserve the separate rendering
-evidence too. Read the live protocol and respect any reported cooldown or
-retry restriction. No corrected intake has been authorized or started.
+The local rc3 proof/rendering checks and official hosted preflight are complete.
+Before any corrected intake, obtain Sela's approval of the already pushed
+candidate `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`, root `comparator.json`
+and the responsible-maintainer relationship. Keep that exact verified commit
+rather than silently substituting a subsequent receipt/documentation commit.
+Read the live protocol and respect any reported cooldown or retry restriction.
+Merging PR #6 requires its own explicit approval; neither that merge nor a
+corrected intake has been authorized or performed.
 
 ## Pinned workflow and current eligibility
 
@@ -143,7 +152,7 @@ model. The rc3 compatibility work preserves the model and six frozen statements.
 The earlier receipts retain their precise scope. Metadata validation is not
 proof verification, and successful preflight is not editorial approval.
 
-## Completed mechanical verification and next step
+## Historical rc4 mechanical verification
 
 The release metadata is merged, the source is public, and the approved full
 40-character commit is `2d2cc89859d17d3143cd40c4a4b3df49801aa533`.
@@ -192,7 +201,10 @@ sign-in flow. The supported machine route uses authenticated `gh` with repositor
 write and gist access. It is weaker identity evidence than the browser route;
 it establishes repository-write control plus a named gist account.
 
-After the passed full preflight and the exact submission agreement above:
+For a corrected intake, first obtain approval for the exact candidate and
+relationship specified in "Conditions for a corrected submission" above. The
+original rc4 approval does not authorize that new intake. After the passing
+preflight and new snapshot agreement:
 
 1. `POST /api/submit` with the repository, full commit, explicit
    `comparator_config_path: comparator.json`, and the agreed

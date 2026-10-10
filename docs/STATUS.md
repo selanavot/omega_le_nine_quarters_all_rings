@@ -1,6 +1,6 @@
 # Status
 
-## Lean rc3 compatibility: local verification passed
+## Lean rc3 compatibility: local checks and hosted preflight passed
 
 2026-10-10. Branch: `compat/lean-4.35-rc3`.
 Sela authorized testing older supported Lean versions and making a repository
@@ -30,10 +30,18 @@ configurations are unchanged too. The checked source, pins and harness are at
 
 See [the rc3 verification receipt](../verification/comparator/RESULTS-RC3.md)
 for commands, hashes and scope. These are local macOS results using dependency
-caches and trusted-source Comparator with its build sandbox disabled. The
-official hosted rc3 mechanical preflight has not started; no new hosted
-verification or registry acceptance is claimed. The earlier rc4 receipts are
-preserved separately.
+caches and trusted-source Comparator with its build sandbox disabled.
+
+The [official hosted rc3 mechanical preflight](https://github.com/selanavot/omega_le_nine_quarters_all_rings/actions/runs/38024128253)
+also passed for exact commit `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`, root
+`comparator.json` and the same six claims. Its report has `status: pass`,
+`stage: complete`, empty error/warning lists and checked time
+`2026-10-10T04:38:01Z`. The
+[retained report](../verification/palomar/preflight-ringsrc3test.json) records
+that snapshot. Later receipt and documentation commits retain the checked
+proof, pins and harness but are not themselves the workflow's target. Preflight
+does not include rendering, editorial review or registration; the separate
+local rendering evidence remains necessary. The earlier rc4 receipts retain their original verification scope.
 
 The original Palomar intake `pq5sjorephuw` remains tied to
 `2d2cc89859d17d3143cd40c4a4b3df49801aa533`. Its last confirmed status is
@@ -43,9 +51,11 @@ registration is authorized or performed by this compatibility work. The
 published Zenodo v0.1.0 archive and its checksums remain unchanged.
 
 PRs #1–#5 are merged; PR #5's Zenodo documentation merge is
-`be15d1a0239bf682a31bde07d025d86fc5a3d521`. Prepare a separate compatibility PR
-with these local results and run the hosted preflight after pushing its exact
-snapshot. Its merge requires Sela's explicit approval for that PR.
+`be15d1a0239bf682a31bde07d025d86fc5a3d521`.
+[Compatibility PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6)
+is open. All planned verification checks are complete. Merging PR #6 and
+submitting the corrected candidate `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`
+remain subject to Sela's explicit approval; neither has been performed.
 Root alone starts Lean/Lake builds with `LEAN_NUM_THREADS=1`; other agents own
 only their assigned source or documentation files. See [ownership](OWNERSHIP.md)
 and [the current plan](PLAN.md). The sections below retain earlier snapshots.

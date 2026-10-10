@@ -4,9 +4,14 @@
 
 Local steps 1–4 passed on 2026-10-10 at source/pins/harness commit
 `fd3d1cf942ae05c1437d26cc0d83d813ce20a4c9`; see
-[the rc3 receipt](../verification/comparator/RESULTS-RC3.md). The hosted
-mechanical preflight has not started. Publication and submission records
-remain unchanged.
+[the rc3 receipt](../verification/comparator/RESULTS-RC3.md). Documentation and
+paper updates are prepared in
+[PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6).
+The [hosted mechanical preflight](https://github.com/selanavot/omega_le_nine_quarters_all_rings/actions/runs/38024128253)
+passed exact candidate `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`. Later receipt
+and documentation commits do not retarget that result. All six steps below
+are complete; merging PR #6 and a corrected intake still require explicit
+approval. The existing Zenodo archive and original submission remain unchanged.
 
 1. Test the exact submitted Challenge against supported unmodified renderers
    before changing dependencies. The local rc3 rendering check passed.

@@ -15,9 +15,12 @@
   protected. Do not edit another agent's files while its work is in progress.
 
 Local proof, kernel, Comparator, negative-control and rendering checks passed.
-No Lean proof repair was needed; all 160 files under `lean/` are unchanged. Root owns
-the remaining receipt integration, hosted preflight dispatch, Git and PR work.
-No merge or corrected Palomar intake is authorized by these assignments.
+The official hosted preflight passed candidate
+`9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`; [PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6)
+is open. No Lean proof repair was needed; all 160 files under `lean/` are unchanged.
+Root owns final receipt integration, Git and PR updates. No merge or corrected
+Palomar intake is authorized by these assignments; later receipt/docs commits
+must not be represented as the preflight's immutable target.
 
 ## Historical proof and publication assignments
 

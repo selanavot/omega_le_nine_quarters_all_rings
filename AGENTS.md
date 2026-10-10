@@ -39,6 +39,12 @@ a compatibility change if it resolves the renderer failure. Work continues on
 `compat/lean-4.35-rc3` after the unchanged Challenge rendered successfully with
 the unmodified rc3 renderer. This authorizes repository changes and validation,
 not a new Palomar intake or replacement of the published Zenodo snapshot.
+Compatibility [PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6)
+is open. Its merge and a corrected intake have not been authorized or performed.
+The exact candidate that passed the hosted rc3 preflight is
+`9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`; later receipt/documentation commits
+do not replace that verified snapshot. Obtain approval of the intended immutable
+commit, root `comparator.json` and maintainer relationship before a corrected intake.
 Permanent Palomar registration requires a further explicit instruction after
 Sela receives the complete review; submission approval is not that instruction.
 See docs/ZENODO.md and docs/PALOMAR.md for the current publication steps.
@@ -79,8 +85,11 @@ pinned. Full local proof compilation, fresh-kernel replay, Comparator with all
 six bundled checkers, both negative controls and rendering passed at the
 source/pins/harness commit `fd3d1cf942ae05c1437d26cc0d83d813ce20a4c9`; see
 docs/STATUS.md and verification/comparator/RESULTS-RC3.md. All 160 Lean files
-under `lean/` are unchanged. The hosted rc3 preflight has not started; local success
-does not certify a hosted workflow or authorize a new intake.
+under `lean/` are unchanged. The official hosted rc3 preflight also passed for
+`9d10116c89f9bdcdaccd58aacea353d4b7ae6e90` in
+[run 38024128253](https://github.com/selanavot/omega_le_nine_quarters_all_rings/actions/runs/38024128253).
+That report is mechanical verification, not rendering, editorial review,
+registration or authorization for a new intake.
 The archived release and earlier verification receipts remain on rc4 and
 Mathlib `f0469b25d97aef3998d4bc06f6f01da670b3d18e`. Preserve those records as
 historical evidence; never relabel them with new dependency versions.

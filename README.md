@@ -122,6 +122,11 @@ The [full Palomar mechanical preflight and registry verification passed](verific
 for the submitted rc4 snapshot, but its registry rendering stage failed.
 The unchanged Challenge has since rendered locally with the unmodified rc3
 renderer; see the [rendering check](verification/palomar/RC3-RENDER.md).
+The [official hosted rc3 mechanical preflight also passed](https://github.com/selanavot/omega_le_nine_quarters_all_rings/actions/runs/38024128253)
+for candidate commit `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`, with empty report
+error and warning lists. [PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6)
+contains the compatibility change and its receipts; subsequent receipt and
+documentation commits are outside the exact snapshot checked by that workflow.
 The original submission remains tied to its rc4 commit. No new submission or
 registry acceptance is claimed.
 
