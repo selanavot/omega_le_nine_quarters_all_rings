@@ -1,6 +1,6 @@
 # Palomar release and submission handoff
 
-Updated on 2026-10-09. Sela confirmed the human creator/maintainer credit,
+Updated on 2026-10-10. Sela confirmed the human creator/maintainer credit,
 approved the public repository and the PR #2 merge, and authorized submission
 of snapshot `2d2cc89859d17d3143cd40c4a4b3df49801aa533` with root
 `comparator.json` as its responsible maintainer. The repository is now public.
@@ -17,15 +17,78 @@ The registry's [verification run](https://github.com/PalomarRegistry/PalomarSubm
 also completed successfully; its bounded mechanical report says `pass` and
 `complete` for the same snapshot and six claims. Both reports are retained in
 the public receipt. This does not establish that editorial review is complete.
-After earlier HTTP 500 responses, the submission API now reports
+After earlier HTTP 500 responses, the last confirmed submission API status was
 `verification-error`: Palomar could not complete the Challenge renderability
 check after multiple attempts. The final recorded attempt failed at
 2026-10-09 20:54:31 UTC. Editorial review has not started; the review endpoint
-returns HTTP 404. No detailed rendering diagnostic is exposed. Preserve the
+returned HTTP 404. The public failure report omitted the underlying renderer
+error; local investigation recovered it as described below. Preserve the
 existing submission and token; do not create a duplicate intake.
 The confirmed human credit describes orchestration and responsibility, not
 handwritten proofs or prose. Permanent registration still needs explicit
 approval after Sela receives the complete review.
+
+## Renderer diagnosis and rc3 compatibility
+
+The submitted rc4 Challenge compiles, but Palomar's pinned Verso renderer fails
+while preparing highlighted code with
+`error finding highlighted code: missing data file for module Mathlib`.
+The failure also reproduces with a tiny module importing Mathlib and proving
+`True`; it does not require the matrix-multiplication theorem. In the pinned
+rc4 renderer, an import requests private compiled data while Lake supplies the
+exported and editor-support data for a `module` file. The local investigation
+corrected that request and rendered the original Challenge successfully.
+The public failed attempt is
+[run 37989444912](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/37989444912).
+
+Sela then authorized checking older supported versions and making a repository
+compatibility change if successful. The unchanged Challenge rendered locally
+with the **unmodified rc3 renderer**, and all six displayed theorem signatures
+matched those from the locally corrected rc4 renderer. Literal extraction,
+HTML generation, the trusted core-notation audit and sanitization also passed
+locally under rc3. The compatibility branch therefore pins Lean
+`leanprover/lean4:v4.35.0-rc3` with Mathlib
+`c55e6e786f49471c72fbddbec5415808896aec1e`. See
+[the rc3 rendering check](../verification/palomar/RC3-RENDER.md).
+
+Full proof compilation, fresh-kernel replay, Comparator with all six bundled
+checkers and both negative controls also passed locally under rc3 at
+source/pins/harness commit `fd3d1cf942ae05c1437d26cc0d83d813ce20a4c9`. All 160
+Lean files under `lean/` are unchanged. See
+[the rc3 verification receipt](../verification/comparator/RESULTS-RC3.md).
+The [official hosted rc3 full mechanical preflight](https://github.com/selanavot/omega_le_nine_quarters_all_rings/actions/runs/38024128253)
+also passed candidate `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90` with root
+`comparator.json` and the same six claims. The
+[retained report](../verification/palomar/preflight-ringsrc3test.json) records
+`status: pass`, `stage: complete`, empty error/warning lists and checked time
+`2026-10-10T04:38:01Z`. Later commits adding receipts and documentation preserve
+the proof, pins and harness but are not the exact snapshot targeted by that
+workflow. Preflight does not include rendering, editorial review or registration.
+The compatibility change is in open
+[PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6);
+no merge or registry acceptance is claimed.
+The original intake still names the rc4 commit. No replacement submission has
+been authorized or made; preserve that intake and its token. A dependency
+change in Git cannot repair or silently retarget an immutable submission.
+
+## Conditions for a corrected submission
+
+The original `verification-error` is a settled state under the
+[agent protocol](https://submit.palomar-registry.org/llms.txt). Follow its
+reported next action and observe the submission cooldown before any retry.
+The [official submission page](https://submit.palomar-registry.org/) directs
+unsuccessful submissions to leave **Existing Palomar ID** blank when retrying;
+that field is for a new version of an already registered result. The intake ID
+`pq5sjorephuw` is not a registered-result ID and must not be placed there.
+
+The local rc3 proof/rendering checks and official hosted preflight are complete.
+Before any corrected intake, obtain Sela's approval of the already pushed
+candidate `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`, root `comparator.json`
+and the responsible-maintainer relationship. Keep that exact verified commit
+rather than silently substituting a subsequent receipt/documentation commit.
+Read the live protocol and respect any reported cooldown or retry restriction.
+Merging PR #6 requires its own explicit approval; neither that merge nor a
+corrected intake has been authorized or performed.
 
 ## Pinned workflow and current eligibility
 
@@ -39,14 +102,16 @@ The upstream job fetches a public source snapshot without private-repository
 credentials. The repository's approved visibility change satisfies that
 prerequisite.
 
-Our `leanprover/lean4:v4.35.0-rc4` exceeds the pinned pipeline's
+The compatibility branch's `leanprover/lean4:v4.35.0-rc3` exceeds the pinned pipeline's
 [rc2 minimum](https://github.com/PalomarRegistry/PalomarSubmission/blob/d4e41c1d5b0d114c4859e6e5831dc6d3ad1d0d44/toolchains.json)
-and exactly matches the pinned Mathlib toolchain. The exact
-[Verso rc4 tag](https://github.com/leanprover/verso/tree/v4.35.0-rc4)
-resolves to `01a09f320122475119588526857a07d218aef600`; no toolchain change is
-currently indicated. Recheck live policy and support before any future intake.
+and matches its selected Mathlib toolchain. Toolchain eligibility alone did not
+prevent the rc4 rendering failure: the submitted snapshot used the
+[Verso rc4 tag](https://github.com/leanprover/verso/tree/v4.35.0-rc4), resolving to
+`01a09f320122475119588526857a07d218aef600`. The rc3 rendering receipt records the
+tested replacement environment. Recheck live policy and support before any
+future intake; the historical rc4 reports certify only their recorded snapshot.
 
-The source inspection found 161 tracked Lean files, all with the required
+The submitted-snapshot source inspection found 161 tracked Lean files, all with the required
 module header except the permitted Lakefile exemption. The largest has 1,613
 lines. Challenge is 166 lines/5,233 bytes, imports only Mathlib, and fits the
 preferred review surface. The submitted comparator configuration uses only
@@ -82,17 +147,18 @@ program costs for all rings; and literal exact integer coefficient identities.
 The zero-ring real-infimum convention and its explicit zero-cost program are
 stated separately. The paper remains without an author byline.
 
-The source and Comparator model are unchanged by this release preparation.
+The original release preparation did not change the proof source or Comparator
+model. The rc3 compatibility work preserves the model and six frozen statements.
 The earlier receipts retain their precise scope. Metadata validation is not
 proof verification, and successful preflight is not editorial approval.
 
-## Completed mechanical verification and next step
+## Historical rc4 mechanical verification
 
 The release metadata is merged, the source is public, and the approved full
 40-character commit is `2d2cc89859d17d3143cd40c4a4b3df49801aa533`.
 Both the completed preflight and submitted intake use that immutable
-snapshot and root `comparator.json`, not a moving branch or the newer
-documentation-only follow-up. Sela explicitly confirmed the responsible
+snapshot and root `comparator.json`, not a moving branch, documentation follow-up
+or the newer rc3 compatibility work. Sela explicitly confirmed the responsible
 maintainer relationship; it was not inferred from GitHub ownership.
 
 The full workflow completed successfully with request ID `ringsfull001`.
@@ -135,7 +201,10 @@ sign-in flow. The supported machine route uses authenticated `gh` with repositor
 write and gist access. It is weaker identity evidence than the browser route;
 it establishes repository-write control plus a named gist account.
 
-After the passed full preflight and the exact submission agreement above:
+For a corrected intake, first obtain approval for the exact candidate and
+relationship specified in "Conditions for a corrected submission" above. The
+original rc4 approval does not authorize that new intake. After the passing
+preflight and new snapshot agreement:
 
 1. `POST /api/submit` with the repository, full commit, explicit
    `comparator_config_path: comparator.json`, and the agreed

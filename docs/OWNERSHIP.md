@@ -1,5 +1,29 @@
 # Ownership
 
+## Active rc3 compatibility assignments
+
+2026-10-10, branch `compat/lean-4.35-rc3`:
+
+- Root: toolchain and dependency pins, serialized builds and audit execution,
+  verification receipts, proof compatibility repairs if required, final
+  integration, Git and PR. Only root starts Lean/Lake processes.
+- `rc2_audit_requirements`: AGENTS.md, README.md, docs/STATUS.md, docs/PLAN.md,
+  docs/OWNERSHIP.md and docs/PALOMAR.md. The agent name records its earlier rc2
+  investigation; the selected compatibility environment is rc3.
+- Additional assignments require an explicit file list from root. The
+  arithmetic model, frozen Challenge statements and published records remain
+  protected. Do not edit another agent's files while its work is in progress.
+
+Local proof, kernel, Comparator, negative-control and rendering checks passed.
+The official hosted preflight passed candidate
+`9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`; [PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6)
+is open. No Lean proof repair was needed; all 160 files under `lean/` are unchanged.
+Root owns final receipt integration, Git and PR updates. No merge or corrected
+Palomar intake is authorized by these assignments; later receipt/docs commits
+must not be represented as the preflight's immutable target.
+
+## Historical proof and publication assignments
+
 - Root: setup, docs/paper, serialized build coordinator; integral Fourier/separation and determinant/sector integration; Integral/{Cyclotomic,UnnormalizedFourier}.
 - ring_statement: Model; Arithmetic/{Complexity,Programs,ProgramComposition,NaiveAlgorithm,Padding,LowerBound,Exponent,RecursiveBlockPrograms,Growth}; Polynomial/ExpressionFamily; Integral/Arithmetic; Character/{Dot,Permutation,Symmetrization}; Convolution/{Basic,Symmetry}; Growth/NormalizedProfile; Entropy/Tag; docs/ARITHMETIC-STATUS.md.
 - ring_spectrum: Tensor/ComplexTensorFlattening; AuxiliarySeparation/Arithmetic/RankExponent; AuxiliarySeparation/Tensor/{Semiring,Scalar,Characters,CharacterBounds,BinaryCharacter,DirectSumClass,SupportExtension,SixfoldProductBounds,Primitive,PrimitiveClass}; Character/{Basic,Existence}; Spectrum/Obstruction; docs/SPECTRUM-STATUS.md.

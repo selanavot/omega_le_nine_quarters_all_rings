@@ -1,0 +1,57 @@
+{
+  "date": "2026-10-10",
+  "platform": "macOS ARM64, native (not Linux sandbox)",
+  "challenge_sha256": "e5ce8a1491d77029211b59a6b54d066e7e6a7449ef9c619c23e96c0a09b9978c",
+  "lean_toolchain": "leanprover/lean4:v4.35.0-rc3",
+  "mathlib": "c55e6e786f49471c72fbddbec5415808896aec1e",
+  "verso": "8fc7a297f14d5adc1a551b5b4ecf283c08bd691f",
+  "subverso": "d047cb484b2f3598187450935dbcc84d078cb581",
+  "palomar_pipeline": "d4e41c1d5b0d114c4859e6e5831dc6d3ad1d0d44",
+  "renderer_source_modified": false,
+  "stages": {
+    "literate": "pass",
+    "html": "pass",
+    "core_notation_audit": "pass",
+    "sanitize": "pass"
+  },
+  "declarations": [
+    "ComparatorChecks.omega_bound",
+    "ComparatorChecks.admissible_bddBelow",
+    "ComparatorChecks.admissible_nonempty",
+    "ComparatorChecks.omega_lower",
+    "ComparatorChecks.epsilon_cost",
+    "ComparatorChecks.exact_coefficients"
+  ],
+  "html_anchors": {
+    "ComparatorChecks.omega_bound": [
+      "ComparatorChecks___omega_bound"
+    ],
+    "ComparatorChecks.admissible_bddBelow": [
+      "ComparatorChecks___admissible_bddBelow"
+    ],
+    "ComparatorChecks.admissible_nonempty": [
+      "ComparatorChecks___admissible_nonempty"
+    ],
+    "ComparatorChecks.omega_lower": [
+      "ComparatorChecks___omega_lower"
+    ],
+    "ComparatorChecks.epsilon_cost": [
+      "ComparatorChecks___epsilon_cost"
+    ],
+    "ComparatorChecks.exact_coefficients": [
+      "ComparatorChecks___exact_coefficients"
+    ]
+  },
+  "render_errors": 0,
+  "expected_challenge_hole_warnings": 6,
+  "signature_differences_from_rc4_repaired_control": [],
+  "sanitized_artifact_tree_sha256": "cbd0a1cd8d17c4c5ac4c7a623df164de4ca59eef199081cb64b29e0fe248de06",
+  "log_sha256": {
+    "rc3-render-build.log": "8fa80f58ea88aeff71cf7b7311d50ebe8025d61150674be7771558003e88cf6c",
+    "rc3-html.log": "6bf4aa0f83da789ab9e4476b886ed6fa2e270ee42db17ff651c55ab95c1e77d3",
+    "rc3-audit-build.log": "30fa0c5517704c21fe9a1ade30a33d370814d9ee8ef6584d4dc345752f8336d0",
+    "rc3-core-audit.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "rc3-audit-declarations.json": "90b385b855761e0f01c126f575ee284bc6cbcf0f58aec48d28c991c45a638e13",
+    "rc3-sanitize.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

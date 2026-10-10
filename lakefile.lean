@@ -10,7 +10,7 @@ package omega_le_nine_quarters_all_rings where
   leanOptions := #[⟨`autoImplicit, false⟩]
 
 require mathlib from git
-  "https://github.com/leanprover-community/mathlib4.git" @ "f0469b25d97aef3998d4bc06f6f01da670b3d18e"
+  "https://github.com/leanprover-community/mathlib4.git" @ "c55e6e786f49471c72fbddbec5415808896aec1e"
 
 @[default_target]
 lean_lib OAI

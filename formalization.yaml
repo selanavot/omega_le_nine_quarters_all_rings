@@ -108,10 +108,11 @@ review:
     axiom checks, replay of their complete dependency closure into a fresh Lean
     kernel, and local Comparator with all six bundled checkers. These local
     checks reused dependency caches and disabled Comparator's build sandbox;
-    they are not Palomar's full provenance/sandbox preflight. Earlier unchanged
-    negative controls rejected altered gate cost and sorryAx. This is not human
-    peer review. Receipts: verification/comparator/RESULTS.md and the separately
-    scoped RESULTS-NONTRIVIAL.md. No Palomar review or registration is claimed.
+    they are not Palomar's full provenance/sandbox preflight. Both negative controls
+    were rerun on Lean rc3 and rejected altered gate cost and sorryAx. This is not
+    human peer review. Current receipt: verification/comparator/RESULTS-RC3.md;
+    earlier rc4 and nontrivial-ring receipts remain separately scoped. No Palomar
+    review or registration is claimed.
 alignment:
   namespace: ComparatorChecks
   statements:

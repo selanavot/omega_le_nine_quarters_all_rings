@@ -8,10 +8,12 @@ Our [earlier all-fields extension](https://github.com/selanavot/matrix-multiplic
 establishes the same bound over every field.
 This repository extends the result to arbitrary associative unital
 rings, including noncommutative rings.
-The full theorem, including the trivial ring, has passed compilation, axiom audit,
-fresh-kernel replay, and frozen-specification Comparator with all six bundled checkers.
-See [verification details](verification/comparator/README.md) and
-[current status](docs/STATUS.md).
+The full theorem, including the trivial ring, passed compilation, axiom audit,
+fresh-kernel replay, and frozen-specification Comparator with all six bundled
+checkers on Lean 4.35.0-rc3. Both deliberate negative controls also passed.
+The rc3 pin avoids a Challenge-rendering failure in the rc4 renderer; all 160
+Lean files under `lean/` are unchanged from the previously verified rc4 version. See
+[verification details](verification/comparator/README.md) and [current status](docs/STATUS.md).
 
 **Both the extension's Lean proof development and the [paper](paper/paper.pdf)
 are AI-generated with Codex under human direction.** The numerical exponent
@@ -102,7 +104,8 @@ Version **0.1.0** is published on [Zenodo](https://zenodo.org/records/23268534):
 The archive preserves source snapshot
 [`2d2cc89859d17d3143cd40c4a4b3df49801aa533`](https://github.com/selanavot/omega_le_nine_quarters_all_rings/tree/2d2cc89859d17d3143cd40c4a4b3df49801aa533),
 including the Lean development, paper, verification records, Git history bundle
-and checksums. Later repository documentation is outside that frozen release.
+and checksums. Subsequent documentation and the rc3 compatibility changes are
+outside that frozen release.
 Use the version DOI to cite this exact archive; the
 [concept DOI](https://doi.org/10.5281/zenodo.23268533) identifies the evolving project.
 
@@ -116,13 +119,22 @@ See the [Zenodo release record](docs/ZENODO.md) and
 verification against a fixed public commit; the local verification receipt
 does not substitute for that registry workflow.
 The [full Palomar mechanical preflight and registry verification passed](verification/palomar/README.md)
-for the submitted snapshot. Permanent registration remains pending;
-no registry acceptance is claimed.
+for the submitted rc4 snapshot, but its registry rendering stage failed.
+The unchanged Challenge has since rendered locally with the unmodified rc3
+renderer; see the [rendering check](verification/palomar/RC3-RENDER.md).
+The [official hosted rc3 mechanical preflight also passed](https://github.com/selanavot/omega_le_nine_quarters_all_rings/actions/runs/38024128253)
+for candidate commit `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`, with empty report
+error and warning lists. [PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6)
+contains the compatibility change and its receipts; subsequent receipt and
+documentation commits are outside the exact snapshot checked by that workflow.
+The original submission remains tied to its rc4 commit. No new submission or
+registry acceptance is claimed.
 
 ## Build and verify
 
-Lean **4.35.0-rc4** and Mathlib
-`f0469b25d97aef3998d4bc06f6f01da670b3d18e` are pinned.
+Lean **4.35.0-rc3** and Mathlib
+`c55e6e786f49471c72fbddbec5415808896aec1e` are pinned on the compatibility branch.
+The arithmetic model and all six frozen Challenge statements are unchanged.
 
 ```sh
 lake exe cache get
@@ -136,10 +148,12 @@ python3 scripts/check-comparator.py --trusted-local --negative-controls
 The specification checker freezes the original model plus only the seven
 approved typeclass substitutions. Comparator checks six statements, including
 BddBelow, the lower bound, direct costs, and exact integer coefficients.
-The strengthened theorem's [verification receipt](verification/comparator/RESULTS.md)
-records the fresh runs. The unchanged harness's earlier deliberate controls rejected
-changed multiplication cost and `sorry`; their [separate receipt](verification/comparator/RESULTS-NONTRIVIAL.md)
-is preserved with its original scope.
+The [rc3 verification receipt](verification/comparator/RESULTS-RC3.md) records
+the successful full build, fresh-kernel replay and six-checker Comparator run.
+The two negative controls rejected changed multiplication cost and `sorry`
+again under rc3. The [archived rc4 receipt](verification/comparator/RESULTS.md)
+and [earlier nontrivial-ring receipt](verification/comparator/RESULTS-NONTRIVIAL.md)
+retain their original versions and scope.
 The local Comparator command disables its build sandbox; it is not a claim
 of sandboxed source-provenance verification. See [audit details](verification/comparator/README.md).
 
