@@ -27,8 +27,15 @@ This hosted Linux provenance/sandbox check complements the
 The workflow does not include Challenge rendering; the complete native rc3
 rendering check has its [own receipt](RC3-RENDER.md). Local rendering and a
 passed hosted mechanical preflight do not establish registry rendering,
-editorial acceptance or registration. No corrected intake has been made.
-The original rc4 submission and frozen Zenodo archive remain unchanged.
+editorial acceptance or registration. After Sela's explicit approval and
+PR #6's merge, corrected intake **`psdxspsdhwdz`** was accepted for the exact
+preflighted rc3 commit, root `comparator.json`, relationship `maintainer`.
+The temporary ownership tag and secret gist were deleted. Initial status was
+`verifying`, with
+[registry run 38025286082](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082)
+started. This is not a completed registry-verification receipt; see
+[the current handoff](../../docs/PALOMAR.md). The original rc4 submission and
+frozen Zenodo archive remain unchanged.
 
 ## Historical rc4 preflight
 

@@ -124,16 +124,19 @@ The unchanged Challenge has since rendered locally with the unmodified rc3
 renderer; see the [rendering check](verification/palomar/RC3-RENDER.md).
 The [official hosted rc3 mechanical preflight also passed](https://github.com/selanavot/omega_le_nine_quarters_all_rings/actions/runs/38024128253)
 for candidate commit `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`, with empty report
-error and warning lists. [PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6)
+error and warning lists. Merged [PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6)
 contains the compatibility change and its receipts; subsequent receipt and
 documentation commits are outside the exact snapshot checked by that workflow.
-The original submission remains tied to its rc4 commit. No new submission or
-registry acceptance is claimed.
+The corrected intake **`psdxspsdhwdz`** was accepted for that exact rc3 commit
+and initially entered `verifying` in
+[registry run 38025286082](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082).
+Intake acceptance does not establish completed verification, review or
+registration. The original failed rc4 submission remains a separate record.
 
 ## Build and verify
 
 Lean **4.35.0-rc3** and Mathlib
-`c55e6e786f49471c72fbddbec5415808896aec1e` are pinned on the compatibility branch.
+`c55e6e786f49471c72fbddbec5415808896aec1e` are pinned.
 The arithmetic model and all six frozen Challenge statements are unchanged.
 
 ```sh

@@ -19,13 +19,12 @@ Sela approved Palomar submission of the immutable snapshot
 responsible maintainer. Its full mechanical preflight passed:
 https://github.com/selanavot/omega_le_nine_quarters_all_rings/actions/runs/37967750557.
 Do not replace that approved snapshot with later documentation commits.
-Palomar intake `pq5sjorephuw` has been submitted using its required tag/gist
-protocol; both temporary artifacts were removed. Do not create a duplicate
-submission. The access token and private review are outside Git; never publish
+Historical rc4 intake `pq5sjorephuw` used the required tag/gist
+protocol; both temporary artifacts were removed. The access token and private review are outside Git; never publish
 them in this repository. Registry mechanical verification also passed in run
-37969772632; see verification/palomar for both public receipts. The latest
-submission status is `verification-error`: Palomar could not complete the
-Challenge renderability check, and editorial review has not started.
+37969772632; see verification/palomar for both public receipts. That submission
+settled at `verification-error`: Palomar could not complete the
+Challenge renderability check, and editorial review had not started.
 On 2026-10-09 Sela explicitly requested that the existing Zenodo upload be made
 live. Record 23268534 is now published as version 0.1.0 with the same five
 checked release files from the approved snapshot. Its version DOI is
@@ -33,18 +32,24 @@ checked release files from the approved snapshot. Its version DOI is
 Do not create a duplicate record or replace the frozen release with later docs.
 The approved Zenodo documentation PR #5 was merged at
 `be15d1a0239bf682a31bde07d025d86fc5a3d521`. Its merge approval is used and does
-not authorize merging the later compatibility PR.
-Sela subsequently authorized testing older supported Lean versions and making
-a compatibility change if it resolves the renderer failure. Work continues on
-`compat/lean-4.35-rc3` after the unchanged Challenge rendered successfully with
-the unmodified rc3 renderer. This authorizes repository changes and validation,
-not a new Palomar intake or replacement of the published Zenodo snapshot.
+not authorize later merges.
+After successful compatibility testing, Sela explicitly approved the rc3
+change, its corrected intake and overnight monitoring.
 Compatibility [PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6)
-is open. Its merge and a corrected intake have not been authorized or performed.
-The exact candidate that passed the hosted rc3 preflight is
-`9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`; later receipt/documentation commits
-do not replace that verified snapshot. Obtain approval of the intended immutable
-commit, root `comparator.json` and maintainer relationship before a corrected intake.
+merged at `00976b9efed79b4c01ea42565b0832f491ccae75` on
+2026-10-10 at 04:45:34 UTC. Its approval does not authorize merging this or any
+later documentation PR.
+The accepted current Palomar intake is **`psdxspsdhwdz`**, for exact preflighted
+commit `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`, root `comparator.json` and
+relationship `maintainer`. Its required temporary tag and secret gist were
+deleted after verification of ownership. The initial status is `verifying`;
+[registry run 38025286082](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082)
+started, but no completed verification or review is recorded here. Monitor
+this new ID, not the historical rc4 intake. Do not create another intake or
+substitute a later receipt/docs commit. The authorized monitor checks every
+15 minutes through 2026-10-10 09:00 America/New_York; do not create a duplicate
+monitor. Keep credentials and private review outside Git. The Zenodo archive
+remains unchanged.
 Permanent Palomar registration requires a further explicit instruction after
 Sela receives the complete review; submission approval is not that instruction.
 See docs/ZENODO.md and docs/PALOMAR.md for the current publication steps.
@@ -78,7 +83,7 @@ Retain licenses and clear attribution for inherited and modified code.
 
 ## Verification and resources
 
-The compatibility branch pins Lean 4.35.0-rc3 and Mathlib
+The repository pins Lean 4.35.0-rc3 and Mathlib
 `c55e6e786f49471c72fbddbec5415808896aec1e`, following Sela's request to test an
 older supported renderer before changing the project. Keep exact versions
 pinned. Full local proof compilation, fresh-kernel replay, Comparator with all

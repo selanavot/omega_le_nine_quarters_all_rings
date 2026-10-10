@@ -5,13 +5,17 @@
 Local steps 1–4 passed on 2026-10-10 at source/pins/harness commit
 `fd3d1cf942ae05c1437d26cc0d83d813ce20a4c9`; see
 [the rc3 receipt](../verification/comparator/RESULTS-RC3.md). Documentation and
-paper updates are prepared in
+paper updates were merged in
 [PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6).
 The [hosted mechanical preflight](https://github.com/selanavot/omega_le_nine_quarters_all_rings/actions/runs/38024128253)
 passed exact candidate `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`. Later receipt
 and documentation commits do not retarget that result. All six steps below
-are complete; merging PR #6 and a corrected intake still require explicit
-approval. The existing Zenodo archive and original submission remain unchanged.
+are complete. Sela approved PR #6's merge and the corrected intake;
+`psdxspsdhwdz` is accepted for that exact candidate, initially `verifying`.
+Monitor that intake under the authorized 15-minute schedule through
+2026-10-10 09:00 America/New_York. Review and permanent registration remain
+separate; registration requires a further explicit instruction after Sela has
+seen the review. The existing Zenodo archive and original submission remain unchanged.
 
 1. Test the exact submitted Challenge against supported unmodified renderers
    before changing dependencies. The local rc3 rendering check passed.
@@ -26,9 +30,9 @@ approval. The existing Zenodo archive and original submission remain unchanged.
 5. Update current build instructions and the paper's environment description.
    Preserve the published Zenodo snapshot and original Palomar submission.
 6. Push the verified snapshot, open a compatibility PR, and run the official
-   full mechanical preflight against that exact commit. Its merge and any
-   replacement Palomar submission are separate actions; neither has been
-   approved here.
+   full mechanical preflight against that exact commit. PR #6's approved merge
+   and the corrected intake are complete; their acceptance does not establish
+   completion of registry verification or review.
 
 ## Original proof-development plan
 

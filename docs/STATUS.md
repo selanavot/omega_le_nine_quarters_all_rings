@@ -1,8 +1,28 @@
 # Status
 
+## Corrected Palomar intake accepted
+
+2026-10-10. Sela explicitly approved merging PR #6, submitting the corrected
+rc3 snapshot and monitoring overnight. PR #6 merged at
+`00976b9efed79b4c01ea42565b0832f491ccae75` at 04:45:34 UTC.
+Palomar accepted new intake **`psdxspsdhwdz`** for exact commit
+`9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`, root `comparator.json`, relationship
+`maintainer`. The required temporary tag and secret gist were both deleted.
+Its initial API status is `verifying`, and
+[registry run 38025286082](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082)
+started and fetched the submitted source. This records initial acceptance and
+dispatch, not completed verification, rendering, review or registration.
+
+Monitor `psdxspsdhwdz`; retain `pq5sjorephuw` as the historical failed rc4
+submission. The authorized monitor checks every 15 minutes through
+2026-10-10 09:00 America/New_York. Keep credentials and private review outside
+Git, do not create duplicate intake/monitor jobs, and obtain a further explicit
+instruction before permanent registration after Sela has seen the review.
+The Zenodo archive and immutable source snapshots remain unchanged.
+
 ## Lean rc3 compatibility: local checks and hosted preflight passed
 
-2026-10-10. Branch: `compat/lean-4.35-rc3`.
+2026-10-10. Merged branch: `compat/lean-4.35-rc3`.
 Sela authorized testing older supported Lean versions and making a repository
 change if it resolves the Palomar rendering failure. The unchanged submitted
 Challenge renders successfully with the unmodified Lean 4.35.0-rc3 renderer;
@@ -46,16 +66,16 @@ local rendering evidence remains necessary. The earlier rc4 receipts retain thei
 The original Palomar intake `pq5sjorephuw` remains tied to
 `2d2cc89859d17d3143cd40c4a4b3df49801aa533`. Its last confirmed status is
 `verification-error` after rendering failed; the earlier mechanical verification
-passed, and editorial review had not started. No replacement submission or
-registration is authorized or performed by this compatibility work. The
+passed, and editorial review had not started. The corrected rc3 intake is
+recorded above; permanent registration has not been performed. The
 published Zenodo v0.1.0 archive and its checksums remain unchanged.
 
 PRs #1–#5 are merged; PR #5's Zenodo documentation merge is
 `be15d1a0239bf682a31bde07d025d86fc5a3d521`.
 [Compatibility PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6)
-is open. All planned verification checks are complete. Merging PR #6 and
-submitting the corrected candidate `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`
-remain subject to Sela's explicit approval; neither has been performed.
+is merged with Sela's specific approval. The completed checks below and the
+accepted intake above retain their exact snapshot scope. Later documentation
+PRs require their own merge approval.
 Root alone starts Lean/Lake builds with `LEAN_NUM_THREADS=1`; other agents own
 only their assigned source or documentation files. See [ownership](OWNERSHIP.md)
 and [the current plan](PLAN.md). The sections below retain earlier snapshots.
