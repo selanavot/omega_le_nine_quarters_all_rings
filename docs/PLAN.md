@@ -1,5 +1,32 @@
 # Proof plan
 
+## Current compatibility work
+
+Local steps 1–4 passed on 2026-10-10 at source/pins/harness commit
+`fd3d1cf942ae05c1437d26cc0d83d813ce20a4c9`; see
+[the rc3 receipt](../verification/comparator/RESULTS-RC3.md). The hosted
+mechanical preflight has not started. Publication and submission records
+remain unchanged.
+
+1. Test the exact submitted Challenge against supported unmodified renderers
+   before changing dependencies. The local rc3 rendering check passed.
+2. Pin Lean 4.35.0-rc3 with Mathlib
+   `c55e6e786f49471c72fbddbec5415808896aec1e` in an isolated worktree, preserving
+   the arithmetic model, all six Challenge statements and Comparator settings.
+3. Rebuild the complete proof and axiom audit; validate the frozen specification
+   and clean dependency sources. Root alone runs builds, with one Lean thread.
+4. Run fresh-kernel replay and Comparator with all bundled checkers, including
+   both deliberate negative controls. Record completed outcomes separately from
+   the original rc4 receipts; no success is inferred from rendering alone.
+5. Update current build instructions and the paper's environment description.
+   Preserve the published Zenodo snapshot and original Palomar submission.
+6. Push the verified snapshot, open a compatibility PR, and run the official
+   full mechanical preflight against that exact commit. Its merge and any
+   replacement Palomar submission are separate actions; neither has been
+   approved here.
+
+## Original proof-development plan
+
 1. Preserve the arithmetic semantics while generalizing to all rings, treating
    the trivial ring separately with its zero-cost program and real-infimum convention.
 2. Generalize coefficient rank and restriction semiring to commutative rings.

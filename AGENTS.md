@@ -31,9 +31,14 @@ live. Record 23268534 is now published as version 0.1.0 with the same five
 checked release files from the approved snapshot. Its version DOI is
 10.5281/zenodo.23268534 and concept DOI is 10.5281/zenodo.23268533.
 Do not create a duplicate record or replace the frozen release with later docs.
-Sela also explicitly authorized merging the documentation PR prepared on
-`docs/zenodo-publication` after its edits and validation are complete; that
-authorization is specific to this publication update.
+The approved Zenodo documentation PR #5 was merged at
+`be15d1a0239bf682a31bde07d025d86fc5a3d521`. Its merge approval is used and does
+not authorize merging the later compatibility PR.
+Sela subsequently authorized testing older supported Lean versions and making
+a compatibility change if it resolves the renderer failure. Work continues on
+`compat/lean-4.35-rc3` after the unchanged Challenge rendered successfully with
+the unmodified rc3 renderer. This authorizes repository changes and validation,
+not a new Palomar intake or replacement of the published Zenodo snapshot.
 Permanent Palomar registration requires a further explicit instruction after
 Sela receives the complete review; submission approval is not that instruction.
 See docs/ZENODO.md and docs/PALOMAR.md for the current publication steps.
@@ -67,8 +72,18 @@ Retain licenses and clear attribution for inherited and modified code.
 
 ## Verification and resources
 
-Use Lean 4.35.0-rc4 and mathlib f0469b25d97aef3998d4bc06f6f01da670b3d18e,
-upgraded at Sela’s explicit request on 2026-10-09. Keep exact versions pinned.
+The compatibility branch pins Lean 4.35.0-rc3 and Mathlib
+`c55e6e786f49471c72fbddbec5415808896aec1e`, following Sela's request to test an
+older supported renderer before changing the project. Keep exact versions
+pinned. Full local proof compilation, fresh-kernel replay, Comparator with all
+six bundled checkers, both negative controls and rendering passed at the
+source/pins/harness commit `fd3d1cf942ae05c1437d26cc0d83d813ce20a4c9`; see
+docs/STATUS.md and verification/comparator/RESULTS-RC3.md. All 160 Lean files
+under `lean/` are unchanged. The hosted rc3 preflight has not started; local success
+does not certify a hosted workflow or authorize a new intake.
+The archived release and earlier verification receipts remain on rc4 and
+Mathlib `f0469b25d97aef3998d4bc06f6f01da670b3d18e`. Preserve those records as
+historical evidence; never relabel them with new dependency versions.
 24GB host: LEAN_NUM_THREADS=1. Only root starts build processes. Source
 editing may be parallel. If a serialized build queue is installed, agents
 may submit requests; they may not start additional Lake/Lean processes.
@@ -93,3 +108,11 @@ Before reusing dependency caches, resolve `.lake/packages` itself and every
 ancestor: inspecting its children does not detect a parent symlink. Keep a
 physical copy per independently upgraded project; verify `lake env printenv
 LEAN_PATH` stays inside this checkout before starting builds.
+
+When comparing toolchain versions, invoke Lake with the process working
+directory set to the target project and confirm `lake env lean --version`
+there. Passing `lake -d PATH` alone does not select that directory's toolchain:
+the caller's working directory can already have selected a different version
+through Elan. Apply this check to isolated renderer and core-notation audit
+helpers as well as the main proof. Rebuild any helper created under the wrong
+toolchain before counting its output as evidence.

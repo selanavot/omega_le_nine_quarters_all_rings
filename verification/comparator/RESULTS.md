@@ -3,8 +3,11 @@
 Completed 2026-10-09. **PASS**: full compilation, axiom guards, fresh-kernel
 replay, and native Comparator with all six bundled checkers.
 
+This is the historical rc4 receipt; the later rc3 compatibility run has a
+[separate receipt](RESULTS-RC3.md).
+
 The proof and verification harness checked here are at immutable revision
-`63ddeef94ef18a08a9825c30f41b833c1a339260`. Subsequent changes affect only the
+`63ddeef94ef18a08a9825c30f41b833c1a339260`. The immediately following release edits affected only the
 paper and documentation. The full build and both dedicated audits compared
 source snapshots before and after execution; all exited successfully with
 unchanged sources.
@@ -42,7 +45,7 @@ are unchanged from the preceding verified version.
   `e5ce8a1491d77029211b59a6b54d066e7e6a7449ef9c619c23e96c0a09b9978c`.
 - One Lean thread; no concurrent build worker during dedicated verification.
 
-All specification and manifest hashes are retained in [pins.json](pins.json).
+All specification and manifest hashes are retained in [the original pins.json](https://github.com/selanavot/omega_le_nine_quarters_all_rings/blob/63ddeef94ef18a08a9825c30f41b833c1a339260/verification/comparator/pins.json).
 
 ## Completed runs
 

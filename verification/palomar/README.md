@@ -1,5 +1,10 @@
 # Palomar mechanical verification
 
+The reports below certify the original rc4 snapshot. The later rc3 compatibility
+branch has a separate [local rendering receipt](RC3-RENDER.md) and
+[proof verification receipt](../comparator/RESULTS-RC3.md). Those local checks
+do not replace a hosted preflight for a new submitted commit.
+
 **PASS**, 2026-10-09. This is the full official preflight, distinct from
 Palomar's subsequent verification, editorial review and permanent registration.
 
@@ -55,6 +60,8 @@ same approved source, root Comparator configuration and six claims.
 
 The reports' empty warning lists do not mean their build logs are free of Lean
 linter warnings. Mechanical success is distinct from editorial review and
-registration. The latest submission and private-review endpoint requests
-returned HTTP 500, so the editorial state could not be confirmed. No private
-review or registration approval is included here.
+registration. The original submission later settled at `verification-error` after Challenge
+rendering failed. Editorial review had not started. Subsequent API HTTP 500
+responses are a separate service issue. See [the diagnosis](RC3-RENDER.md) and
+[current handoff](../../docs/PALOMAR.md); no review or registration approval is
+included here.

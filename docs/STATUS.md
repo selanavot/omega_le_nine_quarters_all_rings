@@ -1,5 +1,55 @@
 # Status
 
+## Lean rc3 compatibility: local verification passed
+
+2026-10-10. Branch: `compat/lean-4.35-rc3`.
+Sela authorized testing older supported Lean versions and making a repository
+change if it resolves the Palomar rendering failure. The unchanged submitted
+Challenge renders successfully with the unmodified Lean 4.35.0-rc3 renderer;
+all six rendered theorem signatures match those from the locally repaired rc4
+renderer. The local rc3 pipeline also passed literal extraction, HTML
+generation, the trusted core-notation audit and sanitization. Every final
+helper artifact was built under the selected rc3 toolchain. This is a local
+rendering result, not a new registry verification.
+See [the rendering check](../verification/palomar/RC3-RENDER.md).
+
+The branch pins Lean `leanprover/lean4:v4.35.0-rc3` and Mathlib
+`c55e6e786f49471c72fbddbec5415808896aec1e`. All 160 Lean files under `lean/` are unchanged,
+including the arithmetic Model and complete frozen Challenge; both Comparator
+configurations are unchanged too. The checked source, pins and harness are at
+`fd3d1cf942ae05c1437d26cc0d83d813ce20a4c9`.
+
+- Full OAI/FinalAudit/Challenge/KernelAudit build: exit 0, 9,108 build-graph jobs,
+  including reused dependencies and cached/replayed results.
+- Frozen specification, axiom guards and pinned dependency checks: passed.
+- Complete six-claim dependency closure replayed in a fresh Lean kernel:
+  exit 0, 88.6 seconds.
+- Comparator accepted all six claims with all six bundled checkers. Both
+  negative controls rejected their intended faults: altered multiplication
+  cost and `sorryAx`. The complete script exited 0 in 421.2 seconds.
+
+See [the rc3 verification receipt](../verification/comparator/RESULTS-RC3.md)
+for commands, hashes and scope. These are local macOS results using dependency
+caches and trusted-source Comparator with its build sandbox disabled. The
+official hosted rc3 mechanical preflight has not started; no new hosted
+verification or registry acceptance is claimed. The earlier rc4 receipts are
+preserved separately.
+
+The original Palomar intake `pq5sjorephuw` remains tied to
+`2d2cc89859d17d3143cd40c4a4b3df49801aa533`. Its last confirmed status is
+`verification-error` after rendering failed; the earlier mechanical verification
+passed, and editorial review had not started. No replacement submission or
+registration is authorized or performed by this compatibility work. The
+published Zenodo v0.1.0 archive and its checksums remain unchanged.
+
+PRs #1–#5 are merged; PR #5's Zenodo documentation merge is
+`be15d1a0239bf682a31bde07d025d86fc5a3d521`. Prepare a separate compatibility PR
+with these local results and run the hosted preflight after pushing its exact
+snapshot. Its merge requires Sela's explicit approval for that PR.
+Root alone starts Lean/Lake builds with `LEAN_NUM_THREADS=1`; other agents own
+only their assigned source or documentation files. See [ownership](OWNERSHIP.md)
+and [the current plan](PLAN.md). The sections below retain earlier snapshots.
+
 ## Zenodo publication
 
 On 2026-10-09 Sela requested that the existing upload be made live and the
@@ -109,12 +159,13 @@ theorem omega_le_nine_quarters_all_rings
 - No smaller numerical exponent, exact O(n^(9/4)) endpoint, efficient uniform
   circuit generator, or bit-complexity theorem is claimed.
 
-## Current verification
+## Archived rc4 verification
 
 Audited proof/harness revision:
 `63ddeef94ef18a08a9825c30f41b833c1a339260`.
-Later changes are paper and documentation only. Lean 4.35.0-rc4 and mathlib
-f0469b25d97aef3998d4bc06f6f01da670b3d18e are pinned.
+This receipt predates the rc3 compatibility work. It used Lean 4.35.0-rc4 and
+Mathlib f0469b25d97aef3998d4bc06f6f01da670b3d18e; subsequent publication changes
+before the compatibility branch affected paper and documentation only.
 
 - Full revised OAI/FinalAudit/Challenge/KernelAudit build passed:
   9179 build-graph jobs, exit 0, unchanged source snapshot.
@@ -136,7 +187,7 @@ f0469b25d97aef3998d4bc06f6f01da670b3d18e are pinned.
   dates. The paper credits OpenAI and our earlier all-fields extension and
   discloses AI-generated proof development and text.
 
-The [current receipt](../verification/comparator/RESULTS.md) records commands,
+The [rc4 receipt](../verification/comparator/RESULTS.md) records commands,
 versions, log hashes, scope and successful output. The
 [archived receipt](../verification/comparator/RESULTS-NONTRIVIAL.md) preserves
 the preceding nontrivial-ring scope and negative controls. Reviews are in
@@ -149,9 +200,9 @@ dependency closure was freshly replayed; unrelated imported Mathlib declarations
 were not all replayed. Formal verification validates Lean declarations, not
 manuscript prose or historical novelty.
 
-## Restart notes
+## Archived rc4 restart notes
 
-No build worker or audit is running. Detailed logs are ignored under .lake:
+The completed rc4 runs left detailed logs under ignored `.lake/`:
 
 - all-rings-zero-build.log
 - zero-ring-kernel-audit.log
@@ -163,9 +214,6 @@ It is not counted as successful. The completed replacement exports the six
 claims and every dependency, then uses leanchecker --from-export into an empty
 kernel. The export method received a separate source review.
 
-Owner status files retain chronological development notes. This status and
-the current receipt supersede earlier pending-build descriptions.
-PRs #1–#4 are merged. Continue the Zenodo documentation on
-`docs/zenodo-publication` through its own PR; Sela has specifically authorized
-merging that PR after editing and validation. Keep the archived and submitted
-snapshot unchanged.
+Owner status files retain chronological development notes. The compatibility
+section at the top of this file supersedes historical restart instructions.
+Keep the archived and submitted snapshot unchanged.

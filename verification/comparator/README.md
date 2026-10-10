@@ -1,14 +1,15 @@
 # Frozen-model Comparator verification
 
-Status: **the strengthened upper bound with only `[Ring R]` passed** compilation,
-axiom guards, fresh-kernel replay, and Comparator with all six bundled checkers
-on 2026-10-09. See [RESULTS.md](RESULTS.md). The previous nontrivial-ring version's
-receipt, including both deliberate failure controls, is preserved separately in
-[RESULTS-NONTRIVIAL.md](RESULTS-NONTRIVIAL.md). The model, other five statements,
-control implementation and injected targets are unchanged; those negative
-controls were not rerun for this strengthening.
+Status: **the unchanged all-rings proof passed again on Lean 4.35.0-rc3**
+on 2026-10-10: compilation, axiom guards, fresh-kernel replay, Comparator with
+all six bundled checkers, and both deliberate failure controls. See
+[RESULTS-RC3.md](RESULTS-RC3.md). The earlier rc4 run is preserved in
+[RESULTS.md](RESULTS.md), and the preceding nontrivial-ring version in
+[RESULTS-NONTRIVIAL.md](RESULTS-NONTRIVIAL.md). The compiler/dependency pins
+changed for Palomar rendering compatibility; all Lean proof sources and the
+frozen Challenge remain unchanged.
 
-The harness uses native `lake comparator` from Lean **4.35.0-rc4**, with its
+The harness uses native `lake comparator` from Lean **4.35.0-rc3**, with its
 bundled independent kernel checkers requested by `--paranoid`. The local run
 explicitly disables the build sandbox. It is verification of trusted local
 sources, not a sandbox-isolation or external provenance certification.
