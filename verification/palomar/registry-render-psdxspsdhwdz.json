@@ -1,0 +1,89 @@
+{
+  "artifact_tree_sha256": "cbd0a1cd8d17c4c5ac4c7a623df164de4ca59eef199081cb64b29e0fe248de06",
+  "bwrap_source_tag": "v0.12.0",
+  "entrypoint": "Challenge/index.html",
+  "errors": [],
+  "format": "verso-html",
+  "lean_toolchain": "leanprover/lean4:v4.35.0-rc3",
+  "limits": {
+    "artifact_bytes": 26214400,
+    "artifact_files": 2000,
+    "artifact_nodes": 4000,
+    "build_file_bytes": 2147483648,
+    "memory_bytes": 12884901888,
+    "open_files": 4096,
+    "per_file_bytes": 8388608,
+    "tasks": 512,
+    "wall_seconds": 21600,
+    "workspace_bytes": 12884901888
+  },
+  "mathlib_cache": {
+    "bytes": 450785518,
+    "downloaded": 8943,
+    "requested": 8943
+  },
+  "prepared_at": "2026-10-10T05:24:38Z",
+  "rendered_at": "2026-10-10T05:28:41Z",
+  "renderer_commit": "d4e41c1d5b0d114c4859e6e5831dc6d3ad1d0d44",
+  "schema_version": 3,
+  "source": {
+    "challenge_path": "lean/ComparatorAudit/Challenge.lean",
+    "challenge_sha256": "e5ce8a1491d77029211b59a6b54d066e7e6a7449ef9c619c23e96c0a09b9978c",
+    "commit": "9d10116c89f9bdcdaccd58aacea353d4b7ae6e90",
+    "comparator_config_path": "comparator.json",
+    "lakefile_path": "lakefile.lean",
+    "lean_toolchain_path": "lean-toolchain",
+    "project_path": "",
+    "repository": "selanavot/omega_le_nine_quarters_all_rings",
+    "repository_url": "https://github.com/selanavot/omega_le_nine_quarters_all_rings",
+    "solution_path": "lean/ComparatorAudit/Solution.lean"
+  },
+  "stage": "complete",
+  "status": "pass",
+  "surface": {
+    "audit_declarations": [
+      {
+        "declaration": "theorem ComparatorChecks.omega_bound.{u} (R : Type u) [Ring R] : LE.le (OAI.MatrixMultiplication.Arithmetic.omega R) (9 / 4)",
+        "name": "ComparatorChecks.omega_bound"
+      },
+      {
+        "declaration": "theorem ComparatorChecks.admissible_bddBelow.{u} (R : Type u) [Ring R] [Nontrivial R] :\n  BddBelow (Set.ofPred fun \u03c4 => OAI.MatrixMultiplication.Arithmetic.AdmissibleExponent R \u03c4)",
+        "name": "ComparatorChecks.admissible_bddBelow"
+      },
+      {
+        "declaration": "theorem ComparatorChecks.admissible_nonempty.{u} (R : Type u) [Ring R] :\n  Set.Nonempty (Set.ofPred fun \u03c4 => OAI.MatrixMultiplication.Arithmetic.AdmissibleExponent R \u03c4)",
+        "name": "ComparatorChecks.admissible_nonempty"
+      },
+      {
+        "declaration": "theorem ComparatorChecks.omega_lower.{u} (R : Type u) [Ring R] [Nontrivial R] :\n  LE.le 2 (OAI.MatrixMultiplication.Arithmetic.omega R)",
+        "name": "ComparatorChecks.omega_lower"
+      },
+      {
+        "declaration": "theorem ComparatorChecks.epsilon_cost.{u} (R : Type u) [Ring R] (\u03b5 : Real) (h\u03b5 : LT.lt 0 \u03b5) :\n  Exists fun C =>\n    And (LT.lt 0 C)\n      (\u2200 (n : Nat),\n        LE.le 1 n \u2192\n          Exists fun P =>\n            And (OAI.MatrixMultiplication.Arithmetic.MatrixAlgorithm.Correct P)\n              (LE.le (\u2191(OAI.MatrixMultiplication.Arithmetic.MatrixAlgorithm.cost P))\n                (HMul.hMul C (HPow.hPow (\u2191n) (HAdd.hAdd (9 / 4) \u03b5)))))",
+        "name": "ComparatorChecks.epsilon_cost"
+      },
+      {
+        "declaration": "theorem ComparatorChecks.exact_coefficients (\u03b5 : Real) (h\u03b5 : LT.lt 0 \u03b5) :\n  Exists fun n =>\n    Exists fun r =>\n      And (LE.le 2 n)\n        (And (LE.le (\u2191r) (HPow.hPow (\u2191n) (HAdd.hAdd (9 / 4) \u03b5)))\n          (Exists fun a =>\n            Exists fun b =>\n              Exists fun c =>\n                \u2200 (x y z : Prod (Fin n) (Fin n)),\n                  Eq\n                    (ite\n                      (And (Eq (Prod.snd x) (Prod.fst y))\n                        (And (Eq (Prod.snd y) (Prod.fst z)) (Eq (Prod.snd z) (Prod.fst x))))\n                      1 0)\n                    (Finset.sum Finset.univ fun i => HMul.hMul (HMul.hMul (a i x) (b i y)) (c i z))))",
+        "name": "ComparatorChecks.exact_coefficients"
+      }
+    ],
+    "declarations": [
+      "ComparatorChecks.omega_bound",
+      "ComparatorChecks.admissible_bddBelow",
+      "ComparatorChecks.admissible_nonempty",
+      "ComparatorChecks.omega_lower",
+      "ComparatorChecks.epsilon_cost",
+      "ComparatorChecks.exact_coefficients"
+    ],
+    "imports": [
+      "Mathlib"
+    ],
+    "module_doc": null,
+    "schema_version": 3,
+    "solution_imports": [
+      "OAI.LinearAlgebra.MatrixMultiplication.AllRings"
+    ]
+  },
+  "verso_commit": "8fc7a297f14d5adc1a551b5b4ecf283c08bd691f",
+  "workflow_url": "https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38027359827"
+}

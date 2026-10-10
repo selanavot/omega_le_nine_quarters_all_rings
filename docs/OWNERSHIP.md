@@ -1,15 +1,16 @@
 # Ownership
 
-## Active rc3 compatibility assignments
+## Active rc3 intake handoff
 
-2026-10-10, branch `compat/lean-4.35-rc3`:
+2026-10-10, documentation branch `docs/palomar-rc3-intake`:
 
-- Root: toolchain and dependency pins, serialized builds and audit execution,
-  verification receipts, proof compatibility repairs if required, final
-  integration, Git and PR. Only root starts Lean/Lake processes.
+- Root: monitor current intake `psdxspsdhwdz`, retain private credentials outside
+  Git, and coordinate any follow-up. Only root starts Lean/Lake processes.
 - `rc2_audit_requirements`: AGENTS.md, README.md, docs/STATUS.md, docs/PLAN.md,
-  docs/OWNERSHIP.md and docs/PALOMAR.md. The agent name records its earlier rc2
-  investigation; the selected compatibility environment is rc3.
+  docs/OWNERSHIP.md, docs/PALOMAR.md and verification/palomar/README.md;
+  verification/palomar/registry-psdxspsdhwdz.json and the bounded registry-render
+  report/manifest; commit and push updates to
+  documentation PR #7. Do not merge it.
 - Additional assignments require an explicit file list from root. The
   arithmetic model, frozen Challenge statements and published records remain
   protected. Do not edit another agent's files while its work is in progress.
@@ -17,10 +18,15 @@
 Local proof, kernel, Comparator, negative-control and rendering checks passed.
 The official hosted preflight passed candidate
 `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`; [PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6)
-is open. No Lean proof repair was needed; all 160 files under `lean/` are unchanged.
-Root owns final receipt integration, Git and PR updates. No merge or corrected
-Palomar intake is authorized by these assignments; later receipt/docs commits
-must not be represented as the preflight's immutable target.
+is merged with explicit approval. No Lean proof repair was needed; all 160 files
+under `lean/` are unchanged. Sela also approved the corrected intake and
+overnight monitor. That approval does not authorize another PR merge or final
+registration. Later receipt/docs commits must not be represented as the
+preflight or intake's immutable target.
+Registry mechanical verification and rendering of `psdxspsdhwdz` passed.
+The review is not yet available. Root monitors the API/service state separately
+from the completed public workflows. No proof rebuild is needed to retain
+their reports; do not commit the HTML bundle or any private review.
 
 ## Historical proof and publication assignments
 

@@ -1,8 +1,48 @@
 # Status
 
+## Corrected Palomar intake: mechanical verification and rendering passed
+
+2026-10-10. Sela explicitly approved merging PR #6, submitting the corrected
+rc3 snapshot and monitoring overnight. PR #6 merged at
+`00976b9efed79b4c01ea42565b0832f491ccae75` at 04:45:34 UTC.
+Palomar accepted new intake **`psdxspsdhwdz`** for exact commit
+`9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`, root `comparator.json`, relationship
+`maintainer`. The required temporary tag and secret gist were both deleted.
+Its initial API status was `verifying`.
+[registry run 38025286082](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082)
+then completed successfully. Its
+[public mechanical report](../verification/palomar/registry-psdxspsdhwdz.json)
+has `status: pass`, `stage: complete`, checked time `2026-10-10T04:53:15Z`,
+empty error/warning lists and execution profile `palomar-namespace-16x32-v1`.
+The exact repository, commit, root configuration and all six claims match the
+approved snapshot; default Lean, NanoDa and con-ron accepted the solution.
+The receipt hash is recorded in [verification/palomar](../verification/palomar/README.md).
+
+The [official registry render run 38027359827](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38027359827)
+also passed. Its [bounded report](../verification/palomar/registry-render-psdxspsdhwdz.json)
+records `pass`/`complete`, no errors and rendered time `2026-10-10T05:28:41Z`
+for the exact same source, configuration and frozen Challenge hash. All six
+declarations are included; the retained
+[artifact manifest](../verification/palomar/registry-render-psdxspsdhwdz-manifest.json)
+matches all 19 files in the downloaded public bundle. The HTML bundle is not
+committed. The earlier rc4 rendering blocker is resolved on the official rc3
+pipeline, beyond the previously passing local reproduction.
+
+At 05:31 UTC the private-review endpoint returned HTTP 404; no review was yet
+available. The last submission-status request returned HTTP 500. The workflow
+passes do not establish an advanced submission API state or review completion.
+No permanent registration has been performed.
+
+Monitor `psdxspsdhwdz`; retain `pq5sjorephuw` as the historical failed rc4
+submission. The authorized monitor checks every 15 minutes through
+2026-10-10 09:00 America/New_York. Keep credentials and private review outside
+Git, do not create duplicate intake/monitor jobs, and obtain a further explicit
+instruction before permanent registration after Sela has seen the review.
+The Zenodo archive and immutable source snapshots remain unchanged.
+
 ## Lean rc3 compatibility: local checks and hosted preflight passed
 
-2026-10-10. Branch: `compat/lean-4.35-rc3`.
+2026-10-10. Merged branch: `compat/lean-4.35-rc3`.
 Sela authorized testing older supported Lean versions and making a repository
 change if it resolves the Palomar rendering failure. The unchanged submitted
 Challenge renders successfully with the unmodified Lean 4.35.0-rc3 renderer;
@@ -46,16 +86,16 @@ local rendering evidence remains necessary. The earlier rc4 receipts retain thei
 The original Palomar intake `pq5sjorephuw` remains tied to
 `2d2cc89859d17d3143cd40c4a4b3df49801aa533`. Its last confirmed status is
 `verification-error` after rendering failed; the earlier mechanical verification
-passed, and editorial review had not started. No replacement submission or
-registration is authorized or performed by this compatibility work. The
+passed, and editorial review had not started. The corrected rc3 intake is
+recorded above; permanent registration has not been performed. The
 published Zenodo v0.1.0 archive and its checksums remain unchanged.
 
 PRs #1–#5 are merged; PR #5's Zenodo documentation merge is
 `be15d1a0239bf682a31bde07d025d86fc5a3d521`.
 [Compatibility PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6)
-is open. All planned verification checks are complete. Merging PR #6 and
-submitting the corrected candidate `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`
-remain subject to Sela's explicit approval; neither has been performed.
+is merged with Sela's specific approval. The completed checks below and the
+accepted intake above retain their exact snapshot scope. Later documentation
+PRs require their own merge approval.
 Root alone starts Lean/Lake builds with `LEAN_NUM_THREADS=1`; other agents own
 only their assigned source or documentation files. See [ownership](OWNERSHIP.md)
 and [the current plan](PLAN.md). The sections below retain earlier snapshots.

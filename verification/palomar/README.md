@@ -1,4 +1,62 @@
-# Palomar mechanical verification
+# Palomar verification and rendering
+
+## Current rc3 registry rendering
+
+**PASS**, rendered at `2026-10-10T05:28:41Z`; the hosted render job completed
+successfully at 05:28:46 UTC. This is the registry's official rendering check
+for intake **`psdxspsdhwdz`**, following the mechanical pass below. It resolves
+the earlier rc4 rendering failure for the unchanged Challenge on rc3.
+
+- [Registry render run 38027359827](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38027359827).
+- [Public artifact 11660827709](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38027359827/artifacts/11660827709),
+  named `challenge-render-a2dc6dde0708465fbed1605feb42d1bf`.
+- Source: `selanavot/omega_le_nine_quarters_all_rings` at exact commit
+  `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`, root `comparator.json`.
+- Frozen Challenge SHA-256:
+  `e5ce8a1491d77029211b59a6b54d066e7e6a7449ef9c619c23e96c0a09b9978c`.
+- Lean `leanprover/lean4:v4.35.0-rc3`, Verso
+  `8fc7a297f14d5adc1a551b5b4ecf283c08bd691f`, renderer
+  `d4e41c1d5b0d114c4859e6e5831dc6d3ad1d0d44`.
+- [Bounded report](registry-render-psdxspsdhwdz.json), SHA-256:
+  `1a99eb7cb8748a4970e03d4c6f7826a6413c334d454acf6894d113a88101f2a4`.
+- [Artifact manifest](registry-render-psdxspsdhwdz-manifest.json), SHA-256:
+  `c91190f0783d2b8ba5d4a4705112ba3f6ce9f093737da64817df1663c3b23de0`.
+- Report `status: pass`, `stage: complete`, empty error list; all six configured
+  declarations and their audit signatures are present.
+
+Every manifest file's size and SHA-256 matched the downloaded public artifact
+(19 files). The manifest's artifact-tree hash matches the report:
+`cbd0a1cd8d17c4c5ac4c7a623df164de4ca59eef199081cb64b29e0fe248de06`.
+Only the bounded report and manifest are retained here, not the HTML bundle.
+This hosted result is distinct from the earlier [local rendering receipt](RC3-RENDER.md).
+A separate artifact audit found the complete hosted bundle byte-identical to
+the prior local rc3 output, with matching core-audit declarations and exactly
+one HTML definition anchor for each of the six claims.
+At 05:31 UTC no private review was available (HTTP 404). Rendering success is
+not review completion or registration; see [the current handoff](../../docs/PALOMAR.md).
+
+## Current rc3 registry verification
+
+**PASS**, checked at `2026-10-10T04:53:15Z`. This is the registry's own
+mechanical verification after acceptance of intake **`psdxspsdhwdz`**, distinct
+from the preceding preflight and from later rendering, review and registration.
+
+- Source: `selanavot/omega_le_nine_quarters_all_rings` at exact commit
+  `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`.
+- Root `comparator.json`, all six claims and the same configuration hash as
+  the passing rc3 preflight.
+- [Registry run 38025286082](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082).
+- [Public artifact 11659133367](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082/artifacts/11659133367).
+- [Complete bounded report](registry-psdxspsdhwdz.json), SHA-256:
+  `840407d2271e7d4b89f038fd8ef0cb71d42bdb02a35e3cec9e9634a9a9108e49`.
+- Report `status: pass`, `stage: complete`, empty error and warning lists.
+- Execution profile: `palomar-namespace-16x32-v1`.
+- Default Lean, NanoDa and con-ron accepted the solution.
+
+The later hosted rendering pass is recorded separately above. Neither workflow
+establishes the submission API's current state or completed review. See
+[the current handoff](../../docs/PALOMAR.md) for service-status observations.
+No registration has been performed.
 
 ## Current rc3 compatibility preflight
 
@@ -27,8 +85,13 @@ This hosted Linux provenance/sandbox check complements the
 The workflow does not include Challenge rendering; the complete native rc3
 rendering check has its [own receipt](RC3-RENDER.md). Local rendering and a
 passed hosted mechanical preflight do not establish registry rendering,
-editorial acceptance or registration. No corrected intake has been made.
-The original rc4 submission and frozen Zenodo archive remain unchanged.
+editorial acceptance or registration. After Sela's explicit approval and
+PR #6's merge, corrected intake **`psdxspsdhwdz`** was accepted for the exact
+preflighted rc3 commit, root `comparator.json`, relationship `maintainer`.
+The temporary ownership tag and secret gist were deleted. Initial status was
+`verifying`; the registry subsequently passed its mechanical verification,
+recorded separately above. The original rc4 submission and frozen Zenodo
+archive remain unchanged.
 
 ## Historical rc4 preflight
 

@@ -1,6 +1,43 @@
 # Palomar release and submission handoff
 
-Updated on 2026-10-10. Sela confirmed the human creator/maintainer credit,
+## Current rc3 intake
+
+Updated on 2026-10-10. Sela explicitly approved PR #6's merge, the corrected
+intake and overnight monitoring. PR #6 merged at
+`00976b9efed79b4c01ea42565b0832f491ccae75` at 04:45:34 UTC.
+Palomar accepted **`psdxspsdhwdz`** for exact preflighted commit
+`9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`, root `comparator.json` and
+relationship `maintainer`. The required temporary ownership tag and secret
+gist were deleted after the intake completed. Its initial status was `verifying`;
+[registry run 38025286082](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082)
+then passed mechanical verification. The
+[public report](../verification/palomar/registry-psdxspsdhwdz.json) is checked at
+`2026-10-10T04:53:15Z`, says `pass`/`complete`, and has empty error/warning lists.
+It verifies the exact source, root configuration and all six claims with default
+Lean, NanoDa and con-ron under `palomar-namespace-16x32-v1`. The public artifact
+and report hash are recorded in [the receipt](../verification/palomar/README.md).
+The [official rendering workflow](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38027359827)
+then passed for the same source, root configuration and frozen Challenge hash.
+Its [bounded report](../verification/palomar/registry-render-psdxspsdhwdz.json)
+records `pass`/`complete`, no errors and rendered time `2026-10-10T05:28:41Z`.
+All six declarations are present, and all 19 downloaded artifact file hashes
+match the retained manifest. See [the rendering receipt](../verification/palomar/README.md#current-rc3-registry-rendering).
+The earlier rendering blocker is resolved on the official rc3 pipeline.
+
+At 05:31 UTC the private-review endpoint returned HTTP 404, so no review was
+yet available. The last submission-status request returned HTTP 500. Do not
+infer an advanced registry API state, completed review or registration from
+the successful mechanical and rendering workflows.
+
+Monitor this new ID; do not start another intake. The authorized monitor runs
+every 15 minutes through 2026-10-10 09:00 America/New_York. Credentials and any
+private review stay outside Git. Permanent registration still requires a new
+explicit instruction after Sela has seen the complete review. The published
+Zenodo archive and historical rc4 submission remain unchanged.
+
+## Historical rc4 intake
+
+Sela confirmed the human creator/maintainer credit,
 approved the public repository and the PR #2 merge, and authorized submission
 of snapshot `2d2cc89859d17d3143cd40c4a4b3df49801aa533` with root
 `comparator.json` as its responsible maintainer. The repository is now public.
@@ -64,12 +101,12 @@ also passed candidate `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90` with root
 `2026-10-10T04:38:01Z`. Later commits adding receipts and documentation preserve
 the proof, pins and harness but are not the exact snapshot targeted by that
 workflow. Preflight does not include rendering, editorial review or registration.
-The compatibility change is in open
-[PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6);
-no merge or registry acceptance is claimed.
-The original intake still names the rc4 commit. No replacement submission has
-been authorized or made; preserve that intake and its token. A dependency
-change in Git cannot repair or silently retarget an immutable submission.
+The compatibility change was merged in
+[PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6)
+with Sela's explicit approval. The corrected intake above names the exact rc3
+snapshot; the original intake still names its rc4 commit. Neither record is
+silently retargeted by later Git changes, and intake acceptance is not
+registration.
 
 ## Conditions for a corrected submission
 
@@ -81,14 +118,13 @@ unsuccessful submissions to leave **Existing Palomar ID** blank when retrying;
 that field is for a new version of an already registered result. The intake ID
 `pq5sjorephuw` is not a registered-result ID and must not be placed there.
 
-The local rc3 proof/rendering checks and official hosted preflight are complete.
-Before any corrected intake, obtain Sela's approval of the already pushed
-candidate `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`, root `comparator.json`
-and the responsible-maintainer relationship. Keep that exact verified commit
-rather than silently substituting a subsequent receipt/documentation commit.
-Read the live protocol and respect any reported cooldown or retry restriction.
-Merging PR #6 requires its own explicit approval; neither that merge nor a
-corrected intake has been authorized or performed.
+The local rc3 proof/rendering checks and official hosted preflight were complete
+before Sela approved the exact candidate, configuration and maintainer
+relationship. The corrected intake retained
+`9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`; later receipt/documentation commits
+do not replace it. These conditions are satisfied for `psdxspsdhwdz` and do
+not authorize another intake. Read the live protocol and respect any reported
+cooldown or retry restriction before future action.
 
 ## Pinned workflow and current eligibility
 
@@ -201,10 +237,10 @@ sign-in flow. The supported machine route uses authenticated `gh` with repositor
 write and gist access. It is weaker identity evidence than the browser route;
 it establishes repository-write control plus a named gist account.
 
-For a corrected intake, first obtain approval for the exact candidate and
-relationship specified in "Conditions for a corrected submission" above. The
-original rc4 approval does not authorize that new intake. After the passing
-preflight and new snapshot agreement:
+The authorized rc3 intake completed steps 1–3 below. Continue monitoring in
+step 4; step 5 still requires a new explicit registration instruction. For any
+future intake, obtain its own exact-snapshot agreement and passing preflight
+rather than reusing the historical rc4 or rc3 approval.
 
 1. `POST /api/submit` with the repository, full commit, explicit
    `comparator_config_path: comparator.json`, and the agreed
