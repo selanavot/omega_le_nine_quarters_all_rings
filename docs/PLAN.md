@@ -11,10 +11,11 @@ The [hosted mechanical preflight](https://github.com/selanavot/omega_le_nine_qua
 passed exact candidate `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`. Later receipt
 and documentation commits do not retarget that result. All six steps below
 are complete. Sela approved PR #6's merge and the corrected intake;
-`psdxspsdhwdz` is accepted for that exact candidate, initially `verifying`.
+`psdxspsdhwdz` is accepted for that exact candidate, and its
+[registry mechanical verification passed](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082).
 Monitor that intake under the authorized 15-minute schedule through
-2026-10-10 09:00 America/New_York. Review and permanent registration remain
-separate; registration requires a further explicit instruction after Sela has
+2026-10-10 09:00 America/New_York. Registry rendering and review remain
+unconfirmed; registration requires a further explicit instruction after Sela has
 seen the review. The existing Zenodo archive and original submission remain unchanged.
 
 1. Test the exact submitted Challenge against supported unmodified renderers
@@ -31,8 +32,9 @@ seen the review. The existing Zenodo archive and original submission remain unch
    Preserve the published Zenodo snapshot and original Palomar submission.
 6. Push the verified snapshot, open a compatibility PR, and run the official
    full mechanical preflight against that exact commit. PR #6's approved merge
-   and the corrected intake are complete; their acceptance does not establish
-   completion of registry verification or review.
+   and the corrected intake are complete. Registry mechanical verification
+   passed separately; registry rendering, review and registration are not
+   established by that pass.
 
 ## Original proof-development plan
 

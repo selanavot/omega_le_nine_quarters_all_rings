@@ -127,11 +127,12 @@ for candidate commit `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`, with empty repo
 error and warning lists. Merged [PR #6](https://github.com/selanavot/omega_le_nine_quarters_all_rings/pull/6)
 contains the compatibility change and its receipts; subsequent receipt and
 documentation commits are outside the exact snapshot checked by that workflow.
-The corrected intake **`psdxspsdhwdz`** was accepted for that exact rc3 commit
-and initially entered `verifying` in
-[registry run 38025286082](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082).
-Intake acceptance does not establish completed verification, review or
-registration. The original failed rc4 submission remains a separate record.
+The corrected intake **`psdxspsdhwdz`** was accepted for that exact rc3 commit,
+and its [registry mechanical verification passed](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082).
+The [public report](verification/palomar/registry-psdxspsdhwdz.json) records all
+six claims with empty error and warning lists. Registry rendering and review
+remain unconfirmed; no registration is claimed. The original failed rc4
+submission remains a separate record.
 
 ## Build and verify
 

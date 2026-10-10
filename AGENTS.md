@@ -42,9 +42,13 @@ later documentation PR.
 The accepted current Palomar intake is **`psdxspsdhwdz`**, for exact preflighted
 commit `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`, root `comparator.json` and
 relationship `maintainer`. Its required temporary tag and secret gist were
-deleted after verification of ownership. The initial status is `verifying`;
+deleted after verification of ownership. After initial status `verifying`,
 [registry run 38025286082](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082)
-started, but no completed verification or review is recorded here. Monitor
+passed mechanical verification for the exact submitted snapshot; the public
+report is checked at 2026-10-10 04:53:15 UTC and retained in
+verification/palomar/registry-psdxspsdhwdz.json. Registry rendering and review
+remain unconfirmed; do not infer an advanced API state from the workflow pass.
+At 05:01 UTC the status API returned HTTP 500 while health returned 200. Monitor
 this new ID, not the historical rc4 intake. Do not create another intake or
 substitute a later receipt/docs commit. The authorized monitor checks every
 15 minutes through 2026-10-10 09:00 America/New_York; do not create a duplicate

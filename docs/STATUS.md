@@ -1,6 +1,6 @@
 # Status
 
-## Corrected Palomar intake accepted
+## Corrected Palomar intake: mechanical verification passed
 
 2026-10-10. Sela explicitly approved merging PR #6, submitting the corrected
 rc3 snapshot and monitoring overnight. PR #6 merged at
@@ -8,10 +8,21 @@ rc3 snapshot and monitoring overnight. PR #6 merged at
 Palomar accepted new intake **`psdxspsdhwdz`** for exact commit
 `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`, root `comparator.json`, relationship
 `maintainer`. The required temporary tag and secret gist were both deleted.
-Its initial API status is `verifying`, and
+Its initial API status was `verifying`.
 [registry run 38025286082](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082)
-started and fetched the submitted source. This records initial acceptance and
-dispatch, not completed verification, rendering, review or registration.
+then completed successfully. Its
+[public mechanical report](../verification/palomar/registry-psdxspsdhwdz.json)
+has `status: pass`, `stage: complete`, checked time `2026-10-10T04:53:15Z`,
+empty error/warning lists and execution profile `palomar-namespace-16x32-v1`.
+The exact repository, commit, root configuration and all six claims match the
+approved snapshot; default Lean, NanoDa and con-ron accepted the solution.
+The receipt hash is recorded in [verification/palomar](../verification/palomar/README.md).
+
+Registry rendering and editorial review remain unconfirmed. At 05:01 UTC the
+submission-status API returned HTTP 500 while the health endpoint returned
+200, and no rendering run for this candidate had been observed. This does not
+establish an advanced registry API state or a rendering failure. No permanent
+registration has been performed.
 
 Monitor `psdxspsdhwdz`; retain `pq5sjorephuw` as the historical failed rc4
 submission. The authorized monitor checks every 15 minutes through

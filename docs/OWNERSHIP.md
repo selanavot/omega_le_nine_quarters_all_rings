@@ -8,7 +8,8 @@
   Git, and coordinate any follow-up. Only root starts Lean/Lake processes.
 - `rc2_audit_requirements`: AGENTS.md, README.md, docs/STATUS.md, docs/PLAN.md,
   docs/OWNERSHIP.md, docs/PALOMAR.md and verification/palomar/README.md;
-  commit, push and open the documentation PR. Do not merge it.
+  verification/palomar/registry-psdxspsdhwdz.json; commit and push updates to
+  documentation PR #7. Do not merge it.
 - Additional assignments require an explicit file list from root. The
   arithmetic model, frozen Challenge statements and published records remain
   protected. Do not edit another agent's files while its work is in progress.
@@ -21,6 +22,9 @@ under `lean/` are unchanged. Sela also approved the corrected intake and
 overnight monitor. That approval does not authorize another PR merge or final
 registration. Later receipt/docs commits must not be represented as the
 preflight or intake's immutable target.
+Registry mechanical verification of `psdxspsdhwdz` passed; rendering and review
+remain unconfirmed. Root monitors the API/service state separately from the
+completed public workflow. No proof rebuild is needed to retain its report.
 
 ## Historical proof and publication assignments
 

@@ -8,10 +8,20 @@ intake and overnight monitoring. PR #6 merged at
 Palomar accepted **`psdxspsdhwdz`** for exact preflighted commit
 `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`, root `comparator.json` and
 relationship `maintainer`. The required temporary ownership tag and secret
-gist were deleted after the intake completed. Its initial status is `verifying`;
+gist were deleted after the intake completed. Its initial status was `verifying`;
 [registry run 38025286082](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082)
-started and fetched the submitted source. This establishes acceptance and
-dispatch only, not completed verification, rendering, review or registration.
+then passed mechanical verification. The
+[public report](../verification/palomar/registry-psdxspsdhwdz.json) is checked at
+`2026-10-10T04:53:15Z`, says `pass`/`complete`, and has empty error/warning lists.
+It verifies the exact source, root configuration and all six claims with default
+Lean, NanoDa and con-ron under `palomar-namespace-16x32-v1`. The public artifact
+and report hash are recorded in [the receipt](../verification/palomar/README.md).
+This does not establish registry rendering, review or registration.
+
+At 05:01 UTC, the submission-status API returned HTTP 500 while health returned
+200. No rendering workflow for this candidate had been observed; rendering and
+review remain unconfirmed. Do not infer an advanced registry API state or a
+rendering failure from those observations.
 
 Monitor this new ID; do not start another intake. The authorized monitor runs
 every 15 minutes through 2026-10-10 09:00 America/New_York. Credentials and any

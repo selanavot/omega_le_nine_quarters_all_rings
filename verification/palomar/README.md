@@ -1,5 +1,27 @@
 # Palomar mechanical verification
 
+## Current rc3 registry verification
+
+**PASS**, checked at `2026-10-10T04:53:15Z`. This is the registry's own
+mechanical verification after acceptance of intake **`psdxspsdhwdz`**, distinct
+from the preceding preflight and from later rendering, review and registration.
+
+- Source: `selanavot/omega_le_nine_quarters_all_rings` at exact commit
+  `9d10116c89f9bdcdaccd58aacea353d4b7ae6e90`.
+- Root `comparator.json`, all six claims and the same configuration hash as
+  the passing rc3 preflight.
+- [Registry run 38025286082](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082).
+- [Public artifact 11659133367](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082/artifacts/11659133367).
+- [Complete bounded report](registry-psdxspsdhwdz.json), SHA-256:
+  `840407d2271e7d4b89f038fd8ef0cb71d42bdb02a35e3cec9e9634a9a9108e49`.
+- Report `status: pass`, `stage: complete`, empty error and warning lists.
+- Execution profile: `palomar-namespace-16x32-v1`.
+- Default Lean, NanoDa and con-ron accepted the solution.
+
+Registry rendering and review remain unconfirmed; a workflow success does not
+establish the submission API's current state. See [the current handoff](../../docs/PALOMAR.md)
+for the service-status observations. No registration has been performed.
+
 ## Current rc3 compatibility preflight
 
 **PASS, 2026-10-10**, checked at `2026-10-10T04:38:01Z`.
@@ -31,11 +53,9 @@ editorial acceptance or registration. After Sela's explicit approval and
 PR #6's merge, corrected intake **`psdxspsdhwdz`** was accepted for the exact
 preflighted rc3 commit, root `comparator.json`, relationship `maintainer`.
 The temporary ownership tag and secret gist were deleted. Initial status was
-`verifying`, with
-[registry run 38025286082](https://github.com/PalomarRegistry/PalomarSubmission/actions/runs/38025286082)
-started. This is not a completed registry-verification receipt; see
-[the current handoff](../../docs/PALOMAR.md). The original rc4 submission and
-frozen Zenodo archive remain unchanged.
+`verifying`; the registry subsequently passed its mechanical verification,
+recorded separately above. The original rc4 submission and frozen Zenodo
+archive remain unchanged.
 
 ## Historical rc4 preflight
 
